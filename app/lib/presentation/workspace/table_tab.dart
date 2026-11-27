@@ -141,7 +141,7 @@ class _TableTabState extends State<TableTab> {
     return _edits[r]?[c] ?? _rs!.rows[r].cells[c + _skip];
   }
 
-  bool _changed(int r, int c) => r < _base ? _inserted[r - _base][c] != null : _edits[r]?.containsKey(c) == true;
+  bool _changed(int r, int c) => r >= _base ? _inserted[r - _base][c] != null : _edits[r]?.containsKey(c) == true;
 
   RowMark _mark(int r) => r >= _base ? RowMark.inserted : (_deleted.contains(r) ? RowMark.deleted : RowMark.normal);
 

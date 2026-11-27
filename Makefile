@@ -1,4 +1,4 @@
-.PHONY: all test race vet core-lib build-linux proto aar app-deps app-test app-run build-apk pg-test
+.PHONY: all test race vet core-lib build-linux proto aar app-deps app-test app-run build-apk pg-test package-linux icons
 
 # Every build output lands in builds/ at the repo root.
 BIN := builds
@@ -78,11 +78,35 @@ app-deps:
 app-test: app-deps
 	cd app && flutter analyze && $(CAP) flutter test --concurrency=1
 
+# A CMake cache made at another checkout path (the repo was moved or renamed)
+# breaks `flutter build linux`, so it is dropped first.
 build-linux: app-deps
+	@c=app/build/linux/x64/release/CMakeCache.txt; \
+	if [ -f "$$c" ] && ! grep -qxF "CMAKE_CACHEFILE_DIR:INTERNAL=$(CURDIR)/app/build/linux/x64/release" "$$c"; then \
+		echo "CMake cache from another checkout path: removing app/build/linux"; \
+		rm -rf app/build/linux; \
+	fi
 	cd app && CELLAR_BUILD_ID=$(BUILD_ID) flutter build linux --release $(DEFINES)
 	mkdir -p $(BIN)/linux
 	cp -r app/build/linux/x64/release/bundle/. $(BIN)/linux/
 	@echo "app: $(BIN)/linux/cellar"
+
+# Linux packages from the build-linux output, described in packaging/linux/nfpm.yaml.
+# PKG picks the formats (deb, rpm, archlinux; all three by default), e.g.
+#   make package-linux PKG=archlinux
+# Packages land in $(BIN)/packages/. nfpm runs through `go run` unless it is installed.
+PKG ?= deb rpm archlinux
+NFPM ?= $(or $(shell command -v nfpm 2>/dev/null),go run github.com/goreleaser/nfpm/v2/cmd/nfpm@v2.49.0)
+
+package-linux: build-linux
+	mkdir -p $(BIN)/packages
+	@for p in $(PKG); do \
+		PKG_VERSION=$(VERSION) $(NFPM) package -f packaging/linux/nfpm.yaml -p $$p -t $(BIN)/packages/ || exit 1; \
+	done
+
+# Re-renders the committed PNG icons (app, Android) from the SVGs in branding/.
+icons:
+	branding/render.sh
 
 build-apk: aar app-deps
 	cd app && flutter build apk --release --split-per-abi --target-platform android-arm64,android-x64 $(DEFINES)

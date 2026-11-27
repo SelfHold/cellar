@@ -9,10 +9,20 @@ import '../../data/rpc/gen/cellar.pbgrpc.dart' as pb;
 import '../core/core_cubit.dart';
 
 /// What a tree row is.
-enum NodeKind { group, server, direct, connection, database, schema, folder, object, column, info }
+enum NodeKind { group, server, direct, connection, roles, role, database, schema, folder, object, part, column, key, idx, trigger, info }
 
 /// Folders of a schema (DataGrip: tables, views, routines, sequences).
-enum ObjFolder { tables, views, matviews, foreign, sequences, routines }
+enum ObjFolder { tables, views, matviews, foreign, sequences, routines, enums, domains, types }
+
+/// Folders of a table.
+enum ObjPart { columns, keys, indexes, triggers }
+
+String partLabel(ObjPart p) => switch (p) {
+  ObjPart.columns => tr('columns', 'колонки'),
+  ObjPart.keys => tr('keys and checks', 'ключи и проверки'),
+  ObjPart.indexes => tr('indexes', 'индексы'),
+  ObjPart.triggers => tr('triggers', 'триггеры'),
+};
 
 String folderLabel(ObjFolder f) => switch (f) {
   ObjFolder.tables => tr('tables', 'таблицы'),
@@ -21,6 +31,9 @@ String folderLabel(ObjFolder f) => switch (f) {
   ObjFolder.foreign => tr('foreign tables', 'внешние таблицы'),
   ObjFolder.sequences => tr('sequences', 'последовательности'),
   ObjFolder.routines => tr('routines', 'функции'),
+  ObjFolder.enums => tr('enums', 'перечисления'),
+  ObjFolder.domains => tr('domains', 'домены'),
+  ObjFolder.types => tr('types', 'типы'),
 };
 
 ObjFolder folderOf(pb.DbObject_Kind k) => switch (k) {
@@ -29,6 +42,9 @@ ObjFolder folderOf(pb.DbObject_Kind k) => switch (k) {
   pb.DbObject_Kind.MATERIALIZED_VIEW => ObjFolder.matviews,
   pb.DbObject_Kind.FOREIGN_TABLE => ObjFolder.foreign,
   pb.DbObject_Kind.SEQUENCE => ObjFolder.sequences,
+  pb.DbObject_Kind.ENUM => ObjFolder.enums,
+  pb.DbObject_Kind.DOMAIN => ObjFolder.domains,
+  pb.DbObject_Kind.COMPOSITE_TYPE || pb.DbObject_Kind.RANGE_TYPE => ObjFolder.types,
   _ => ObjFolder.routines,
 };
 
@@ -55,12 +71,21 @@ class DbPath {
 
   bool get editable => kind == pb.DbObject_Kind.TABLE || kind == pb.DbObject_Kind.PARTITIONED_TABLE || kind == pb.DbObject_Kind.FOREIGN_TABLE;
 
+  /// A plain or partitioned table: its structure can be modified.
+  bool get table => kind == pb.DbObject_Kind.TABLE || kind == pb.DbObject_Kind.PARTITIONED_TABLE;
+
+  /// Only DDL to show (no columns, no data).
+  bool get ddlOnly => switch (kind) {
+    pb.DbObject_Kind.FUNCTION || pb.DbObject_Kind.PROCEDURE || pb.DbObject_Kind.SEQUENCE || pb.DbObject_Kind.ENUM || pb.DbObject_Kind.DOMAIN || pb.DbObject_Kind.RANGE_TYPE => true,
+    _ => false,
+  };
+
   pb.ObjectRef get ref => pb.ObjectRef(connectionId: conn, database: db, schema: schema, name: name, kind: kind, signature: signature);
 }
 
 /// One visible row of the tree.
 class TreeRow {
-  TreeRow({required this.key, required this.depth, required this.kind, required this.label, this.detail = '', this.expandable = false, this.server, this.connection, this.path, this.folder, this.object, this.column, this.color});
+  TreeRow({required this.key, required this.depth, required this.kind, required this.label, this.detail = '', this.expandable = false, this.server, this.connection, this.path, this.folder, this.object, this.column, this.color, this.role, this.part, this.item});
 
   final String key;
   final int depth;
@@ -75,6 +100,11 @@ class TreeRow {
   final pb.DbObject? object;
   final pb.Column? column;
   final Color? color;
+  final pb.Role? role;
+  final ObjPart? part;
+
+  /// A key, index or trigger row: its pb.Constraint / pb.Index / pb.Trigger.
+  final Object? item;
 }
 
 const _sep = '\u0000';
@@ -237,7 +267,9 @@ class ExplorerController extends ChangeNotifier {
       case NodeKind.schema:
         load = () async => (await api.listObjects(pb.SchemaRef(connectionId: p!.conn, database: p.db, schema: p.schema))).objects;
       case NodeKind.object:
-        load = () async => (await api.describeObject(p!.ref)).columns;
+        load = () async => await api.describeObject(p!.ref);
+      case NodeKind.roles:
+        load = () async => (await api.listRoles(pb.Ref(id: r.connection!.id))).roles;
       default:
     }
     if (load == null) return;
@@ -252,6 +284,27 @@ class ExplorerController extends ChangeNotifier {
     loading.remove(r.key);
     notifyListeners();
   }
+
+  /// Loads a node's children again (after a change made from the tree).
+  void reloadKey(String key) {
+    _dropUnder(key);
+    notifyListeners();
+  }
+
+  /// Keys of the tree's nodes.
+  static String connectionKey(String conn) => 'c:$conn';
+  static String rolesKey(String conn) => 'r:$conn';
+  static String databaseKey(String conn, String db) => 'db:$conn$_sep$db';
+  static String schemaKey(String conn, String db, String schema) => 'sc:$conn$_sep$db$_sep$schema';
+
+  /// Roles of a connection, when loaded.
+  List<pb.Role> rolesOf(String conn) => (_cache[rolesKey(conn)] as List<pb.Role>?) ?? const [];
+
+  /// Databases of a connection, when loaded.
+  List<pb.Database> databasesOf(String conn) => (_cache[connectionKey(conn)] as List<pb.Database>?) ?? const [];
+
+  /// Schemas of a database, when loaded.
+  List<pb.Schema> schemasOf(String conn, String db) => (_cache[databaseKey(conn, db)] as List<pb.Schema>?) ?? const [];
 
   /// Objects of a schema, when loaded (the console's completion uses them).
   List<pb.DbObject> objectsOf(String conn, String db, String schema) =>
@@ -354,26 +407,92 @@ class ExplorerController extends ChangeNotifier {
           for (final o in list) {
             final ok = 'o:${c.id}$_sep${d.name}$_sep${sc.name}$_sep${o.kind.value}$_sep${o.name}$_sep${o.signature}';
             final path = DbPath(c.id, d.name, sc.name, o.name, o.kind, o.signature);
-            final hasCols = f == ObjFolder.tables || f == ObjFolder.views || f == ObjFolder.matviews || f == ObjFolder.foreign;
+            final hasCols = f == ObjFolder.tables || f == ObjFolder.views || f == ObjFolder.matviews || f == ObjFolder.foreign || f == ObjFolder.types && o.kind == pb.DbObject_Kind.COMPOSITE_TYPE;
             out.add(TreeRow(
               key: ok,
               depth: depth + 4,
               kind: NodeKind.object,
               label: f == ObjFolder.routines ? '${o.name}(${o.signature})' : o.name,
-              detail: o.comment.isNotEmpty ? o.comment : '',
+              detail: _objectDetail(o),
               expandable: hasCols,
               object: o,
               connection: c,
               path: path,
             ));
             if (!hasCols || !expanded.contains(ok) || !_status(out, ok, depth + 5)) continue;
-            for (final col in (_cache[ok] as List<pb.Column>?) ?? const <pb.Column>[]) {
-              out.add(TreeRow(key: '$ok${_sep}col$_sep${col.name}', depth: depth + 5, kind: NodeKind.column, label: col.name, detail: col.type + (col.nullable ? '' : ' not null'), column: col, path: path));
+            final info = _cache[ok] as pb.ObjectInfo;
+            if (!path.table && path.kind != pb.DbObject_Kind.FOREIGN_TABLE) {
+              _addColumns(out, info.columns, ok, path, depth + 5);
+              continue;
+            }
+            final ownIndexes = info.indexes.where((ix) => !info.constraints.any((k) => k.name == ix.name)).toList();
+            for (final part in ObjPart.values) {
+              final n = switch (part) {
+                ObjPart.columns => info.columns.length,
+                ObjPart.keys => info.constraints.length,
+                ObjPart.indexes => ownIndexes.length,
+                ObjPart.triggers => info.triggers.length,
+              };
+              if (n == 0 && part != ObjPart.columns) continue;
+              final pk = '$ok${_sep}part$_sep${part.name}';
+              out.add(TreeRow(key: pk, depth: depth + 5, kind: NodeKind.part, label: partLabel(part), detail: '$n', expandable: n > 0, part: part, path: path, connection: c));
+              if (!expanded.contains(pk)) continue;
+              switch (part) {
+                case ObjPart.columns:
+                  _addColumns(out, info.columns, pk, path, depth + 6);
+                case ObjPart.keys:
+                  for (final k in info.constraints) {
+                    out.add(TreeRow(key: '$pk$_sep${k.name}', depth: depth + 6, kind: NodeKind.key, label: k.name, detail: k.definition, item: k, path: path));
+                  }
+                case ObjPart.indexes:
+                  for (final ix in ownIndexes) {
+                    out.add(TreeRow(key: '$pk$_sep${ix.name}', depth: depth + 6, kind: NodeKind.idx, label: ix.name, detail: _indexDetail(ix), item: ix, path: path));
+                  }
+                case ObjPart.triggers:
+                  for (final tg in info.triggers) {
+                    out.add(TreeRow(key: '$pk$_sep${tg.name}', depth: depth + 6, kind: NodeKind.trigger, label: tg.name, detail: tg.enabled ? '' : tr('disabled', 'выключен'), item: tg, path: path));
+                  }
+              }
             }
           }
         }
       }
     }
+    _addRoles(out, c, depth + 1);
+  }
+
+  void _addColumns(List<TreeRow> out, List<pb.Column> cols, String parent, DbPath path, int depth) {
+    for (final col in cols) {
+      out.add(TreeRow(key: '$parent${_sep}col$_sep${col.name}', depth: depth, kind: NodeKind.column, label: col.name, detail: col.type + (col.nullable ? '' : ' not null'), column: col, path: path));
+    }
+  }
+
+  void _addRoles(List<TreeRow> out, pb.Connection c, int depth) {
+    final key = rolesKey(c.id);
+    final showSystem = AppSettings.instance.showSystemSchemas;
+    final loaded = _cache[key] as List<pb.Role>?;
+    final shown = loaded?.where((r) => showSystem || !r.system).toList();
+    out.add(TreeRow(key: key, depth: depth, kind: NodeKind.roles, label: tr('users and roles', 'пользователи и роли'), detail: shown == null ? '' : '${shown.length}', expandable: true, connection: c, path: DbPath(c.id)));
+    if (!expanded.contains(key) || !_status(out, key, depth + 1)) return;
+    for (final r in shown!) {
+      final flags = [if (r.superuser) 'superuser', if (!r.login) tr('group', 'группа'), if (r.memberOf.isNotEmpty) '∈ ${r.memberOf.join(', ')}'];
+      out.add(TreeRow(key: 'ro:${c.id}$_sep${r.name}', depth: depth + 1, kind: NodeKind.role, label: r.name, detail: flags.join('  ·  '), role: r, connection: c, path: DbPath(c.id)));
+    }
+  }
+
+  String _objectDetail(pb.DbObject o) {
+    if (o.comment.isNotEmpty) return o.comment;
+    return switch (o.kind) {
+      pb.DbObject_Kind.ENUM => o.labels.join(', '),
+      pb.DbObject_Kind.DOMAIN || pb.DbObject_Kind.RANGE_TYPE => o.baseType,
+      _ => '',
+    };
+  }
+
+  String _indexDetail(pb.Index ix) {
+    final d = ix.definition;
+    final i = d.indexOf(' USING ');
+    return (ix.unique ? 'unique ' : '') + (i >= 0 ? d.substring(i + 7) : d);
   }
 
   /// Adds a loading / error row; true when the children are there. An

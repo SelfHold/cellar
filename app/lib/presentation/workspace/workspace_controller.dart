@@ -70,6 +70,20 @@ class WorkspaceController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Closes the tabs on a database (it was dropped or renamed).
+  void closeDatabase(String conn, String db) {
+    tabs.removeWhere((t) => t.path.conn == conn && t.path.db == db);
+    if (active == null) activeId = tabs.isEmpty ? null : tabs.last.id;
+    notifyListeners();
+  }
+
+  /// Closes the tabs of one object (it was dropped).
+  void closeObject(DbPath p) {
+    tabs.removeWhere((t) => t.kind != TabKind.console && t.path.conn == p.conn && t.path.db == p.db && t.path.schema == p.schema && t.path.name == p.name);
+    if (active == null) activeId = tabs.isEmpty ? null : tabs.last.id;
+    notifyListeners();
+  }
+
   /// Closes the tabs of a connection (it was removed).
   void closeConnection(String conn) {
     tabs.removeWhere((t) => t.path.conn == conn);

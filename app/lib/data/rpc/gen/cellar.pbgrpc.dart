@@ -189,6 +189,65 @@ class CellarClient extends $grpc.Client {
     return $createUnaryCall(_$describeObject, request, options: options);
   }
 
+  /// ListRoles returns the roles (users and groups) of the connection's
+  /// server; the pg_* built-in roles are marked system.
+  $grpc.ResponseFuture<$0.RoleList> listRoles(
+    $0.Ref request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listRoles, request, options: options);
+  }
+
+  /// --- DDL: create, alter, drop -------------------------------------------
+  /// PlanChange returns the statements a change would run (the preview of
+  /// the create / modify dialogs). Passwords are masked in it.
+  $grpc.ResponseFuture<$0.ChangePlan> planChange(
+    $0.Change request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$planChange, request, options: options);
+  }
+
+  /// ApplyChange runs them: in one transaction where PostgreSQL allows it
+  /// (CREATE / DROP DATABASE run on their own).
+  $grpc.ResponseFuture<$0.ChangeReply> applyChange(
+    $0.Change request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$applyChange, request, options: options);
+  }
+
+  /// --- dumps (pg_dump, pg_restore, psql) ------------------------------------
+  /// DumpTools says which tools run where for a connection: on this device
+  /// (tunnelled through SSH) or on the server.
+  $grpc.ResponseFuture<$0.DumpToolsReply> dumpTools(
+    $0.Ref request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$dumpTools, request, options: options);
+  }
+
+  /// Dump writes a database (or some of its schemas / tables) to a file on
+  /// this device; cancel the stream to stop it.
+  $grpc.ResponseStream<$0.DumpProgress> dump(
+    $0.DumpRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createStreamingCall(_$dump, $async.Stream.fromIterable([request]),
+        options: options);
+  }
+
+  /// Restore loads a dump file (plain SQL through psql, custom / tar
+  /// through pg_restore) into a database.
+  $grpc.ResponseStream<$0.DumpProgress> restore(
+    $0.RestoreRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createStreamingCall(
+        _$restore, $async.Stream.fromIterable([request]),
+        options: options);
+  }
+
   /// --- data ---------------------------------------------------------------
   /// ReadTable returns one page of a table or view.
   $grpc.ResponseFuture<$0.ResultSet> readTable(
@@ -370,6 +429,31 @@ class CellarClient extends $grpc.Client {
           '/selfhold.cellar.v1.Cellar/DescribeObject',
           ($0.ObjectRef value) => value.writeToBuffer(),
           $0.ObjectInfo.fromBuffer);
+  static final _$listRoles = $grpc.ClientMethod<$0.Ref, $0.RoleList>(
+      '/selfhold.cellar.v1.Cellar/ListRoles',
+      ($0.Ref value) => value.writeToBuffer(),
+      $0.RoleList.fromBuffer);
+  static final _$planChange = $grpc.ClientMethod<$0.Change, $0.ChangePlan>(
+      '/selfhold.cellar.v1.Cellar/PlanChange',
+      ($0.Change value) => value.writeToBuffer(),
+      $0.ChangePlan.fromBuffer);
+  static final _$applyChange = $grpc.ClientMethod<$0.Change, $0.ChangeReply>(
+      '/selfhold.cellar.v1.Cellar/ApplyChange',
+      ($0.Change value) => value.writeToBuffer(),
+      $0.ChangeReply.fromBuffer);
+  static final _$dumpTools = $grpc.ClientMethod<$0.Ref, $0.DumpToolsReply>(
+      '/selfhold.cellar.v1.Cellar/DumpTools',
+      ($0.Ref value) => value.writeToBuffer(),
+      $0.DumpToolsReply.fromBuffer);
+  static final _$dump = $grpc.ClientMethod<$0.DumpRequest, $0.DumpProgress>(
+      '/selfhold.cellar.v1.Cellar/Dump',
+      ($0.DumpRequest value) => value.writeToBuffer(),
+      $0.DumpProgress.fromBuffer);
+  static final _$restore =
+      $grpc.ClientMethod<$0.RestoreRequest, $0.DumpProgress>(
+          '/selfhold.cellar.v1.Cellar/Restore',
+          ($0.RestoreRequest value) => value.writeToBuffer(),
+          $0.DumpProgress.fromBuffer);
   static final _$readTable =
       $grpc.ClientMethod<$0.ReadTableRequest, $0.ResultSet>(
           '/selfhold.cellar.v1.Cellar/ReadTable',
@@ -565,6 +649,48 @@ abstract class CellarServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.ObjectRef.fromBuffer(value),
         ($0.ObjectInfo value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Ref, $0.RoleList>(
+        'ListRoles',
+        listRoles_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Ref.fromBuffer(value),
+        ($0.RoleList value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Change, $0.ChangePlan>(
+        'PlanChange',
+        planChange_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Change.fromBuffer(value),
+        ($0.ChangePlan value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Change, $0.ChangeReply>(
+        'ApplyChange',
+        applyChange_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Change.fromBuffer(value),
+        ($0.ChangeReply value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Ref, $0.DumpToolsReply>(
+        'DumpTools',
+        dumpTools_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Ref.fromBuffer(value),
+        ($0.DumpToolsReply value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.DumpRequest, $0.DumpProgress>(
+        'Dump',
+        dump_Pre,
+        false,
+        true,
+        ($core.List<$core.int> value) => $0.DumpRequest.fromBuffer(value),
+        ($0.DumpProgress value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.RestoreRequest, $0.DumpProgress>(
+        'Restore',
+        restore_Pre,
+        false,
+        true,
+        ($core.List<$core.int> value) => $0.RestoreRequest.fromBuffer(value),
+        ($0.DumpProgress value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.ReadTableRequest, $0.ResultSet>(
         'ReadTable',
         readTable_Pre,
@@ -799,6 +925,53 @@ abstract class CellarServiceBase extends $grpc.Service {
 
   $async.Future<$0.ObjectInfo> describeObject(
       $grpc.ServiceCall call, $0.ObjectRef request);
+
+  $async.Future<$0.RoleList> listRoles_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.Ref> $request) async {
+    return listRoles($call, await $request);
+  }
+
+  $async.Future<$0.RoleList> listRoles($grpc.ServiceCall call, $0.Ref request);
+
+  $async.Future<$0.ChangePlan> planChange_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.Change> $request) async {
+    return planChange($call, await $request);
+  }
+
+  $async.Future<$0.ChangePlan> planChange(
+      $grpc.ServiceCall call, $0.Change request);
+
+  $async.Future<$0.ChangeReply> applyChange_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.Change> $request) async {
+    return applyChange($call, await $request);
+  }
+
+  $async.Future<$0.ChangeReply> applyChange(
+      $grpc.ServiceCall call, $0.Change request);
+
+  $async.Future<$0.DumpToolsReply> dumpTools_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.Ref> $request) async {
+    return dumpTools($call, await $request);
+  }
+
+  $async.Future<$0.DumpToolsReply> dumpTools(
+      $grpc.ServiceCall call, $0.Ref request);
+
+  $async.Stream<$0.DumpProgress> dump_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.DumpRequest> $request) async* {
+    yield* dump($call, await $request);
+  }
+
+  $async.Stream<$0.DumpProgress> dump(
+      $grpc.ServiceCall call, $0.DumpRequest request);
+
+  $async.Stream<$0.DumpProgress> restore_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.RestoreRequest> $request) async* {
+    yield* restore($call, await $request);
+  }
+
+  $async.Stream<$0.DumpProgress> restore(
+      $grpc.ServiceCall call, $0.RestoreRequest request);
 
   $async.Future<$0.ResultSet> readTable_Pre($grpc.ServiceCall $call,
       $async.Future<$0.ReadTableRequest> $request) async {

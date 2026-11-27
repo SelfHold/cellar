@@ -2025,6 +2025,12 @@ class Database extends $pb.GeneratedMessage {
     $fixnum.Int64? sizeBytes,
     $core.bool? isTemplate,
     $core.bool? canConnect,
+    $core.String? encoding,
+    $core.String? collate,
+    $core.String? ctype,
+    $core.int? connectionLimit,
+    $core.String? comment,
+    $core.String? template,
   }) {
     final result = Database._();
     if (name != null) result.name = name;
@@ -2032,6 +2038,12 @@ class Database extends $pb.GeneratedMessage {
     if (sizeBytes != null) result.sizeBytes = sizeBytes;
     if (isTemplate != null) result.isTemplate = isTemplate;
     if (canConnect != null) result.canConnect = canConnect;
+    if (encoding != null) result.encoding = encoding;
+    if (collate != null) result.collate = collate;
+    if (ctype != null) result.ctype = ctype;
+    if (connectionLimit != null) result.connectionLimit = connectionLimit;
+    if (comment != null) result.comment = comment;
+    if (template != null) result.template = template;
     return result;
   }
 
@@ -2054,6 +2066,12 @@ class Database extends $pb.GeneratedMessage {
     ..aInt64(3, _omitFieldNames ? '' : 'sizeBytes')
     ..aOB(4, _omitFieldNames ? '' : 'isTemplate')
     ..aOB(5, _omitFieldNames ? '' : 'canConnect')
+    ..aOS(6, _omitFieldNames ? '' : 'encoding')
+    ..aOS(7, _omitFieldNames ? '' : 'collate')
+    ..aOS(8, _omitFieldNames ? '' : 'ctype')
+    ..aI(9, _omitFieldNames ? '' : 'connectionLimit')
+    ..aOS(10, _omitFieldNames ? '' : 'comment')
+    ..aOS(11, _omitFieldNames ? '' : 'template')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2120,6 +2138,61 @@ class Database extends $pb.GeneratedMessage {
   $core.bool hasCanConnect() => $_has(4);
   @$pb.TagNumber(5)
   void clearCanConnect() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get encoding => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set encoding($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasEncoding() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearEncoding() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.String get collate => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set collate($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasCollate() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearCollate() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.String get ctype => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set ctype($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasCtype() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearCtype() => $_clearField(8);
+
+  @$pb.TagNumber(9)
+  $core.int get connectionLimit => $_getIZ(8);
+  @$pb.TagNumber(9)
+  set connectionLimit($core.int value) => $_setSignedInt32(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasConnectionLimit() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearConnectionLimit() => $_clearField(9);
+
+  @$pb.TagNumber(10)
+  $core.String get comment => $_getSZ(9);
+  @$pb.TagNumber(10)
+  set comment($core.String value) => $_setString(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasComment() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearComment() => $_clearField(10);
+
+  /// Create only: the template to copy ("" = template1).
+  @$pb.TagNumber(11)
+  $core.String get template => $_getSZ(10);
+  @$pb.TagNumber(11)
+  set template($core.String value) => $_setString(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasTemplate() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearTemplate() => $_clearField(11);
 }
 
 class DatabaseList extends $pb.GeneratedMessage {
@@ -2260,11 +2333,13 @@ class Schema extends $pb.GeneratedMessage {
     $core.String? name,
     $core.String? owner,
     $core.bool? system,
+    $core.String? comment,
   }) {
     final result = Schema._();
     if (name != null) result.name = name;
     if (owner != null) result.owner = owner;
     if (system != null) result.system = system;
+    if (comment != null) result.comment = comment;
     return result;
   }
 
@@ -2285,6 +2360,7 @@ class Schema extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'name')
     ..aOS(2, _omitFieldNames ? '' : 'owner')
     ..aOB(3, _omitFieldNames ? '' : 'system')
+    ..aOS(4, _omitFieldNames ? '' : 'comment')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2333,6 +2409,15 @@ class Schema extends $pb.GeneratedMessage {
   $core.bool hasSystem() => $_has(2);
   @$pb.TagNumber(3)
   void clearSystem() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get comment => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set comment($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasComment() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearComment() => $_clearField(4);
 }
 
 class SchemaList extends $pb.GeneratedMessage {
@@ -2473,6 +2558,8 @@ class DbObject extends $pb.GeneratedMessage {
     $core.String? comment,
     $fixnum.Int64? rowsEstimate,
     $core.String? signature,
+    $core.Iterable<$core.String>? labels,
+    $core.String? baseType,
   }) {
     final result = DbObject._();
     if (kind != null) result.kind = kind;
@@ -2480,6 +2567,8 @@ class DbObject extends $pb.GeneratedMessage {
     if (comment != null) result.comment = comment;
     if (rowsEstimate != null) result.rowsEstimate = rowsEstimate;
     if (signature != null) result.signature = signature;
+    if (labels != null) result.labels.addAll(labels);
+    if (baseType != null) result.baseType = baseType;
     return result;
   }
 
@@ -2503,6 +2592,8 @@ class DbObject extends $pb.GeneratedMessage {
     ..aOS(3, _omitFieldNames ? '' : 'comment')
     ..aInt64(4, _omitFieldNames ? '' : 'rowsEstimate')
     ..aOS(5, _omitFieldNames ? '' : 'signature')
+    ..pPS(6, _omitFieldNames ? '' : 'labels')
+    ..aOS(7, _omitFieldNames ? '' : 'baseType')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2569,6 +2660,19 @@ class DbObject extends $pb.GeneratedMessage {
   $core.bool hasSignature() => $_has(4);
   @$pb.TagNumber(5)
   void clearSignature() => $_clearField(5);
+
+  /// Enums: the labels; domains, ranges: the base / sub type.
+  @$pb.TagNumber(6)
+  $pb.PbList<$core.String> get labels => $_getList(5);
+
+  @$pb.TagNumber(7)
+  $core.String get baseType => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set baseType($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasBaseType() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearBaseType() => $_clearField(7);
 }
 
 class ObjectList extends $pb.GeneratedMessage {
@@ -3075,6 +3179,86 @@ class Constraint extends $pb.GeneratedMessage {
   void clearDefinition() => $_clearField(3);
 }
 
+class Trigger extends $pb.GeneratedMessage {
+  factory Trigger({
+    $core.String? name,
+    $core.String? definition,
+    $core.bool? enabled,
+  }) {
+    final result = Trigger._();
+    if (name != null) result.name = name;
+    if (definition != null) result.definition = definition;
+    if (enabled != null) result.enabled = enabled;
+    return result;
+  }
+
+  Trigger._();
+
+  factory Trigger.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      Trigger()..mergeFromBuffer(data, registry);
+  factory Trigger.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      Trigger()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Trigger',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
+      createEmptyInstance: Trigger.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'name')
+    ..aOS(2, _omitFieldNames ? '' : 'definition')
+    ..aOB(3, _omitFieldNames ? '' : 'enabled')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Trigger clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Trigger copyWith(void Function(Trigger) updates) =>
+      super.copyWith((message) => updates(message as Trigger)) as Trigger;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use Trigger() / Trigger.new instead')
+  static Trigger create() => Trigger._();
+  static $pb.GeneratedMessage $_createMessage() => Trigger._();
+  @$core.override
+  Trigger createEmptyInstance() => Trigger._();
+  @$core.pragma('dart2js:noInline')
+  static Trigger getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Trigger>(Trigger.$_createMessage);
+  static Trigger? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get name => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set name($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasName() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearName() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get definition => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set definition($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasDefinition() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearDefinition() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.bool get enabled => $_getBF(2);
+  @$pb.TagNumber(3)
+  set enabled($core.bool value) => $_setBool(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasEnabled() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearEnabled() => $_clearField(3);
+}
+
 class ObjectInfo extends $pb.GeneratedMessage {
   factory ObjectInfo({
     DbObject? object,
@@ -3085,6 +3269,7 @@ class ObjectInfo extends $pb.GeneratedMessage {
     $core.Iterable<$core.String>? primaryKey,
     $core.String? owner,
     $fixnum.Int64? sizeBytes,
+    $core.Iterable<Trigger>? triggers,
   }) {
     final result = ObjectInfo._();
     if (object != null) result.object = object;
@@ -3095,6 +3280,7 @@ class ObjectInfo extends $pb.GeneratedMessage {
     if (primaryKey != null) result.primaryKey.addAll(primaryKey);
     if (owner != null) result.owner = owner;
     if (sizeBytes != null) result.sizeBytes = sizeBytes;
+    if (triggers != null) result.triggers.addAll(triggers);
     return result;
   }
 
@@ -3124,6 +3310,8 @@ class ObjectInfo extends $pb.GeneratedMessage {
     ..pPS(6, _omitFieldNames ? '' : 'primaryKey')
     ..aOS(7, _omitFieldNames ? '' : 'owner')
     ..aInt64(8, _omitFieldNames ? '' : 'sizeBytes')
+    ..pPM<Trigger>(9, _omitFieldNames ? '' : 'triggers',
+        subBuilder: Trigger.$_createMessage)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3195,6 +3383,1547 @@ class ObjectInfo extends $pb.GeneratedMessage {
   $core.bool hasSizeBytes() => $_has(7);
   @$pb.TagNumber(8)
   void clearSizeBytes() => $_clearField(8);
+
+  @$pb.TagNumber(9)
+  $pb.PbList<Trigger> get triggers => $_getList(8);
+}
+
+class Role extends $pb.GeneratedMessage {
+  factory Role({
+    $core.String? name,
+    $core.bool? login,
+    $core.bool? superuser,
+    $core.bool? createDb,
+    $core.bool? createRole,
+    $core.bool? inherit,
+    $core.bool? replication,
+    $core.bool? bypassRls,
+    $core.int? connectionLimit,
+    $core.String? validUntil,
+    $core.Iterable<$core.String>? memberOf,
+    $core.String? comment,
+    $core.bool? system,
+    $core.String? password,
+  }) {
+    final result = Role._();
+    if (name != null) result.name = name;
+    if (login != null) result.login = login;
+    if (superuser != null) result.superuser = superuser;
+    if (createDb != null) result.createDb = createDb;
+    if (createRole != null) result.createRole = createRole;
+    if (inherit != null) result.inherit = inherit;
+    if (replication != null) result.replication = replication;
+    if (bypassRls != null) result.bypassRls = bypassRls;
+    if (connectionLimit != null) result.connectionLimit = connectionLimit;
+    if (validUntil != null) result.validUntil = validUntil;
+    if (memberOf != null) result.memberOf.addAll(memberOf);
+    if (comment != null) result.comment = comment;
+    if (system != null) result.system = system;
+    if (password != null) result.password = password;
+    return result;
+  }
+
+  Role._();
+
+  factory Role.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      Role()..mergeFromBuffer(data, registry);
+  factory Role.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      Role()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Role',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
+      createEmptyInstance: Role.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'name')
+    ..aOB(2, _omitFieldNames ? '' : 'login')
+    ..aOB(3, _omitFieldNames ? '' : 'superuser')
+    ..aOB(4, _omitFieldNames ? '' : 'createDb')
+    ..aOB(5, _omitFieldNames ? '' : 'createRole')
+    ..aOB(6, _omitFieldNames ? '' : 'inherit')
+    ..aOB(7, _omitFieldNames ? '' : 'replication')
+    ..aOB(8, _omitFieldNames ? '' : 'bypassRls')
+    ..aI(9, _omitFieldNames ? '' : 'connectionLimit')
+    ..aOS(10, _omitFieldNames ? '' : 'validUntil')
+    ..pPS(11, _omitFieldNames ? '' : 'memberOf')
+    ..aOS(12, _omitFieldNames ? '' : 'comment')
+    ..aOB(13, _omitFieldNames ? '' : 'system')
+    ..aOS(14, _omitFieldNames ? '' : 'password')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Role clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Role copyWith(void Function(Role) updates) =>
+      super.copyWith((message) => updates(message as Role)) as Role;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use Role() / Role.new instead')
+  static Role create() => Role._();
+  static $pb.GeneratedMessage $_createMessage() => Role._();
+  @$core.override
+  Role createEmptyInstance() => Role._();
+  @$core.pragma('dart2js:noInline')
+  static Role getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Role>(Role.$_createMessage);
+  static Role? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get name => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set name($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasName() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearName() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.bool get login => $_getBF(1);
+  @$pb.TagNumber(2)
+  set login($core.bool value) => $_setBool(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasLogin() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearLogin() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.bool get superuser => $_getBF(2);
+  @$pb.TagNumber(3)
+  set superuser($core.bool value) => $_setBool(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSuperuser() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSuperuser() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.bool get createDb => $_getBF(3);
+  @$pb.TagNumber(4)
+  set createDb($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasCreateDb() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearCreateDb() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.bool get createRole => $_getBF(4);
+  @$pb.TagNumber(5)
+  set createRole($core.bool value) => $_setBool(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasCreateRole() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearCreateRole() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.bool get inherit => $_getBF(5);
+  @$pb.TagNumber(6)
+  set inherit($core.bool value) => $_setBool(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasInherit() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearInherit() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.bool get replication => $_getBF(6);
+  @$pb.TagNumber(7)
+  set replication($core.bool value) => $_setBool(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasReplication() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearReplication() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.bool get bypassRls => $_getBF(7);
+  @$pb.TagNumber(8)
+  set bypassRls($core.bool value) => $_setBool(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasBypassRls() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearBypassRls() => $_clearField(8);
+
+  @$pb.TagNumber(9)
+  $core.int get connectionLimit => $_getIZ(8);
+  @$pb.TagNumber(9)
+  set connectionLimit($core.int value) => $_setSignedInt32(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasConnectionLimit() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearConnectionLimit() => $_clearField(9);
+
+  @$pb.TagNumber(10)
+  $core.String get validUntil => $_getSZ(9);
+  @$pb.TagNumber(10)
+  set validUntil($core.String value) => $_setString(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasValidUntil() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearValidUntil() => $_clearField(10);
+
+  @$pb.TagNumber(11)
+  $pb.PbList<$core.String> get memberOf => $_getList(10);
+
+  @$pb.TagNumber(12)
+  $core.String get comment => $_getSZ(11);
+  @$pb.TagNumber(12)
+  set comment($core.String value) => $_setString(11, value);
+  @$pb.TagNumber(12)
+  $core.bool hasComment() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearComment() => $_clearField(12);
+
+  @$pb.TagNumber(13)
+  $core.bool get system => $_getBF(12);
+  @$pb.TagNumber(13)
+  set system($core.bool value) => $_setBool(12, value);
+  @$pb.TagNumber(13)
+  $core.bool hasSystem() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearSystem() => $_clearField(13);
+
+  /// Changes only: the new password ("" = keep). Never sent back. It is
+  /// hashed in the core (SCRAM-SHA-256 or md5, as the server keeps them)
+  /// before it goes to the server.
+  @$pb.TagNumber(14)
+  $core.String get password => $_getSZ(13);
+  @$pb.TagNumber(14)
+  set password($core.String value) => $_setString(13, value);
+  @$pb.TagNumber(14)
+  $core.bool hasPassword() => $_has(13);
+  @$pb.TagNumber(14)
+  void clearPassword() => $_clearField(14);
+}
+
+class RoleList extends $pb.GeneratedMessage {
+  factory RoleList({
+    $core.Iterable<Role>? roles,
+  }) {
+    final result = RoleList._();
+    if (roles != null) result.roles.addAll(roles);
+    return result;
+  }
+
+  RoleList._();
+
+  factory RoleList.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      RoleList()..mergeFromBuffer(data, registry);
+  factory RoleList.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      RoleList()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RoleList',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
+      createEmptyInstance: RoleList.$_createMessage)
+    ..pPM<Role>(1, _omitFieldNames ? '' : 'roles',
+        subBuilder: Role.$_createMessage)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RoleList clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RoleList copyWith(void Function(RoleList) updates) =>
+      super.copyWith((message) => updates(message as RoleList)) as RoleList;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use RoleList() / RoleList.new instead')
+  static RoleList create() => RoleList._();
+  static $pb.GeneratedMessage $_createMessage() => RoleList._();
+  @$core.override
+  RoleList createEmptyInstance() => RoleList._();
+  @$core.pragma('dart2js:noInline')
+  static RoleList getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RoleList>(RoleList.$_createMessage);
+  static RoleList? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<Role> get roles => $_getList(0);
+}
+
+class ColumnSpec extends $pb.GeneratedMessage {
+  factory ColumnSpec({
+    $core.String? name,
+    $core.String? original,
+    $core.String? type,
+    $core.bool? nullable,
+    $core.String? default_5,
+    $core.String? comment,
+  }) {
+    final result = ColumnSpec._();
+    if (name != null) result.name = name;
+    if (original != null) result.original = original;
+    if (type != null) result.type = type;
+    if (nullable != null) result.nullable = nullable;
+    if (default_5 != null) result.default_5 = default_5;
+    if (comment != null) result.comment = comment;
+    return result;
+  }
+
+  ColumnSpec._();
+
+  factory ColumnSpec.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      ColumnSpec()..mergeFromBuffer(data, registry);
+  factory ColumnSpec.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      ColumnSpec()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ColumnSpec',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
+      createEmptyInstance: ColumnSpec.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'name')
+    ..aOS(2, _omitFieldNames ? '' : 'original')
+    ..aOS(3, _omitFieldNames ? '' : 'type')
+    ..aOB(4, _omitFieldNames ? '' : 'nullable')
+    ..aOS(5, _omitFieldNames ? '' : 'default')
+    ..aOS(6, _omitFieldNames ? '' : 'comment')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ColumnSpec clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ColumnSpec copyWith(void Function(ColumnSpec) updates) =>
+      super.copyWith((message) => updates(message as ColumnSpec)) as ColumnSpec;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use ColumnSpec() / ColumnSpec.new instead')
+  static ColumnSpec create() => ColumnSpec._();
+  static $pb.GeneratedMessage $_createMessage() => ColumnSpec._();
+  @$core.override
+  ColumnSpec createEmptyInstance() => ColumnSpec._();
+  @$core.pragma('dart2js:noInline')
+  static ColumnSpec getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ColumnSpec>(ColumnSpec.$_createMessage);
+  static ColumnSpec? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get name => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set name($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasName() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearName() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get original => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set original($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasOriginal() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearOriginal() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get type => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set type($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasType() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearType() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.bool get nullable => $_getBF(3);
+  @$pb.TagNumber(4)
+  set nullable($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasNullable() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearNullable() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get default_5 => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set default_5($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasDefault_5() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearDefault_5() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get comment => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set comment($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasComment() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearComment() => $_clearField(6);
+}
+
+/// A table as the create / modify dialog wants it. Changes are worked out
+/// against the table as it is in the database now.
+class TableSpec extends $pb.GeneratedMessage {
+  factory TableSpec({
+    $core.String? schema,
+    $core.String? name,
+    $core.String? comment,
+    $core.String? owner,
+    $core.Iterable<ColumnSpec>? columns,
+    $core.Iterable<$core.String>? primaryKey,
+    $core.Iterable<Constraint>? constraints,
+    $core.Iterable<Index>? indexes,
+  }) {
+    final result = TableSpec._();
+    if (schema != null) result.schema = schema;
+    if (name != null) result.name = name;
+    if (comment != null) result.comment = comment;
+    if (owner != null) result.owner = owner;
+    if (columns != null) result.columns.addAll(columns);
+    if (primaryKey != null) result.primaryKey.addAll(primaryKey);
+    if (constraints != null) result.constraints.addAll(constraints);
+    if (indexes != null) result.indexes.addAll(indexes);
+    return result;
+  }
+
+  TableSpec._();
+
+  factory TableSpec.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      TableSpec()..mergeFromBuffer(data, registry);
+  factory TableSpec.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      TableSpec()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'TableSpec',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
+      createEmptyInstance: TableSpec.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'schema')
+    ..aOS(2, _omitFieldNames ? '' : 'name')
+    ..aOS(3, _omitFieldNames ? '' : 'comment')
+    ..aOS(4, _omitFieldNames ? '' : 'owner')
+    ..pPM<ColumnSpec>(5, _omitFieldNames ? '' : 'columns',
+        subBuilder: ColumnSpec.$_createMessage)
+    ..pPS(6, _omitFieldNames ? '' : 'primaryKey')
+    ..pPM<Constraint>(7, _omitFieldNames ? '' : 'constraints',
+        subBuilder: Constraint.$_createMessage)
+    ..pPM<Index>(8, _omitFieldNames ? '' : 'indexes',
+        subBuilder: Index.$_createMessage)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  TableSpec clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  TableSpec copyWith(void Function(TableSpec) updates) =>
+      super.copyWith((message) => updates(message as TableSpec)) as TableSpec;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use TableSpec() / TableSpec.new instead')
+  static TableSpec create() => TableSpec._();
+  static $pb.GeneratedMessage $_createMessage() => TableSpec._();
+  @$core.override
+  TableSpec createEmptyInstance() => TableSpec._();
+  @$core.pragma('dart2js:noInline')
+  static TableSpec getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<TableSpec>(TableSpec.$_createMessage);
+  static TableSpec? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get schema => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set schema($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSchema() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSchema() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get name => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set name($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearName() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get comment => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set comment($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasComment() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearComment() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get owner => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set owner($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasOwner() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearOwner() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $pb.PbList<ColumnSpec> get columns => $_getList(4);
+
+  @$pb.TagNumber(6)
+  $pb.PbList<$core.String> get primaryKey => $_getList(5);
+
+  /// Other constraints, by name (an unnamed new one gets the server's
+  /// name): definition as pg_get_constraintdef prints it.
+  @$pb.TagNumber(7)
+  $pb.PbList<Constraint> get constraints => $_getList(6);
+
+  /// Indexes other than the constraints' own. definition: what follows
+  /// "ON <table>" ("(a, b)", "USING gin (tags)"), or the whole CREATE INDEX
+  /// statement as DescribeObject returns it.
+  @$pb.TagNumber(8)
+  $pb.PbList<Index> get indexes => $_getList(7);
+}
+
+enum Change_Object { role, db, schema, table, target, notSet }
+
+class Change extends $pb.GeneratedMessage {
+  factory Change({
+    $core.String? connectionId,
+    $core.String? database,
+    Change_Op? op,
+    $core.String? original,
+    $core.bool? cascade,
+    Role? role,
+    Database? db,
+    Schema? schema,
+    TableSpec? table,
+    ObjectRef? target,
+  }) {
+    final result = Change._();
+    if (connectionId != null) result.connectionId = connectionId;
+    if (database != null) result.database = database;
+    if (op != null) result.op = op;
+    if (original != null) result.original = original;
+    if (cascade != null) result.cascade = cascade;
+    if (role != null) result.role = role;
+    if (db != null) result.db = db;
+    if (schema != null) result.schema = schema;
+    if (table != null) result.table = table;
+    if (target != null) result.target = target;
+    return result;
+  }
+
+  Change._();
+
+  factory Change.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      Change()..mergeFromBuffer(data, registry);
+  factory Change.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      Change()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, Change_Object> _Change_ObjectByTag = {
+    6: Change_Object.role,
+    7: Change_Object.db,
+    8: Change_Object.schema,
+    9: Change_Object.table,
+    10: Change_Object.target,
+    0: Change_Object.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Change',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
+      createEmptyInstance: Change.$_createMessage)
+    ..oo(0, [6, 7, 8, 9, 10])
+    ..aOS(1, _omitFieldNames ? '' : 'connectionId')
+    ..aOS(2, _omitFieldNames ? '' : 'database')
+    ..aE<Change_Op>(3, _omitFieldNames ? '' : 'op',
+        enumValues: Change_Op.values)
+    ..aOS(4, _omitFieldNames ? '' : 'original')
+    ..aOB(5, _omitFieldNames ? '' : 'cascade')
+    ..aOM<Role>(6, _omitFieldNames ? '' : 'role',
+        subBuilder: Role.$_createMessage)
+    ..aOM<Database>(7, _omitFieldNames ? '' : 'db',
+        subBuilder: Database.$_createMessage)
+    ..aOM<Schema>(8, _omitFieldNames ? '' : 'schema',
+        subBuilder: Schema.$_createMessage)
+    ..aOM<TableSpec>(9, _omitFieldNames ? '' : 'table',
+        subBuilder: TableSpec.$_createMessage)
+    ..aOM<ObjectRef>(10, _omitFieldNames ? '' : 'target',
+        subBuilder: ObjectRef.$_createMessage)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Change clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Change copyWith(void Function(Change) updates) =>
+      super.copyWith((message) => updates(message as Change)) as Change;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use Change() / Change.new instead')
+  static Change create() => Change._();
+  static $pb.GeneratedMessage $_createMessage() => Change._();
+  @$core.override
+  Change createEmptyInstance() => Change._();
+  @$core.pragma('dart2js:noInline')
+  static Change getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Change>(Change.$_createMessage);
+  static Change? _defaultInstance;
+
+  @$pb.TagNumber(6)
+  @$pb.TagNumber(7)
+  @$pb.TagNumber(8)
+  @$pb.TagNumber(9)
+  @$pb.TagNumber(10)
+  Change_Object whichObject() => _Change_ObjectByTag[$_whichOneof(0)]!;
+  @$pb.TagNumber(6)
+  @$pb.TagNumber(7)
+  @$pb.TagNumber(8)
+  @$pb.TagNumber(9)
+  @$pb.TagNumber(10)
+  void clearObject() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  $core.String get connectionId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set connectionId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasConnectionId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearConnectionId() => $_clearField(1);
+
+  /// Where schema, table and object changes run.
+  @$pb.TagNumber(2)
+  $core.String get database => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set database($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasDatabase() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearDatabase() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  Change_Op get op => $_getN(2);
+  @$pb.TagNumber(3)
+  set op(Change_Op value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasOp() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearOp() => $_clearField(3);
+
+  /// ALTER / DROP: the current name (of the role, database, schema or
+  /// table); a different name in the object renames it.
+  @$pb.TagNumber(4)
+  $core.String get original => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set original($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasOriginal() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearOriginal() => $_clearField(4);
+
+  /// DROP: also drop what depends on it (databases: WITH (FORCE), ending
+  /// the sessions on it).
+  @$pb.TagNumber(5)
+  $core.bool get cascade => $_getBF(4);
+  @$pb.TagNumber(5)
+  set cascade($core.bool value) => $_setBool(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasCascade() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearCascade() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  Role get role => $_getN(5);
+  @$pb.TagNumber(6)
+  set role(Role value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasRole() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearRole() => $_clearField(6);
+  @$pb.TagNumber(6)
+  Role ensureRole() => $_ensure(5);
+
+  @$pb.TagNumber(7)
+  Database get db => $_getN(6);
+  @$pb.TagNumber(7)
+  set db(Database value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasDb() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearDb() => $_clearField(7);
+  @$pb.TagNumber(7)
+  Database ensureDb() => $_ensure(6);
+
+  @$pb.TagNumber(8)
+  Schema get schema => $_getN(7);
+  @$pb.TagNumber(8)
+  set schema(Schema value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasSchema() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearSchema() => $_clearField(8);
+  @$pb.TagNumber(8)
+  Schema ensureSchema() => $_ensure(7);
+
+  @$pb.TagNumber(9)
+  TableSpec get table => $_getN(8);
+  @$pb.TagNumber(9)
+  set table(TableSpec value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasTable() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearTable() => $_clearField(9);
+  @$pb.TagNumber(9)
+  TableSpec ensureTable() => $_ensure(8);
+
+  @$pb.TagNumber(10)
+  ObjectRef get target => $_getN(9);
+  @$pb.TagNumber(10)
+  set target(ObjectRef value) => $_setField(10, value);
+  @$pb.TagNumber(10)
+  $core.bool hasTarget() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearTarget() => $_clearField(10);
+  @$pb.TagNumber(10)
+  ObjectRef ensureTarget() => $_ensure(9);
+}
+
+class ChangePlan extends $pb.GeneratedMessage {
+  factory ChangePlan({
+    $core.Iterable<$core.String>? statements,
+    $core.Iterable<$core.String>? warnings,
+    $core.bool? transactional,
+  }) {
+    final result = ChangePlan._();
+    if (statements != null) result.statements.addAll(statements);
+    if (warnings != null) result.warnings.addAll(warnings);
+    if (transactional != null) result.transactional = transactional;
+    return result;
+  }
+
+  ChangePlan._();
+
+  factory ChangePlan.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      ChangePlan()..mergeFromBuffer(data, registry);
+  factory ChangePlan.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      ChangePlan()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ChangePlan',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
+      createEmptyInstance: ChangePlan.$_createMessage)
+    ..pPS(1, _omitFieldNames ? '' : 'statements')
+    ..pPS(2, _omitFieldNames ? '' : 'warnings')
+    ..aOB(3, _omitFieldNames ? '' : 'transactional')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ChangePlan clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ChangePlan copyWith(void Function(ChangePlan) updates) =>
+      super.copyWith((message) => updates(message as ChangePlan)) as ChangePlan;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use ChangePlan() / ChangePlan.new instead')
+  static ChangePlan create() => ChangePlan._();
+  static $pb.GeneratedMessage $_createMessage() => ChangePlan._();
+  @$core.override
+  ChangePlan createEmptyInstance() => ChangePlan._();
+  @$core.pragma('dart2js:noInline')
+  static ChangePlan getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ChangePlan>(ChangePlan.$_createMessage);
+  static ChangePlan? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<$core.String> get statements => $_getList(0);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<$core.String> get warnings => $_getList(1);
+
+  /// false: the statements run one by one (CREATE / DROP DATABASE).
+  @$pb.TagNumber(3)
+  $core.bool get transactional => $_getBF(2);
+  @$pb.TagNumber(3)
+  set transactional($core.bool value) => $_setBool(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasTransactional() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearTransactional() => $_clearField(3);
+}
+
+class ChangeReply extends $pb.GeneratedMessage {
+  factory ChangeReply({
+    $core.Iterable<$core.String>? statements,
+  }) {
+    final result = ChangeReply._();
+    if (statements != null) result.statements.addAll(statements);
+    return result;
+  }
+
+  ChangeReply._();
+
+  factory ChangeReply.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      ChangeReply()..mergeFromBuffer(data, registry);
+  factory ChangeReply.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      ChangeReply()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ChangeReply',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
+      createEmptyInstance: ChangeReply.$_createMessage)
+    ..pPS(1, _omitFieldNames ? '' : 'statements')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ChangeReply clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ChangeReply copyWith(void Function(ChangeReply) updates) =>
+      super.copyWith((message) => updates(message as ChangeReply))
+          as ChangeReply;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use ChangeReply() / ChangeReply.new instead')
+  static ChangeReply create() => ChangeReply._();
+  static $pb.GeneratedMessage $_createMessage() => ChangeReply._();
+  @$core.override
+  ChangeReply createEmptyInstance() => ChangeReply._();
+  @$core.pragma('dart2js:noInline')
+  static ChangeReply getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ChangeReply>(
+          ChangeReply.$_createMessage);
+  static ChangeReply? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<$core.String> get statements => $_getList(0);
+}
+
+class DumpTool extends $pb.GeneratedMessage {
+  factory DumpTool({
+    ToolPlace? place,
+    $core.String? path,
+    $core.String? version,
+    $core.int? major,
+    $core.bool? fits,
+  }) {
+    final result = DumpTool._();
+    if (place != null) result.place = place;
+    if (path != null) result.path = path;
+    if (version != null) result.version = version;
+    if (major != null) result.major = major;
+    if (fits != null) result.fits = fits;
+    return result;
+  }
+
+  DumpTool._();
+
+  factory DumpTool.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      DumpTool()..mergeFromBuffer(data, registry);
+  factory DumpTool.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      DumpTool()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DumpTool',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
+      createEmptyInstance: DumpTool.$_createMessage)
+    ..aE<ToolPlace>(1, _omitFieldNames ? '' : 'place',
+        enumValues: ToolPlace.values)
+    ..aOS(2, _omitFieldNames ? '' : 'path')
+    ..aOS(3, _omitFieldNames ? '' : 'version')
+    ..aI(4, _omitFieldNames ? '' : 'major')
+    ..aOB(5, _omitFieldNames ? '' : 'fits')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DumpTool clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DumpTool copyWith(void Function(DumpTool) updates) =>
+      super.copyWith((message) => updates(message as DumpTool)) as DumpTool;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use DumpTool() / DumpTool.new instead')
+  static DumpTool create() => DumpTool._();
+  static $pb.GeneratedMessage $_createMessage() => DumpTool._();
+  @$core.override
+  DumpTool createEmptyInstance() => DumpTool._();
+  @$core.pragma('dart2js:noInline')
+  static DumpTool getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DumpTool>(DumpTool.$_createMessage);
+  static DumpTool? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  ToolPlace get place => $_getN(0);
+  @$pb.TagNumber(1)
+  set place(ToolPlace value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPlace() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPlace() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get path => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set path($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPath() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPath() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get version => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set version($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasVersion() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearVersion() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.int get major => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set major($core.int value) => $_setSignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasMajor() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearMajor() => $_clearField(4);
+
+  /// pg_dump of this version can dump the database server (its major is
+  /// not older than the server's).
+  @$pb.TagNumber(5)
+  $core.bool get fits => $_getBF(4);
+  @$pb.TagNumber(5)
+  set fits($core.bool value) => $_setBool(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasFits() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearFits() => $_clearField(5);
+}
+
+class DumpToolsReply extends $pb.GeneratedMessage {
+  factory DumpToolsReply({
+    $core.Iterable<DumpTool>? tools,
+    $core.String? serverVersion,
+    $core.String? note,
+  }) {
+    final result = DumpToolsReply._();
+    if (tools != null) result.tools.addAll(tools);
+    if (serverVersion != null) result.serverVersion = serverVersion;
+    if (note != null) result.note = note;
+    return result;
+  }
+
+  DumpToolsReply._();
+
+  factory DumpToolsReply.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      DumpToolsReply()..mergeFromBuffer(data, registry);
+  factory DumpToolsReply.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      DumpToolsReply()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DumpToolsReply',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
+      createEmptyInstance: DumpToolsReply.$_createMessage)
+    ..pPM<DumpTool>(1, _omitFieldNames ? '' : 'tools',
+        subBuilder: DumpTool.$_createMessage)
+    ..aOS(2, _omitFieldNames ? '' : 'serverVersion')
+    ..aOS(3, _omitFieldNames ? '' : 'note')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DumpToolsReply clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DumpToolsReply copyWith(void Function(DumpToolsReply) updates) =>
+      super.copyWith((message) => updates(message as DumpToolsReply))
+          as DumpToolsReply;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use DumpToolsReply() / DumpToolsReply.new instead')
+  static DumpToolsReply create() => DumpToolsReply._();
+  static $pb.GeneratedMessage $_createMessage() => DumpToolsReply._();
+  @$core.override
+  DumpToolsReply createEmptyInstance() => DumpToolsReply._();
+  @$core.pragma('dart2js:noInline')
+  static DumpToolsReply getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<DumpToolsReply>(
+          DumpToolsReply.$_createMessage);
+  static DumpToolsReply? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<DumpTool> get tools => $_getList(0);
+
+  @$pb.TagNumber(2)
+  $core.String get serverVersion => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set serverVersion($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasServerVersion() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearServerVersion() => $_clearField(2);
+
+  /// Why there is no fitting tool ("" = there is one).
+  @$pb.TagNumber(3)
+  $core.String get note => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set note($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasNote() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearNote() => $_clearField(3);
+}
+
+class DumpRequest extends $pb.GeneratedMessage {
+  factory DumpRequest({
+    $core.String? connectionId,
+    $core.String? database,
+    $core.String? path,
+    DumpRequest_Format? format,
+    $core.Iterable<$core.String>? schemas,
+    $core.Iterable<ObjectRef>? tables,
+    $core.bool? schemaOnly,
+    $core.bool? dataOnly,
+    $core.bool? noOwner,
+    $core.bool? noPrivileges,
+    $core.bool? clean,
+    $core.bool? createDatabase,
+    $core.bool? inserts,
+    ToolPlace? place,
+  }) {
+    final result = DumpRequest._();
+    if (connectionId != null) result.connectionId = connectionId;
+    if (database != null) result.database = database;
+    if (path != null) result.path = path;
+    if (format != null) result.format = format;
+    if (schemas != null) result.schemas.addAll(schemas);
+    if (tables != null) result.tables.addAll(tables);
+    if (schemaOnly != null) result.schemaOnly = schemaOnly;
+    if (dataOnly != null) result.dataOnly = dataOnly;
+    if (noOwner != null) result.noOwner = noOwner;
+    if (noPrivileges != null) result.noPrivileges = noPrivileges;
+    if (clean != null) result.clean = clean;
+    if (createDatabase != null) result.createDatabase = createDatabase;
+    if (inserts != null) result.inserts = inserts;
+    if (place != null) result.place = place;
+    return result;
+  }
+
+  DumpRequest._();
+
+  factory DumpRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      DumpRequest()..mergeFromBuffer(data, registry);
+  factory DumpRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      DumpRequest()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DumpRequest',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
+      createEmptyInstance: DumpRequest.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'connectionId')
+    ..aOS(2, _omitFieldNames ? '' : 'database')
+    ..aOS(3, _omitFieldNames ? '' : 'path')
+    ..aE<DumpRequest_Format>(4, _omitFieldNames ? '' : 'format',
+        enumValues: DumpRequest_Format.values)
+    ..pPS(5, _omitFieldNames ? '' : 'schemas')
+    ..pPM<ObjectRef>(6, _omitFieldNames ? '' : 'tables',
+        subBuilder: ObjectRef.$_createMessage)
+    ..aOB(7, _omitFieldNames ? '' : 'schemaOnly')
+    ..aOB(8, _omitFieldNames ? '' : 'dataOnly')
+    ..aOB(9, _omitFieldNames ? '' : 'noOwner')
+    ..aOB(10, _omitFieldNames ? '' : 'noPrivileges')
+    ..aOB(11, _omitFieldNames ? '' : 'clean')
+    ..aOB(12, _omitFieldNames ? '' : 'createDatabase')
+    ..aOB(13, _omitFieldNames ? '' : 'inserts')
+    ..aE<ToolPlace>(14, _omitFieldNames ? '' : 'place',
+        enumValues: ToolPlace.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DumpRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DumpRequest copyWith(void Function(DumpRequest) updates) =>
+      super.copyWith((message) => updates(message as DumpRequest))
+          as DumpRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use DumpRequest() / DumpRequest.new instead')
+  static DumpRequest create() => DumpRequest._();
+  static $pb.GeneratedMessage $_createMessage() => DumpRequest._();
+  @$core.override
+  DumpRequest createEmptyInstance() => DumpRequest._();
+  @$core.pragma('dart2js:noInline')
+  static DumpRequest getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<DumpRequest>(
+          DumpRequest.$_createMessage);
+  static DumpRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get connectionId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set connectionId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasConnectionId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearConnectionId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get database => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set database($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasDatabase() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearDatabase() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get path => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set path($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasPath() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearPath() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  DumpRequest_Format get format => $_getN(3);
+  @$pb.TagNumber(4)
+  set format(DumpRequest_Format value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasFormat() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearFormat() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $pb.PbList<$core.String> get schemas => $_getList(4);
+
+  @$pb.TagNumber(6)
+  $pb.PbList<ObjectRef> get tables => $_getList(5);
+
+  @$pb.TagNumber(7)
+  $core.bool get schemaOnly => $_getBF(6);
+  @$pb.TagNumber(7)
+  set schemaOnly($core.bool value) => $_setBool(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasSchemaOnly() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearSchemaOnly() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.bool get dataOnly => $_getBF(7);
+  @$pb.TagNumber(8)
+  set dataOnly($core.bool value) => $_setBool(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasDataOnly() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearDataOnly() => $_clearField(8);
+
+  @$pb.TagNumber(9)
+  $core.bool get noOwner => $_getBF(8);
+  @$pb.TagNumber(9)
+  set noOwner($core.bool value) => $_setBool(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasNoOwner() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearNoOwner() => $_clearField(9);
+
+  @$pb.TagNumber(10)
+  $core.bool get noPrivileges => $_getBF(9);
+  @$pb.TagNumber(10)
+  set noPrivileges($core.bool value) => $_setBool(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasNoPrivileges() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearNoPrivileges() => $_clearField(10);
+
+  @$pb.TagNumber(11)
+  $core.bool get clean => $_getBF(10);
+  @$pb.TagNumber(11)
+  set clean($core.bool value) => $_setBool(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasClean() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearClean() => $_clearField(11);
+
+  @$pb.TagNumber(12)
+  $core.bool get createDatabase => $_getBF(11);
+  @$pb.TagNumber(12)
+  set createDatabase($core.bool value) => $_setBool(11, value);
+  @$pb.TagNumber(12)
+  $core.bool hasCreateDatabase() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearCreateDatabase() => $_clearField(12);
+
+  @$pb.TagNumber(13)
+  $core.bool get inserts => $_getBF(12);
+  @$pb.TagNumber(13)
+  set inserts($core.bool value) => $_setBool(12, value);
+  @$pb.TagNumber(13)
+  $core.bool hasInserts() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearInserts() => $_clearField(13);
+
+  @$pb.TagNumber(14)
+  ToolPlace get place => $_getN(13);
+  @$pb.TagNumber(14)
+  set place(ToolPlace value) => $_setField(14, value);
+  @$pb.TagNumber(14)
+  $core.bool hasPlace() => $_has(13);
+  @$pb.TagNumber(14)
+  void clearPlace() => $_clearField(14);
+}
+
+class RestoreRequest extends $pb.GeneratedMessage {
+  factory RestoreRequest({
+    $core.String? connectionId,
+    $core.String? database,
+    $core.String? path,
+    $core.bool? clean,
+    $core.bool? noOwner,
+    $core.bool? noPrivileges,
+    $core.bool? singleTransaction,
+    $core.bool? schemaOnly,
+    $core.bool? dataOnly,
+    $core.bool? createDatabase,
+    $core.bool? exitOnError,
+    ToolPlace? place,
+  }) {
+    final result = RestoreRequest._();
+    if (connectionId != null) result.connectionId = connectionId;
+    if (database != null) result.database = database;
+    if (path != null) result.path = path;
+    if (clean != null) result.clean = clean;
+    if (noOwner != null) result.noOwner = noOwner;
+    if (noPrivileges != null) result.noPrivileges = noPrivileges;
+    if (singleTransaction != null) result.singleTransaction = singleTransaction;
+    if (schemaOnly != null) result.schemaOnly = schemaOnly;
+    if (dataOnly != null) result.dataOnly = dataOnly;
+    if (createDatabase != null) result.createDatabase = createDatabase;
+    if (exitOnError != null) result.exitOnError = exitOnError;
+    if (place != null) result.place = place;
+    return result;
+  }
+
+  RestoreRequest._();
+
+  factory RestoreRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      RestoreRequest()..mergeFromBuffer(data, registry);
+  factory RestoreRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      RestoreRequest()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RestoreRequest',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
+      createEmptyInstance: RestoreRequest.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'connectionId')
+    ..aOS(2, _omitFieldNames ? '' : 'database')
+    ..aOS(3, _omitFieldNames ? '' : 'path')
+    ..aOB(4, _omitFieldNames ? '' : 'clean')
+    ..aOB(5, _omitFieldNames ? '' : 'noOwner')
+    ..aOB(6, _omitFieldNames ? '' : 'noPrivileges')
+    ..aOB(7, _omitFieldNames ? '' : 'singleTransaction')
+    ..aOB(8, _omitFieldNames ? '' : 'schemaOnly')
+    ..aOB(9, _omitFieldNames ? '' : 'dataOnly')
+    ..aOB(10, _omitFieldNames ? '' : 'createDatabase')
+    ..aOB(11, _omitFieldNames ? '' : 'exitOnError')
+    ..aE<ToolPlace>(12, _omitFieldNames ? '' : 'place',
+        enumValues: ToolPlace.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RestoreRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RestoreRequest copyWith(void Function(RestoreRequest) updates) =>
+      super.copyWith((message) => updates(message as RestoreRequest))
+          as RestoreRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use RestoreRequest() / RestoreRequest.new instead')
+  static RestoreRequest create() => RestoreRequest._();
+  static $pb.GeneratedMessage $_createMessage() => RestoreRequest._();
+  @$core.override
+  RestoreRequest createEmptyInstance() => RestoreRequest._();
+  @$core.pragma('dart2js:noInline')
+  static RestoreRequest getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<RestoreRequest>(
+          RestoreRequest.$_createMessage);
+  static RestoreRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get connectionId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set connectionId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasConnectionId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearConnectionId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get database => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set database($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasDatabase() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearDatabase() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get path => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set path($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasPath() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearPath() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.bool get clean => $_getBF(3);
+  @$pb.TagNumber(4)
+  set clean($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasClean() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearClean() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.bool get noOwner => $_getBF(4);
+  @$pb.TagNumber(5)
+  set noOwner($core.bool value) => $_setBool(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasNoOwner() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearNoOwner() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.bool get noPrivileges => $_getBF(5);
+  @$pb.TagNumber(6)
+  set noPrivileges($core.bool value) => $_setBool(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasNoPrivileges() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearNoPrivileges() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.bool get singleTransaction => $_getBF(6);
+  @$pb.TagNumber(7)
+  set singleTransaction($core.bool value) => $_setBool(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasSingleTransaction() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearSingleTransaction() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.bool get schemaOnly => $_getBF(7);
+  @$pb.TagNumber(8)
+  set schemaOnly($core.bool value) => $_setBool(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasSchemaOnly() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearSchemaOnly() => $_clearField(8);
+
+  @$pb.TagNumber(9)
+  $core.bool get dataOnly => $_getBF(8);
+  @$pb.TagNumber(9)
+  set dataOnly($core.bool value) => $_setBool(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasDataOnly() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearDataOnly() => $_clearField(9);
+
+  @$pb.TagNumber(10)
+  $core.bool get createDatabase => $_getBF(9);
+  @$pb.TagNumber(10)
+  set createDatabase($core.bool value) => $_setBool(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasCreateDatabase() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearCreateDatabase() => $_clearField(10);
+
+  @$pb.TagNumber(11)
+  $core.bool get exitOnError => $_getBF(10);
+  @$pb.TagNumber(11)
+  set exitOnError($core.bool value) => $_setBool(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasExitOnError() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearExitOnError() => $_clearField(11);
+
+  @$pb.TagNumber(12)
+  ToolPlace get place => $_getN(11);
+  @$pb.TagNumber(12)
+  set place(ToolPlace value) => $_setField(12, value);
+  @$pb.TagNumber(12)
+  $core.bool hasPlace() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearPlace() => $_clearField(12);
+}
+
+class DumpProgress extends $pb.GeneratedMessage {
+  factory DumpProgress({
+    $fixnum.Int64? bytes,
+    $fixnum.Int64? total,
+    $core.Iterable<$core.String>? log,
+    $core.bool? done,
+    $core.String? error,
+    $core.String? tool,
+    $core.String? format,
+  }) {
+    final result = DumpProgress._();
+    if (bytes != null) result.bytes = bytes;
+    if (total != null) result.total = total;
+    if (log != null) result.log.addAll(log);
+    if (done != null) result.done = done;
+    if (error != null) result.error = error;
+    if (tool != null) result.tool = tool;
+    if (format != null) result.format = format;
+    return result;
+  }
+
+  DumpProgress._();
+
+  factory DumpProgress.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      DumpProgress()..mergeFromBuffer(data, registry);
+  factory DumpProgress.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      DumpProgress()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DumpProgress',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
+      createEmptyInstance: DumpProgress.$_createMessage)
+    ..aInt64(1, _omitFieldNames ? '' : 'bytes')
+    ..aInt64(2, _omitFieldNames ? '' : 'total')
+    ..pPS(3, _omitFieldNames ? '' : 'log')
+    ..aOB(4, _omitFieldNames ? '' : 'done')
+    ..aOS(5, _omitFieldNames ? '' : 'error')
+    ..aOS(6, _omitFieldNames ? '' : 'tool')
+    ..aOS(7, _omitFieldNames ? '' : 'format')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DumpProgress clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DumpProgress copyWith(void Function(DumpProgress) updates) =>
+      super.copyWith((message) => updates(message as DumpProgress))
+          as DumpProgress;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use DumpProgress() / DumpProgress.new instead')
+  static DumpProgress create() => DumpProgress._();
+  static $pb.GeneratedMessage $_createMessage() => DumpProgress._();
+  @$core.override
+  DumpProgress createEmptyInstance() => DumpProgress._();
+  @$core.pragma('dart2js:noInline')
+  static DumpProgress getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<DumpProgress>(
+          DumpProgress.$_createMessage);
+  static DumpProgress? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get bytes => $_getI64(0);
+  @$pb.TagNumber(1)
+  set bytes($fixnum.Int64 value) => $_setInt64(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasBytes() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearBytes() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get total => $_getI64(1);
+  @$pb.TagNumber(2)
+  set total($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasTotal() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearTotal() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $pb.PbList<$core.String> get log => $_getList(2);
+
+  @$pb.TagNumber(4)
+  $core.bool get done => $_getBF(3);
+  @$pb.TagNumber(4)
+  set done($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasDone() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearDone() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get error => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set error($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasError() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearError() => $_clearField(5);
+
+  /// The first message: what runs ("pg_dump 17.2 on this device").
+  @$pb.TagNumber(6)
+  $core.String get tool => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set tool($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasTool() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearTool() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.String get format => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set format($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasFormat() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearFormat() => $_clearField(7);
 }
 
 class ResultColumn extends $pb.GeneratedMessage {

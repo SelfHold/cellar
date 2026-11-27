@@ -26,6 +26,55 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type ToolPlace int32
+
+const (
+	ToolPlace_TOOL_PLACE_UNSPECIFIED ToolPlace = 0 // auto: this device if its tools fit, else the server
+	ToolPlace_LOCAL                  ToolPlace = 1
+	ToolPlace_REMOTE                 ToolPlace = 2 // on the server, over SSH
+)
+
+// Enum value maps for ToolPlace.
+var (
+	ToolPlace_name = map[int32]string{
+		0: "TOOL_PLACE_UNSPECIFIED",
+		1: "LOCAL",
+		2: "REMOTE",
+	}
+	ToolPlace_value = map[string]int32{
+		"TOOL_PLACE_UNSPECIFIED": 0,
+		"LOCAL":                  1,
+		"REMOTE":                 2,
+	}
+)
+
+func (x ToolPlace) Enum() *ToolPlace {
+	p := new(ToolPlace)
+	*p = x
+	return p
+}
+
+func (x ToolPlace) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ToolPlace) Descriptor() protoreflect.EnumDescriptor {
+	return file_cellar_proto_enumTypes[0].Descriptor()
+}
+
+func (ToolPlace) Type() protoreflect.EnumType {
+	return &file_cellar_proto_enumTypes[0]
+}
+
+func (x ToolPlace) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ToolPlace.Descriptor instead.
+func (ToolPlace) EnumDescriptor() ([]byte, []int) {
+	return file_cellar_proto_rawDescGZIP(), []int{0}
+}
+
 type SyncState_Phase int32
 
 const (
@@ -77,11 +126,11 @@ func (x SyncState_Phase) String() string {
 }
 
 func (SyncState_Phase) Descriptor() protoreflect.EnumDescriptor {
-	return file_cellar_proto_enumTypes[0].Descriptor()
+	return file_cellar_proto_enumTypes[1].Descriptor()
 }
 
 func (SyncState_Phase) Type() protoreflect.EnumType {
-	return &file_cellar_proto_enumTypes[0]
+	return &file_cellar_proto_enumTypes[1]
 }
 
 func (x SyncState_Phase) Number() protoreflect.EnumNumber {
@@ -135,11 +184,11 @@ func (x Event_Kind) String() string {
 }
 
 func (Event_Kind) Descriptor() protoreflect.EnumDescriptor {
-	return file_cellar_proto_enumTypes[1].Descriptor()
+	return file_cellar_proto_enumTypes[2].Descriptor()
 }
 
 func (Event_Kind) Type() protoreflect.EnumType {
-	return &file_cellar_proto_enumTypes[1]
+	return &file_cellar_proto_enumTypes[2]
 }
 
 func (x Event_Kind) Number() protoreflect.EnumNumber {
@@ -187,11 +236,11 @@ func (x Server_Auth) String() string {
 }
 
 func (Server_Auth) Descriptor() protoreflect.EnumDescriptor {
-	return file_cellar_proto_enumTypes[2].Descriptor()
+	return file_cellar_proto_enumTypes[3].Descriptor()
 }
 
 func (Server_Auth) Type() protoreflect.EnumType {
-	return &file_cellar_proto_enumTypes[2]
+	return &file_cellar_proto_enumTypes[3]
 }
 
 func (x Server_Auth) Number() protoreflect.EnumNumber {
@@ -239,11 +288,11 @@ func (x HostKey_Status) String() string {
 }
 
 func (HostKey_Status) Descriptor() protoreflect.EnumDescriptor {
-	return file_cellar_proto_enumTypes[3].Descriptor()
+	return file_cellar_proto_enumTypes[4].Descriptor()
 }
 
 func (HostKey_Status) Type() protoreflect.EnumType {
-	return &file_cellar_proto_enumTypes[3]
+	return &file_cellar_proto_enumTypes[4]
 }
 
 func (x HostKey_Status) Number() protoreflect.EnumNumber {
@@ -285,11 +334,11 @@ func (x DiscoveredService_Kind) String() string {
 }
 
 func (DiscoveredService_Kind) Descriptor() protoreflect.EnumDescriptor {
-	return file_cellar_proto_enumTypes[4].Descriptor()
+	return file_cellar_proto_enumTypes[5].Descriptor()
 }
 
 func (DiscoveredService_Kind) Type() protoreflect.EnumType {
-	return &file_cellar_proto_enumTypes[4]
+	return &file_cellar_proto_enumTypes[5]
 }
 
 func (x DiscoveredService_Kind) Number() protoreflect.EnumNumber {
@@ -331,11 +380,11 @@ func (x Connection_Kind) String() string {
 }
 
 func (Connection_Kind) Descriptor() protoreflect.EnumDescriptor {
-	return file_cellar_proto_enumTypes[5].Descriptor()
+	return file_cellar_proto_enumTypes[6].Descriptor()
 }
 
 func (Connection_Kind) Type() protoreflect.EnumType {
-	return &file_cellar_proto_enumTypes[5]
+	return &file_cellar_proto_enumTypes[6]
 }
 
 func (x Connection_Kind) Number() protoreflect.EnumNumber {
@@ -383,11 +432,11 @@ func (x Connection_SslMode) String() string {
 }
 
 func (Connection_SslMode) Descriptor() protoreflect.EnumDescriptor {
-	return file_cellar_proto_enumTypes[6].Descriptor()
+	return file_cellar_proto_enumTypes[7].Descriptor()
 }
 
 func (Connection_SslMode) Type() protoreflect.EnumType {
-	return &file_cellar_proto_enumTypes[6]
+	return &file_cellar_proto_enumTypes[7]
 }
 
 func (x Connection_SslMode) Number() protoreflect.EnumNumber {
@@ -411,20 +460,28 @@ const (
 	DbObject_FOREIGN_TABLE     DbObject_Kind = 6
 	DbObject_PARTITIONED_TABLE DbObject_Kind = 7
 	DbObject_PROCEDURE         DbObject_Kind = 8
+	DbObject_ENUM              DbObject_Kind = 9
+	DbObject_DOMAIN            DbObject_Kind = 10
+	DbObject_COMPOSITE_TYPE    DbObject_Kind = 11
+	DbObject_RANGE_TYPE        DbObject_Kind = 12
 )
 
 // Enum value maps for DbObject_Kind.
 var (
 	DbObject_Kind_name = map[int32]string{
-		0: "KIND_UNSPECIFIED",
-		1: "TABLE",
-		2: "VIEW",
-		3: "MATERIALIZED_VIEW",
-		4: "SEQUENCE",
-		5: "FUNCTION",
-		6: "FOREIGN_TABLE",
-		7: "PARTITIONED_TABLE",
-		8: "PROCEDURE",
+		0:  "KIND_UNSPECIFIED",
+		1:  "TABLE",
+		2:  "VIEW",
+		3:  "MATERIALIZED_VIEW",
+		4:  "SEQUENCE",
+		5:  "FUNCTION",
+		6:  "FOREIGN_TABLE",
+		7:  "PARTITIONED_TABLE",
+		8:  "PROCEDURE",
+		9:  "ENUM",
+		10: "DOMAIN",
+		11: "COMPOSITE_TYPE",
+		12: "RANGE_TYPE",
 	}
 	DbObject_Kind_value = map[string]int32{
 		"KIND_UNSPECIFIED":  0,
@@ -436,6 +493,10 @@ var (
 		"FOREIGN_TABLE":     6,
 		"PARTITIONED_TABLE": 7,
 		"PROCEDURE":         8,
+		"ENUM":              9,
+		"DOMAIN":            10,
+		"COMPOSITE_TYPE":    11,
+		"RANGE_TYPE":        12,
 	}
 )
 
@@ -450,11 +511,11 @@ func (x DbObject_Kind) String() string {
 }
 
 func (DbObject_Kind) Descriptor() protoreflect.EnumDescriptor {
-	return file_cellar_proto_enumTypes[7].Descriptor()
+	return file_cellar_proto_enumTypes[8].Descriptor()
 }
 
 func (DbObject_Kind) Type() protoreflect.EnumType {
-	return &file_cellar_proto_enumTypes[7]
+	return &file_cellar_proto_enumTypes[8]
 }
 
 func (x DbObject_Kind) Number() protoreflect.EnumNumber {
@@ -464,6 +525,110 @@ func (x DbObject_Kind) Number() protoreflect.EnumNumber {
 // Deprecated: Use DbObject_Kind.Descriptor instead.
 func (DbObject_Kind) EnumDescriptor() ([]byte, []int) {
 	return file_cellar_proto_rawDescGZIP(), []int{25, 0}
+}
+
+type Change_Op int32
+
+const (
+	Change_OP_UNSPECIFIED Change_Op = 0
+	Change_CREATE         Change_Op = 1
+	Change_ALTER          Change_Op = 2
+	Change_DROP           Change_Op = 3
+)
+
+// Enum value maps for Change_Op.
+var (
+	Change_Op_name = map[int32]string{
+		0: "OP_UNSPECIFIED",
+		1: "CREATE",
+		2: "ALTER",
+		3: "DROP",
+	}
+	Change_Op_value = map[string]int32{
+		"OP_UNSPECIFIED": 0,
+		"CREATE":         1,
+		"ALTER":          2,
+		"DROP":           3,
+	}
+)
+
+func (x Change_Op) Enum() *Change_Op {
+	p := new(Change_Op)
+	*p = x
+	return p
+}
+
+func (x Change_Op) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (Change_Op) Descriptor() protoreflect.EnumDescriptor {
+	return file_cellar_proto_enumTypes[9].Descriptor()
+}
+
+func (Change_Op) Type() protoreflect.EnumType {
+	return &file_cellar_proto_enumTypes[9]
+}
+
+func (x Change_Op) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use Change_Op.Descriptor instead.
+func (Change_Op) EnumDescriptor() ([]byte, []int) {
+	return file_cellar_proto_rawDescGZIP(), []int{37, 0}
+}
+
+type DumpRequest_Format int32
+
+const (
+	DumpRequest_FORMAT_UNSPECIFIED DumpRequest_Format = 0 // plain
+	DumpRequest_PLAIN              DumpRequest_Format = 1 // SQL, restored with psql
+	DumpRequest_CUSTOM             DumpRequest_Format = 2 // pg_restore's compressed archive
+	DumpRequest_TAR                DumpRequest_Format = 3
+)
+
+// Enum value maps for DumpRequest_Format.
+var (
+	DumpRequest_Format_name = map[int32]string{
+		0: "FORMAT_UNSPECIFIED",
+		1: "PLAIN",
+		2: "CUSTOM",
+		3: "TAR",
+	}
+	DumpRequest_Format_value = map[string]int32{
+		"FORMAT_UNSPECIFIED": 0,
+		"PLAIN":              1,
+		"CUSTOM":             2,
+		"TAR":                3,
+	}
+)
+
+func (x DumpRequest_Format) Enum() *DumpRequest_Format {
+	p := new(DumpRequest_Format)
+	*p = x
+	return p
+}
+
+func (x DumpRequest_Format) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (DumpRequest_Format) Descriptor() protoreflect.EnumDescriptor {
+	return file_cellar_proto_enumTypes[10].Descriptor()
+}
+
+func (DumpRequest_Format) Type() protoreflect.EnumType {
+	return &file_cellar_proto_enumTypes[10]
+}
+
+func (x DumpRequest_Format) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use DumpRequest_Format.Descriptor instead.
+func (DumpRequest_Format) EnumDescriptor() ([]byte, []int) {
+	return file_cellar_proto_rawDescGZIP(), []int{42, 0}
 }
 
 type RowEdit_Op int32
@@ -502,11 +667,11 @@ func (x RowEdit_Op) String() string {
 }
 
 func (RowEdit_Op) Descriptor() protoreflect.EnumDescriptor {
-	return file_cellar_proto_enumTypes[8].Descriptor()
+	return file_cellar_proto_enumTypes[11].Descriptor()
 }
 
 func (RowEdit_Op) Type() protoreflect.EnumType {
-	return &file_cellar_proto_enumTypes[8]
+	return &file_cellar_proto_enumTypes[11]
 }
 
 func (x RowEdit_Op) Number() protoreflect.EnumNumber {
@@ -515,7 +680,7 @@ func (x RowEdit_Op) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use RowEdit_Op.Descriptor instead.
 func (RowEdit_Op) EnumDescriptor() ([]byte, []int) {
-	return file_cellar_proto_rawDescGZIP(), []int{39, 0}
+	return file_cellar_proto_rawDescGZIP(), []int{52, 0}
 }
 
 type Empty struct {
@@ -1993,12 +2158,19 @@ func (x *TestReply) GetLatencyMs() int64 {
 }
 
 type Database struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Owner         string                 `protobuf:"bytes,2,opt,name=owner,proto3" json:"owner,omitempty"`
-	SizeBytes     int64                  `protobuf:"varint,3,opt,name=size_bytes,json=sizeBytes,proto3" json:"size_bytes,omitempty"`
-	IsTemplate    bool                   `protobuf:"varint,4,opt,name=is_template,json=isTemplate,proto3" json:"is_template,omitempty"`
-	CanConnect    bool                   `protobuf:"varint,5,opt,name=can_connect,json=canConnect,proto3" json:"can_connect,omitempty"`
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Name            string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Owner           string                 `protobuf:"bytes,2,opt,name=owner,proto3" json:"owner,omitempty"`
+	SizeBytes       int64                  `protobuf:"varint,3,opt,name=size_bytes,json=sizeBytes,proto3" json:"size_bytes,omitempty"`
+	IsTemplate      bool                   `protobuf:"varint,4,opt,name=is_template,json=isTemplate,proto3" json:"is_template,omitempty"`
+	CanConnect      bool                   `protobuf:"varint,5,opt,name=can_connect,json=canConnect,proto3" json:"can_connect,omitempty"`
+	Encoding        string                 `protobuf:"bytes,6,opt,name=encoding,proto3" json:"encoding,omitempty"`
+	Collate         string                 `protobuf:"bytes,7,opt,name=collate,proto3" json:"collate,omitempty"`
+	Ctype           string                 `protobuf:"bytes,8,opt,name=ctype,proto3" json:"ctype,omitempty"`
+	ConnectionLimit int32                  `protobuf:"varint,9,opt,name=connection_limit,json=connectionLimit,proto3" json:"connection_limit,omitempty"` // -1 = no limit
+	Comment         string                 `protobuf:"bytes,10,opt,name=comment,proto3" json:"comment,omitempty"`
+	// Create only: the template to copy ("" = template1).
+	Template      string `protobuf:"bytes,11,opt,name=template,proto3" json:"template,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2066,6 +2238,48 @@ func (x *Database) GetCanConnect() bool {
 		return x.CanConnect
 	}
 	return false
+}
+
+func (x *Database) GetEncoding() string {
+	if x != nil {
+		return x.Encoding
+	}
+	return ""
+}
+
+func (x *Database) GetCollate() string {
+	if x != nil {
+		return x.Collate
+	}
+	return ""
+}
+
+func (x *Database) GetCtype() string {
+	if x != nil {
+		return x.Ctype
+	}
+	return ""
+}
+
+func (x *Database) GetConnectionLimit() int32 {
+	if x != nil {
+		return x.ConnectionLimit
+	}
+	return 0
+}
+
+func (x *Database) GetComment() string {
+	if x != nil {
+		return x.Comment
+	}
+	return ""
+}
+
+func (x *Database) GetTemplate() string {
+	if x != nil {
+		return x.Template
+	}
+	return ""
 }
 
 type DatabaseList struct {
@@ -2177,6 +2391,7 @@ type Schema struct {
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Owner         string                 `protobuf:"bytes,2,opt,name=owner,proto3" json:"owner,omitempty"`
 	System        bool                   `protobuf:"varint,3,opt,name=system,proto3" json:"system,omitempty"` // pg_catalog, information_schema, pg_toast...
+	Comment       string                 `protobuf:"bytes,4,opt,name=comment,proto3" json:"comment,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2230,6 +2445,13 @@ func (x *Schema) GetSystem() bool {
 		return x.System
 	}
 	return false
+}
+
+func (x *Schema) GetComment() string {
+	if x != nil {
+		return x.Comment
+	}
+	return ""
 }
 
 type SchemaList struct {
@@ -2337,12 +2559,15 @@ func (x *SchemaRef) GetSchema() string {
 }
 
 type DbObject struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Kind          DbObject_Kind          `protobuf:"varint,1,opt,name=kind,proto3,enum=selfhold.cellar.v1.DbObject_Kind" json:"kind,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Comment       string                 `protobuf:"bytes,3,opt,name=comment,proto3" json:"comment,omitempty"`
-	RowsEstimate  int64                  `protobuf:"varint,4,opt,name=rows_estimate,json=rowsEstimate,proto3" json:"rows_estimate,omitempty"` // tables: pg_class.reltuples (-1 unknown)
-	Signature     string                 `protobuf:"bytes,5,opt,name=signature,proto3" json:"signature,omitempty"`                            // functions: argument types
+	state        protoimpl.MessageState `protogen:"open.v1"`
+	Kind         DbObject_Kind          `protobuf:"varint,1,opt,name=kind,proto3,enum=selfhold.cellar.v1.DbObject_Kind" json:"kind,omitempty"`
+	Name         string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Comment      string                 `protobuf:"bytes,3,opt,name=comment,proto3" json:"comment,omitempty"`
+	RowsEstimate int64                  `protobuf:"varint,4,opt,name=rows_estimate,json=rowsEstimate,proto3" json:"rows_estimate,omitempty"` // tables: pg_class.reltuples (-1 unknown)
+	Signature    string                 `protobuf:"bytes,5,opt,name=signature,proto3" json:"signature,omitempty"`                            // functions: argument types
+	// Enums: the labels; domains, ranges: the base / sub type.
+	Labels        []string `protobuf:"bytes,6,rep,name=labels,proto3" json:"labels,omitempty"`
+	BaseType      string   `protobuf:"bytes,7,opt,name=base_type,json=baseType,proto3" json:"base_type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2408,6 +2633,20 @@ func (x *DbObject) GetRowsEstimate() int64 {
 func (x *DbObject) GetSignature() string {
 	if x != nil {
 		return x.Signature
+	}
+	return ""
+}
+
+func (x *DbObject) GetLabels() []string {
+	if x != nil {
+		return x.Labels
+	}
+	return nil
+}
+
+func (x *DbObject) GetBaseType() string {
+	if x != nil {
+		return x.BaseType
 	}
 	return ""
 }
@@ -2784,6 +3023,66 @@ func (x *Constraint) GetDefinition() string {
 	return ""
 }
 
+type Trigger struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Definition    string                 `protobuf:"bytes,2,opt,name=definition,proto3" json:"definition,omitempty"` // pg_get_triggerdef
+	Enabled       bool                   `protobuf:"varint,3,opt,name=enabled,proto3" json:"enabled,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Trigger) Reset() {
+	*x = Trigger{}
+	mi := &file_cellar_proto_msgTypes[31]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Trigger) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Trigger) ProtoMessage() {}
+
+func (x *Trigger) ProtoReflect() protoreflect.Message {
+	mi := &file_cellar_proto_msgTypes[31]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Trigger.ProtoReflect.Descriptor instead.
+func (*Trigger) Descriptor() ([]byte, []int) {
+	return file_cellar_proto_rawDescGZIP(), []int{31}
+}
+
+func (x *Trigger) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *Trigger) GetDefinition() string {
+	if x != nil {
+		return x.Definition
+	}
+	return ""
+}
+
+func (x *Trigger) GetEnabled() bool {
+	if x != nil {
+		return x.Enabled
+	}
+	return false
+}
+
 type ObjectInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Object        *DbObject              `protobuf:"bytes,1,opt,name=object,proto3" json:"object,omitempty"`
@@ -2794,13 +3093,14 @@ type ObjectInfo struct {
 	PrimaryKey    []string               `protobuf:"bytes,6,rep,name=primary_key,json=primaryKey,proto3" json:"primary_key,omitempty"`
 	Owner         string                 `protobuf:"bytes,7,opt,name=owner,proto3" json:"owner,omitempty"`
 	SizeBytes     int64                  `protobuf:"varint,8,opt,name=size_bytes,json=sizeBytes,proto3" json:"size_bytes,omitempty"`
+	Triggers      []*Trigger             `protobuf:"bytes,9,rep,name=triggers,proto3" json:"triggers,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ObjectInfo) Reset() {
 	*x = ObjectInfo{}
-	mi := &file_cellar_proto_msgTypes[31]
+	mi := &file_cellar_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2812,7 +3112,7 @@ func (x *ObjectInfo) String() string {
 func (*ObjectInfo) ProtoMessage() {}
 
 func (x *ObjectInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_cellar_proto_msgTypes[31]
+	mi := &file_cellar_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2825,7 +3125,7 @@ func (x *ObjectInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ObjectInfo.ProtoReflect.Descriptor instead.
 func (*ObjectInfo) Descriptor() ([]byte, []int) {
-	return file_cellar_proto_rawDescGZIP(), []int{31}
+	return file_cellar_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *ObjectInfo) GetObject() *DbObject {
@@ -2884,6 +3184,1191 @@ func (x *ObjectInfo) GetSizeBytes() int64 {
 	return 0
 }
 
+func (x *ObjectInfo) GetTriggers() []*Trigger {
+	if x != nil {
+		return x.Triggers
+	}
+	return nil
+}
+
+type Role struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Name            string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Login           bool                   `protobuf:"varint,2,opt,name=login,proto3" json:"login,omitempty"` // a user; false: a group role
+	Superuser       bool                   `protobuf:"varint,3,opt,name=superuser,proto3" json:"superuser,omitempty"`
+	CreateDb        bool                   `protobuf:"varint,4,opt,name=create_db,json=createDb,proto3" json:"create_db,omitempty"`
+	CreateRole      bool                   `protobuf:"varint,5,opt,name=create_role,json=createRole,proto3" json:"create_role,omitempty"`
+	Inherit         bool                   `protobuf:"varint,6,opt,name=inherit,proto3" json:"inherit,omitempty"`
+	Replication     bool                   `protobuf:"varint,7,opt,name=replication,proto3" json:"replication,omitempty"`
+	BypassRls       bool                   `protobuf:"varint,8,opt,name=bypass_rls,json=bypassRls,proto3" json:"bypass_rls,omitempty"`
+	ConnectionLimit int32                  `protobuf:"varint,9,opt,name=connection_limit,json=connectionLimit,proto3" json:"connection_limit,omitempty"` // -1 = no limit
+	ValidUntil      string                 `protobuf:"bytes,10,opt,name=valid_until,json=validUntil,proto3" json:"valid_until,omitempty"`                // the password's expiry as typed, "" = never
+	MemberOf        []string               `protobuf:"bytes,11,rep,name=member_of,json=memberOf,proto3" json:"member_of,omitempty"`
+	Comment         string                 `protobuf:"bytes,12,opt,name=comment,proto3" json:"comment,omitempty"`
+	System          bool                   `protobuf:"varint,13,opt,name=system,proto3" json:"system,omitempty"` // pg_* built-in roles
+	// Changes only: the new password ("" = keep). Never sent back. It is
+	// hashed in the core (SCRAM-SHA-256 or md5, as the server keeps them)
+	// before it goes to the server.
+	Password      string `protobuf:"bytes,14,opt,name=password,proto3" json:"password,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Role) Reset() {
+	*x = Role{}
+	mi := &file_cellar_proto_msgTypes[33]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Role) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Role) ProtoMessage() {}
+
+func (x *Role) ProtoReflect() protoreflect.Message {
+	mi := &file_cellar_proto_msgTypes[33]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Role.ProtoReflect.Descriptor instead.
+func (*Role) Descriptor() ([]byte, []int) {
+	return file_cellar_proto_rawDescGZIP(), []int{33}
+}
+
+func (x *Role) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *Role) GetLogin() bool {
+	if x != nil {
+		return x.Login
+	}
+	return false
+}
+
+func (x *Role) GetSuperuser() bool {
+	if x != nil {
+		return x.Superuser
+	}
+	return false
+}
+
+func (x *Role) GetCreateDb() bool {
+	if x != nil {
+		return x.CreateDb
+	}
+	return false
+}
+
+func (x *Role) GetCreateRole() bool {
+	if x != nil {
+		return x.CreateRole
+	}
+	return false
+}
+
+func (x *Role) GetInherit() bool {
+	if x != nil {
+		return x.Inherit
+	}
+	return false
+}
+
+func (x *Role) GetReplication() bool {
+	if x != nil {
+		return x.Replication
+	}
+	return false
+}
+
+func (x *Role) GetBypassRls() bool {
+	if x != nil {
+		return x.BypassRls
+	}
+	return false
+}
+
+func (x *Role) GetConnectionLimit() int32 {
+	if x != nil {
+		return x.ConnectionLimit
+	}
+	return 0
+}
+
+func (x *Role) GetValidUntil() string {
+	if x != nil {
+		return x.ValidUntil
+	}
+	return ""
+}
+
+func (x *Role) GetMemberOf() []string {
+	if x != nil {
+		return x.MemberOf
+	}
+	return nil
+}
+
+func (x *Role) GetComment() string {
+	if x != nil {
+		return x.Comment
+	}
+	return ""
+}
+
+func (x *Role) GetSystem() bool {
+	if x != nil {
+		return x.System
+	}
+	return false
+}
+
+func (x *Role) GetPassword() string {
+	if x != nil {
+		return x.Password
+	}
+	return ""
+}
+
+type RoleList struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Roles         []*Role                `protobuf:"bytes,1,rep,name=roles,proto3" json:"roles,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RoleList) Reset() {
+	*x = RoleList{}
+	mi := &file_cellar_proto_msgTypes[34]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RoleList) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RoleList) ProtoMessage() {}
+
+func (x *RoleList) ProtoReflect() protoreflect.Message {
+	mi := &file_cellar_proto_msgTypes[34]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RoleList.ProtoReflect.Descriptor instead.
+func (*RoleList) Descriptor() ([]byte, []int) {
+	return file_cellar_proto_rawDescGZIP(), []int{34}
+}
+
+func (x *RoleList) GetRoles() []*Role {
+	if x != nil {
+		return x.Roles
+	}
+	return nil
+}
+
+type ColumnSpec struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Original      string                 `protobuf:"bytes,2,opt,name=original,proto3" json:"original,omitempty"` // the column's current name, "" = a new column
+	Type          string                 `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`
+	Nullable      bool                   `protobuf:"varint,4,opt,name=nullable,proto3" json:"nullable,omitempty"`
+	Default       string                 `protobuf:"bytes,5,opt,name=default,proto3" json:"default,omitempty"` // an expression, "" = none
+	Comment       string                 `protobuf:"bytes,6,opt,name=comment,proto3" json:"comment,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ColumnSpec) Reset() {
+	*x = ColumnSpec{}
+	mi := &file_cellar_proto_msgTypes[35]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ColumnSpec) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ColumnSpec) ProtoMessage() {}
+
+func (x *ColumnSpec) ProtoReflect() protoreflect.Message {
+	mi := &file_cellar_proto_msgTypes[35]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ColumnSpec.ProtoReflect.Descriptor instead.
+func (*ColumnSpec) Descriptor() ([]byte, []int) {
+	return file_cellar_proto_rawDescGZIP(), []int{35}
+}
+
+func (x *ColumnSpec) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *ColumnSpec) GetOriginal() string {
+	if x != nil {
+		return x.Original
+	}
+	return ""
+}
+
+func (x *ColumnSpec) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *ColumnSpec) GetNullable() bool {
+	if x != nil {
+		return x.Nullable
+	}
+	return false
+}
+
+func (x *ColumnSpec) GetDefault() string {
+	if x != nil {
+		return x.Default
+	}
+	return ""
+}
+
+func (x *ColumnSpec) GetComment() string {
+	if x != nil {
+		return x.Comment
+	}
+	return ""
+}
+
+// A table as the create / modify dialog wants it. Changes are worked out
+// against the table as it is in the database now.
+type TableSpec struct {
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	Schema     string                 `protobuf:"bytes,1,opt,name=schema,proto3" json:"schema,omitempty"`
+	Name       string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Comment    string                 `protobuf:"bytes,3,opt,name=comment,proto3" json:"comment,omitempty"`
+	Owner      string                 `protobuf:"bytes,4,opt,name=owner,proto3" json:"owner,omitempty"` // "" = keep (create: the current user)
+	Columns    []*ColumnSpec          `protobuf:"bytes,5,rep,name=columns,proto3" json:"columns,omitempty"`
+	PrimaryKey []string               `protobuf:"bytes,6,rep,name=primary_key,json=primaryKey,proto3" json:"primary_key,omitempty"` // column names, in order
+	// Other constraints, by name (an unnamed new one gets the server's
+	// name): definition as pg_get_constraintdef prints it.
+	Constraints []*Constraint `protobuf:"bytes,7,rep,name=constraints,proto3" json:"constraints,omitempty"`
+	// Indexes other than the constraints' own. definition: what follows
+	// "ON <table>" ("(a, b)", "USING gin (tags)"), or the whole CREATE INDEX
+	// statement as DescribeObject returns it.
+	Indexes       []*Index `protobuf:"bytes,8,rep,name=indexes,proto3" json:"indexes,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TableSpec) Reset() {
+	*x = TableSpec{}
+	mi := &file_cellar_proto_msgTypes[36]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TableSpec) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TableSpec) ProtoMessage() {}
+
+func (x *TableSpec) ProtoReflect() protoreflect.Message {
+	mi := &file_cellar_proto_msgTypes[36]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TableSpec.ProtoReflect.Descriptor instead.
+func (*TableSpec) Descriptor() ([]byte, []int) {
+	return file_cellar_proto_rawDescGZIP(), []int{36}
+}
+
+func (x *TableSpec) GetSchema() string {
+	if x != nil {
+		return x.Schema
+	}
+	return ""
+}
+
+func (x *TableSpec) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *TableSpec) GetComment() string {
+	if x != nil {
+		return x.Comment
+	}
+	return ""
+}
+
+func (x *TableSpec) GetOwner() string {
+	if x != nil {
+		return x.Owner
+	}
+	return ""
+}
+
+func (x *TableSpec) GetColumns() []*ColumnSpec {
+	if x != nil {
+		return x.Columns
+	}
+	return nil
+}
+
+func (x *TableSpec) GetPrimaryKey() []string {
+	if x != nil {
+		return x.PrimaryKey
+	}
+	return nil
+}
+
+func (x *TableSpec) GetConstraints() []*Constraint {
+	if x != nil {
+		return x.Constraints
+	}
+	return nil
+}
+
+func (x *TableSpec) GetIndexes() []*Index {
+	if x != nil {
+		return x.Indexes
+	}
+	return nil
+}
+
+type Change struct {
+	state        protoimpl.MessageState `protogen:"open.v1"`
+	ConnectionId string                 `protobuf:"bytes,1,opt,name=connection_id,json=connectionId,proto3" json:"connection_id,omitempty"`
+	// Where schema, table and object changes run.
+	Database string    `protobuf:"bytes,2,opt,name=database,proto3" json:"database,omitempty"`
+	Op       Change_Op `protobuf:"varint,3,opt,name=op,proto3,enum=selfhold.cellar.v1.Change_Op" json:"op,omitempty"`
+	// ALTER / DROP: the current name (of the role, database, schema or
+	// table); a different name in the object renames it.
+	Original string `protobuf:"bytes,4,opt,name=original,proto3" json:"original,omitempty"`
+	// DROP: also drop what depends on it (databases: WITH (FORCE), ending
+	// the sessions on it).
+	Cascade bool `protobuf:"varint,5,opt,name=cascade,proto3" json:"cascade,omitempty"`
+	// Types that are valid to be assigned to Object:
+	//
+	//	*Change_Role
+	//	*Change_Db
+	//	*Change_Schema
+	//	*Change_Table
+	//	*Change_Target
+	Object        isChange_Object `protobuf_oneof:"object"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Change) Reset() {
+	*x = Change{}
+	mi := &file_cellar_proto_msgTypes[37]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Change) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Change) ProtoMessage() {}
+
+func (x *Change) ProtoReflect() protoreflect.Message {
+	mi := &file_cellar_proto_msgTypes[37]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Change.ProtoReflect.Descriptor instead.
+func (*Change) Descriptor() ([]byte, []int) {
+	return file_cellar_proto_rawDescGZIP(), []int{37}
+}
+
+func (x *Change) GetConnectionId() string {
+	if x != nil {
+		return x.ConnectionId
+	}
+	return ""
+}
+
+func (x *Change) GetDatabase() string {
+	if x != nil {
+		return x.Database
+	}
+	return ""
+}
+
+func (x *Change) GetOp() Change_Op {
+	if x != nil {
+		return x.Op
+	}
+	return Change_OP_UNSPECIFIED
+}
+
+func (x *Change) GetOriginal() string {
+	if x != nil {
+		return x.Original
+	}
+	return ""
+}
+
+func (x *Change) GetCascade() bool {
+	if x != nil {
+		return x.Cascade
+	}
+	return false
+}
+
+func (x *Change) GetObject() isChange_Object {
+	if x != nil {
+		return x.Object
+	}
+	return nil
+}
+
+func (x *Change) GetRole() *Role {
+	if x != nil {
+		if x, ok := x.Object.(*Change_Role); ok {
+			return x.Role
+		}
+	}
+	return nil
+}
+
+func (x *Change) GetDb() *Database {
+	if x != nil {
+		if x, ok := x.Object.(*Change_Db); ok {
+			return x.Db
+		}
+	}
+	return nil
+}
+
+func (x *Change) GetSchema() *Schema {
+	if x != nil {
+		if x, ok := x.Object.(*Change_Schema); ok {
+			return x.Schema
+		}
+	}
+	return nil
+}
+
+func (x *Change) GetTable() *TableSpec {
+	if x != nil {
+		if x, ok := x.Object.(*Change_Table); ok {
+			return x.Table
+		}
+	}
+	return nil
+}
+
+func (x *Change) GetTarget() *ObjectRef {
+	if x != nil {
+		if x, ok := x.Object.(*Change_Target); ok {
+			return x.Target
+		}
+	}
+	return nil
+}
+
+type isChange_Object interface {
+	isChange_Object()
+}
+
+type Change_Role struct {
+	Role *Role `protobuf:"bytes,6,opt,name=role,proto3,oneof"`
+}
+
+type Change_Db struct {
+	Db *Database `protobuf:"bytes,7,opt,name=db,proto3,oneof"`
+}
+
+type Change_Schema struct {
+	Schema *Schema `protobuf:"bytes,8,opt,name=schema,proto3,oneof"`
+}
+
+type Change_Table struct {
+	Table *TableSpec `protobuf:"bytes,9,opt,name=table,proto3,oneof"`
+}
+
+type Change_Target struct {
+	Target *ObjectRef `protobuf:"bytes,10,opt,name=target,proto3,oneof"` // DROP of any schema object
+}
+
+func (*Change_Role) isChange_Object() {}
+
+func (*Change_Db) isChange_Object() {}
+
+func (*Change_Schema) isChange_Object() {}
+
+func (*Change_Table) isChange_Object() {}
+
+func (*Change_Target) isChange_Object() {}
+
+type ChangePlan struct {
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	Statements []string               `protobuf:"bytes,1,rep,name=statements,proto3" json:"statements,omitempty"`
+	Warnings   []string               `protobuf:"bytes,2,rep,name=warnings,proto3" json:"warnings,omitempty"`
+	// false: the statements run one by one (CREATE / DROP DATABASE).
+	Transactional bool `protobuf:"varint,3,opt,name=transactional,proto3" json:"transactional,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ChangePlan) Reset() {
+	*x = ChangePlan{}
+	mi := &file_cellar_proto_msgTypes[38]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ChangePlan) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChangePlan) ProtoMessage() {}
+
+func (x *ChangePlan) ProtoReflect() protoreflect.Message {
+	mi := &file_cellar_proto_msgTypes[38]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChangePlan.ProtoReflect.Descriptor instead.
+func (*ChangePlan) Descriptor() ([]byte, []int) {
+	return file_cellar_proto_rawDescGZIP(), []int{38}
+}
+
+func (x *ChangePlan) GetStatements() []string {
+	if x != nil {
+		return x.Statements
+	}
+	return nil
+}
+
+func (x *ChangePlan) GetWarnings() []string {
+	if x != nil {
+		return x.Warnings
+	}
+	return nil
+}
+
+func (x *ChangePlan) GetTransactional() bool {
+	if x != nil {
+		return x.Transactional
+	}
+	return false
+}
+
+type ChangeReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Statements    []string               `protobuf:"bytes,1,rep,name=statements,proto3" json:"statements,omitempty"` // as run (passwords masked)
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ChangeReply) Reset() {
+	*x = ChangeReply{}
+	mi := &file_cellar_proto_msgTypes[39]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ChangeReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChangeReply) ProtoMessage() {}
+
+func (x *ChangeReply) ProtoReflect() protoreflect.Message {
+	mi := &file_cellar_proto_msgTypes[39]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChangeReply.ProtoReflect.Descriptor instead.
+func (*ChangeReply) Descriptor() ([]byte, []int) {
+	return file_cellar_proto_rawDescGZIP(), []int{39}
+}
+
+func (x *ChangeReply) GetStatements() []string {
+	if x != nil {
+		return x.Statements
+	}
+	return nil
+}
+
+type DumpTool struct {
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	Place   ToolPlace              `protobuf:"varint,1,opt,name=place,proto3,enum=selfhold.cellar.v1.ToolPlace" json:"place,omitempty"`
+	Path    string                 `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`       // pg_dump's path; pg_restore and psql are next to it
+	Version string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"` // "17.2"
+	Major   int32                  `protobuf:"varint,4,opt,name=major,proto3" json:"major,omitempty"`
+	// pg_dump of this version can dump the database server (its major is
+	// not older than the server's).
+	Fits          bool `protobuf:"varint,5,opt,name=fits,proto3" json:"fits,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DumpTool) Reset() {
+	*x = DumpTool{}
+	mi := &file_cellar_proto_msgTypes[40]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DumpTool) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DumpTool) ProtoMessage() {}
+
+func (x *DumpTool) ProtoReflect() protoreflect.Message {
+	mi := &file_cellar_proto_msgTypes[40]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DumpTool.ProtoReflect.Descriptor instead.
+func (*DumpTool) Descriptor() ([]byte, []int) {
+	return file_cellar_proto_rawDescGZIP(), []int{40}
+}
+
+func (x *DumpTool) GetPlace() ToolPlace {
+	if x != nil {
+		return x.Place
+	}
+	return ToolPlace_TOOL_PLACE_UNSPECIFIED
+}
+
+func (x *DumpTool) GetPath() string {
+	if x != nil {
+		return x.Path
+	}
+	return ""
+}
+
+func (x *DumpTool) GetVersion() string {
+	if x != nil {
+		return x.Version
+	}
+	return ""
+}
+
+func (x *DumpTool) GetMajor() int32 {
+	if x != nil {
+		return x.Major
+	}
+	return 0
+}
+
+func (x *DumpTool) GetFits() bool {
+	if x != nil {
+		return x.Fits
+	}
+	return false
+}
+
+type DumpToolsReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Tools         []*DumpTool            `protobuf:"bytes,1,rep,name=tools,proto3" json:"tools,omitempty"`
+	ServerVersion string                 `protobuf:"bytes,2,opt,name=server_version,json=serverVersion,proto3" json:"server_version,omitempty"`
+	// Why there is no fitting tool ("" = there is one).
+	Note          string `protobuf:"bytes,3,opt,name=note,proto3" json:"note,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DumpToolsReply) Reset() {
+	*x = DumpToolsReply{}
+	mi := &file_cellar_proto_msgTypes[41]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DumpToolsReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DumpToolsReply) ProtoMessage() {}
+
+func (x *DumpToolsReply) ProtoReflect() protoreflect.Message {
+	mi := &file_cellar_proto_msgTypes[41]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DumpToolsReply.ProtoReflect.Descriptor instead.
+func (*DumpToolsReply) Descriptor() ([]byte, []int) {
+	return file_cellar_proto_rawDescGZIP(), []int{41}
+}
+
+func (x *DumpToolsReply) GetTools() []*DumpTool {
+	if x != nil {
+		return x.Tools
+	}
+	return nil
+}
+
+func (x *DumpToolsReply) GetServerVersion() string {
+	if x != nil {
+		return x.ServerVersion
+	}
+	return ""
+}
+
+func (x *DumpToolsReply) GetNote() string {
+	if x != nil {
+		return x.Note
+	}
+	return ""
+}
+
+type DumpRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	ConnectionId   string                 `protobuf:"bytes,1,opt,name=connection_id,json=connectionId,proto3" json:"connection_id,omitempty"`
+	Database       string                 `protobuf:"bytes,2,opt,name=database,proto3" json:"database,omitempty"`
+	Path           string                 `protobuf:"bytes,3,opt,name=path,proto3" json:"path,omitempty"` // the file to write on this device
+	Format         DumpRequest_Format     `protobuf:"varint,4,opt,name=format,proto3,enum=selfhold.cellar.v1.DumpRequest_Format" json:"format,omitempty"`
+	Schemas        []string               `protobuf:"bytes,5,rep,name=schemas,proto3" json:"schemas,omitempty"` // only these ("" = all)
+	Tables         []*ObjectRef           `protobuf:"bytes,6,rep,name=tables,proto3" json:"tables,omitempty"`   // only these tables (schema, name)
+	SchemaOnly     bool                   `protobuf:"varint,7,opt,name=schema_only,json=schemaOnly,proto3" json:"schema_only,omitempty"`
+	DataOnly       bool                   `protobuf:"varint,8,opt,name=data_only,json=dataOnly,proto3" json:"data_only,omitempty"`
+	NoOwner        bool                   `protobuf:"varint,9,opt,name=no_owner,json=noOwner,proto3" json:"no_owner,omitempty"`
+	NoPrivileges   bool                   `protobuf:"varint,10,opt,name=no_privileges,json=noPrivileges,proto3" json:"no_privileges,omitempty"`
+	Clean          bool                   `protobuf:"varint,11,opt,name=clean,proto3" json:"clean,omitempty"`                                         // DROP ... IF EXISTS before each CREATE
+	CreateDatabase bool                   `protobuf:"varint,12,opt,name=create_database,json=createDatabase,proto3" json:"create_database,omitempty"` // CREATE DATABASE and connect to it
+	Inserts        bool                   `protobuf:"varint,13,opt,name=inserts,proto3" json:"inserts,omitempty"`                                     // INSERT statements instead of COPY
+	Place          ToolPlace              `protobuf:"varint,14,opt,name=place,proto3,enum=selfhold.cellar.v1.ToolPlace" json:"place,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *DumpRequest) Reset() {
+	*x = DumpRequest{}
+	mi := &file_cellar_proto_msgTypes[42]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DumpRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DumpRequest) ProtoMessage() {}
+
+func (x *DumpRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_cellar_proto_msgTypes[42]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DumpRequest.ProtoReflect.Descriptor instead.
+func (*DumpRequest) Descriptor() ([]byte, []int) {
+	return file_cellar_proto_rawDescGZIP(), []int{42}
+}
+
+func (x *DumpRequest) GetConnectionId() string {
+	if x != nil {
+		return x.ConnectionId
+	}
+	return ""
+}
+
+func (x *DumpRequest) GetDatabase() string {
+	if x != nil {
+		return x.Database
+	}
+	return ""
+}
+
+func (x *DumpRequest) GetPath() string {
+	if x != nil {
+		return x.Path
+	}
+	return ""
+}
+
+func (x *DumpRequest) GetFormat() DumpRequest_Format {
+	if x != nil {
+		return x.Format
+	}
+	return DumpRequest_FORMAT_UNSPECIFIED
+}
+
+func (x *DumpRequest) GetSchemas() []string {
+	if x != nil {
+		return x.Schemas
+	}
+	return nil
+}
+
+func (x *DumpRequest) GetTables() []*ObjectRef {
+	if x != nil {
+		return x.Tables
+	}
+	return nil
+}
+
+func (x *DumpRequest) GetSchemaOnly() bool {
+	if x != nil {
+		return x.SchemaOnly
+	}
+	return false
+}
+
+func (x *DumpRequest) GetDataOnly() bool {
+	if x != nil {
+		return x.DataOnly
+	}
+	return false
+}
+
+func (x *DumpRequest) GetNoOwner() bool {
+	if x != nil {
+		return x.NoOwner
+	}
+	return false
+}
+
+func (x *DumpRequest) GetNoPrivileges() bool {
+	if x != nil {
+		return x.NoPrivileges
+	}
+	return false
+}
+
+func (x *DumpRequest) GetClean() bool {
+	if x != nil {
+		return x.Clean
+	}
+	return false
+}
+
+func (x *DumpRequest) GetCreateDatabase() bool {
+	if x != nil {
+		return x.CreateDatabase
+	}
+	return false
+}
+
+func (x *DumpRequest) GetInserts() bool {
+	if x != nil {
+		return x.Inserts
+	}
+	return false
+}
+
+func (x *DumpRequest) GetPlace() ToolPlace {
+	if x != nil {
+		return x.Place
+	}
+	return ToolPlace_TOOL_PLACE_UNSPECIFIED
+}
+
+type RestoreRequest struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	ConnectionId      string                 `protobuf:"bytes,1,opt,name=connection_id,json=connectionId,proto3" json:"connection_id,omitempty"`
+	Database          string                 `protobuf:"bytes,2,opt,name=database,proto3" json:"database,omitempty"`
+	Path              string                 `protobuf:"bytes,3,opt,name=path,proto3" json:"path,omitempty"`    // the dump file on this device
+	Clean             bool                   `protobuf:"varint,4,opt,name=clean,proto3" json:"clean,omitempty"` // custom / tar: drop objects before creating them
+	NoOwner           bool                   `protobuf:"varint,5,opt,name=no_owner,json=noOwner,proto3" json:"no_owner,omitempty"`
+	NoPrivileges      bool                   `protobuf:"varint,6,opt,name=no_privileges,json=noPrivileges,proto3" json:"no_privileges,omitempty"`
+	SingleTransaction bool                   `protobuf:"varint,7,opt,name=single_transaction,json=singleTransaction,proto3" json:"single_transaction,omitempty"`
+	SchemaOnly        bool                   `protobuf:"varint,8,opt,name=schema_only,json=schemaOnly,proto3" json:"schema_only,omitempty"`
+	DataOnly          bool                   `protobuf:"varint,9,opt,name=data_only,json=dataOnly,proto3" json:"data_only,omitempty"`
+	CreateDatabase    bool                   `protobuf:"varint,10,opt,name=create_database,json=createDatabase,proto3" json:"create_database,omitempty"` // custom / tar: create the dump's database first
+	ExitOnError       bool                   `protobuf:"varint,11,opt,name=exit_on_error,json=exitOnError,proto3" json:"exit_on_error,omitempty"`
+	Place             ToolPlace              `protobuf:"varint,12,opt,name=place,proto3,enum=selfhold.cellar.v1.ToolPlace" json:"place,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *RestoreRequest) Reset() {
+	*x = RestoreRequest{}
+	mi := &file_cellar_proto_msgTypes[43]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RestoreRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RestoreRequest) ProtoMessage() {}
+
+func (x *RestoreRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_cellar_proto_msgTypes[43]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RestoreRequest.ProtoReflect.Descriptor instead.
+func (*RestoreRequest) Descriptor() ([]byte, []int) {
+	return file_cellar_proto_rawDescGZIP(), []int{43}
+}
+
+func (x *RestoreRequest) GetConnectionId() string {
+	if x != nil {
+		return x.ConnectionId
+	}
+	return ""
+}
+
+func (x *RestoreRequest) GetDatabase() string {
+	if x != nil {
+		return x.Database
+	}
+	return ""
+}
+
+func (x *RestoreRequest) GetPath() string {
+	if x != nil {
+		return x.Path
+	}
+	return ""
+}
+
+func (x *RestoreRequest) GetClean() bool {
+	if x != nil {
+		return x.Clean
+	}
+	return false
+}
+
+func (x *RestoreRequest) GetNoOwner() bool {
+	if x != nil {
+		return x.NoOwner
+	}
+	return false
+}
+
+func (x *RestoreRequest) GetNoPrivileges() bool {
+	if x != nil {
+		return x.NoPrivileges
+	}
+	return false
+}
+
+func (x *RestoreRequest) GetSingleTransaction() bool {
+	if x != nil {
+		return x.SingleTransaction
+	}
+	return false
+}
+
+func (x *RestoreRequest) GetSchemaOnly() bool {
+	if x != nil {
+		return x.SchemaOnly
+	}
+	return false
+}
+
+func (x *RestoreRequest) GetDataOnly() bool {
+	if x != nil {
+		return x.DataOnly
+	}
+	return false
+}
+
+func (x *RestoreRequest) GetCreateDatabase() bool {
+	if x != nil {
+		return x.CreateDatabase
+	}
+	return false
+}
+
+func (x *RestoreRequest) GetExitOnError() bool {
+	if x != nil {
+		return x.ExitOnError
+	}
+	return false
+}
+
+func (x *RestoreRequest) GetPlace() ToolPlace {
+	if x != nil {
+		return x.Place
+	}
+	return ToolPlace_TOOL_PLACE_UNSPECIFIED
+}
+
+type DumpProgress struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Bytes int64                  `protobuf:"varint,1,opt,name=bytes,proto3" json:"bytes,omitempty"` // written (dump) / read (restore) so far
+	Total int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"` // restore: the file's size; dump: 0
+	Log   []string               `protobuf:"bytes,3,rep,name=log,proto3" json:"log,omitempty"`      // new lines of the tool's output
+	Done  bool                   `protobuf:"varint,4,opt,name=done,proto3" json:"done,omitempty"`
+	Error string                 `protobuf:"bytes,5,opt,name=error,proto3" json:"error,omitempty"` // set with done when it failed
+	// The first message: what runs ("pg_dump 17.2 on this device").
+	Tool          string `protobuf:"bytes,6,opt,name=tool,proto3" json:"tool,omitempty"`
+	Format        string `protobuf:"bytes,7,opt,name=format,proto3" json:"format,omitempty"` // restore: "plain", "custom", "tar"
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DumpProgress) Reset() {
+	*x = DumpProgress{}
+	mi := &file_cellar_proto_msgTypes[44]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DumpProgress) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DumpProgress) ProtoMessage() {}
+
+func (x *DumpProgress) ProtoReflect() protoreflect.Message {
+	mi := &file_cellar_proto_msgTypes[44]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DumpProgress.ProtoReflect.Descriptor instead.
+func (*DumpProgress) Descriptor() ([]byte, []int) {
+	return file_cellar_proto_rawDescGZIP(), []int{44}
+}
+
+func (x *DumpProgress) GetBytes() int64 {
+	if x != nil {
+		return x.Bytes
+	}
+	return 0
+}
+
+func (x *DumpProgress) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *DumpProgress) GetLog() []string {
+	if x != nil {
+		return x.Log
+	}
+	return nil
+}
+
+func (x *DumpProgress) GetDone() bool {
+	if x != nil {
+		return x.Done
+	}
+	return false
+}
+
+func (x *DumpProgress) GetError() string {
+	if x != nil {
+		return x.Error
+	}
+	return ""
+}
+
+func (x *DumpProgress) GetTool() string {
+	if x != nil {
+		return x.Tool
+	}
+	return ""
+}
+
+func (x *DumpProgress) GetFormat() string {
+	if x != nil {
+		return x.Format
+	}
+	return ""
+}
+
 type ResultColumn struct {
 	state   protoimpl.MessageState `protogen:"open.v1"`
 	Name    string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
@@ -2897,7 +4382,7 @@ type ResultColumn struct {
 
 func (x *ResultColumn) Reset() {
 	*x = ResultColumn{}
-	mi := &file_cellar_proto_msgTypes[32]
+	mi := &file_cellar_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2909,7 +4394,7 @@ func (x *ResultColumn) String() string {
 func (*ResultColumn) ProtoMessage() {}
 
 func (x *ResultColumn) ProtoReflect() protoreflect.Message {
-	mi := &file_cellar_proto_msgTypes[32]
+	mi := &file_cellar_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2922,7 +4407,7 @@ func (x *ResultColumn) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResultColumn.ProtoReflect.Descriptor instead.
 func (*ResultColumn) Descriptor() ([]byte, []int) {
-	return file_cellar_proto_rawDescGZIP(), []int{32}
+	return file_cellar_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *ResultColumn) GetName() string {
@@ -2963,7 +4448,7 @@ type Cell struct {
 
 func (x *Cell) Reset() {
 	*x = Cell{}
-	mi := &file_cellar_proto_msgTypes[33]
+	mi := &file_cellar_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2975,7 +4460,7 @@ func (x *Cell) String() string {
 func (*Cell) ProtoMessage() {}
 
 func (x *Cell) ProtoReflect() protoreflect.Message {
-	mi := &file_cellar_proto_msgTypes[33]
+	mi := &file_cellar_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2988,7 +4473,7 @@ func (x *Cell) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Cell.ProtoReflect.Descriptor instead.
 func (*Cell) Descriptor() ([]byte, []int) {
-	return file_cellar_proto_rawDescGZIP(), []int{33}
+	return file_cellar_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *Cell) GetText() string {
@@ -3014,7 +4499,7 @@ type Row struct {
 
 func (x *Row) Reset() {
 	*x = Row{}
-	mi := &file_cellar_proto_msgTypes[34]
+	mi := &file_cellar_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3026,7 +4511,7 @@ func (x *Row) String() string {
 func (*Row) ProtoMessage() {}
 
 func (x *Row) ProtoReflect() protoreflect.Message {
-	mi := &file_cellar_proto_msgTypes[34]
+	mi := &file_cellar_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3039,7 +4524,7 @@ func (x *Row) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Row.ProtoReflect.Descriptor instead.
 func (*Row) Descriptor() ([]byte, []int) {
-	return file_cellar_proto_rawDescGZIP(), []int{34}
+	return file_cellar_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *Row) GetCells() []*Cell {
@@ -3078,7 +4563,7 @@ type ResultSet struct {
 
 func (x *ResultSet) Reset() {
 	*x = ResultSet{}
-	mi := &file_cellar_proto_msgTypes[35]
+	mi := &file_cellar_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3090,7 +4575,7 @@ func (x *ResultSet) String() string {
 func (*ResultSet) ProtoMessage() {}
 
 func (x *ResultSet) ProtoReflect() protoreflect.Message {
-	mi := &file_cellar_proto_msgTypes[35]
+	mi := &file_cellar_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3103,7 +4588,7 @@ func (x *ResultSet) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResultSet.ProtoReflect.Descriptor instead.
 func (*ResultSet) Descriptor() ([]byte, []int) {
-	return file_cellar_proto_rawDescGZIP(), []int{35}
+	return file_cellar_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *ResultSet) GetColumns() []*ResultColumn {
@@ -3228,7 +4713,7 @@ type Sort struct {
 
 func (x *Sort) Reset() {
 	*x = Sort{}
-	mi := &file_cellar_proto_msgTypes[36]
+	mi := &file_cellar_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3240,7 +4725,7 @@ func (x *Sort) String() string {
 func (*Sort) ProtoMessage() {}
 
 func (x *Sort) ProtoReflect() protoreflect.Message {
-	mi := &file_cellar_proto_msgTypes[36]
+	mi := &file_cellar_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3253,7 +4738,7 @@ func (x *Sort) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Sort.ProtoReflect.Descriptor instead.
 func (*Sort) Descriptor() ([]byte, []int) {
-	return file_cellar_proto_rawDescGZIP(), []int{36}
+	return file_cellar_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *Sort) GetColumn() string {
@@ -3287,7 +4772,7 @@ type ReadTableRequest struct {
 
 func (x *ReadTableRequest) Reset() {
 	*x = ReadTableRequest{}
-	mi := &file_cellar_proto_msgTypes[37]
+	mi := &file_cellar_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3299,7 +4784,7 @@ func (x *ReadTableRequest) String() string {
 func (*ReadTableRequest) ProtoMessage() {}
 
 func (x *ReadTableRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cellar_proto_msgTypes[37]
+	mi := &file_cellar_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3312,7 +4797,7 @@ func (x *ReadTableRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReadTableRequest.ProtoReflect.Descriptor instead.
 func (*ReadTableRequest) Descriptor() ([]byte, []int) {
-	return file_cellar_proto_rawDescGZIP(), []int{37}
+	return file_cellar_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *ReadTableRequest) GetConnectionId() string {
@@ -3383,7 +4868,7 @@ type EditValue struct {
 
 func (x *EditValue) Reset() {
 	*x = EditValue{}
-	mi := &file_cellar_proto_msgTypes[38]
+	mi := &file_cellar_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3395,7 +4880,7 @@ func (x *EditValue) String() string {
 func (*EditValue) ProtoMessage() {}
 
 func (x *EditValue) ProtoReflect() protoreflect.Message {
-	mi := &file_cellar_proto_msgTypes[38]
+	mi := &file_cellar_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3408,7 +4893,7 @@ func (x *EditValue) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EditValue.ProtoReflect.Descriptor instead.
 func (*EditValue) Descriptor() ([]byte, []int) {
-	return file_cellar_proto_rawDescGZIP(), []int{38}
+	return file_cellar_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *EditValue) GetColumn() string {
@@ -3444,7 +4929,7 @@ type RowEdit struct {
 
 func (x *RowEdit) Reset() {
 	*x = RowEdit{}
-	mi := &file_cellar_proto_msgTypes[39]
+	mi := &file_cellar_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3456,7 +4941,7 @@ func (x *RowEdit) String() string {
 func (*RowEdit) ProtoMessage() {}
 
 func (x *RowEdit) ProtoReflect() protoreflect.Message {
-	mi := &file_cellar_proto_msgTypes[39]
+	mi := &file_cellar_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3469,7 +4954,7 @@ func (x *RowEdit) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RowEdit.ProtoReflect.Descriptor instead.
 func (*RowEdit) Descriptor() ([]byte, []int) {
-	return file_cellar_proto_rawDescGZIP(), []int{39}
+	return file_cellar_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *RowEdit) GetOp() RowEdit_Op {
@@ -3506,7 +4991,7 @@ type EditRequest struct {
 
 func (x *EditRequest) Reset() {
 	*x = EditRequest{}
-	mi := &file_cellar_proto_msgTypes[40]
+	mi := &file_cellar_proto_msgTypes[53]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3518,7 +5003,7 @@ func (x *EditRequest) String() string {
 func (*EditRequest) ProtoMessage() {}
 
 func (x *EditRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cellar_proto_msgTypes[40]
+	mi := &file_cellar_proto_msgTypes[53]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3531,7 +5016,7 @@ func (x *EditRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EditRequest.ProtoReflect.Descriptor instead.
 func (*EditRequest) Descriptor() ([]byte, []int) {
-	return file_cellar_proto_rawDescGZIP(), []int{40}
+	return file_cellar_proto_rawDescGZIP(), []int{53}
 }
 
 func (x *EditRequest) GetConnectionId() string {
@@ -3580,7 +5065,7 @@ type EditReply struct {
 
 func (x *EditReply) Reset() {
 	*x = EditReply{}
-	mi := &file_cellar_proto_msgTypes[41]
+	mi := &file_cellar_proto_msgTypes[54]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3592,7 +5077,7 @@ func (x *EditReply) String() string {
 func (*EditReply) ProtoMessage() {}
 
 func (x *EditReply) ProtoReflect() protoreflect.Message {
-	mi := &file_cellar_proto_msgTypes[41]
+	mi := &file_cellar_proto_msgTypes[54]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3605,7 +5090,7 @@ func (x *EditReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EditReply.ProtoReflect.Descriptor instead.
 func (*EditReply) Descriptor() ([]byte, []int) {
-	return file_cellar_proto_rawDescGZIP(), []int{41}
+	return file_cellar_proto_rawDescGZIP(), []int{54}
 }
 
 func (x *EditReply) GetRowsAffected() int64 {
@@ -3635,7 +5120,7 @@ type Console struct {
 
 func (x *Console) Reset() {
 	*x = Console{}
-	mi := &file_cellar_proto_msgTypes[42]
+	mi := &file_cellar_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3647,7 +5132,7 @@ func (x *Console) String() string {
 func (*Console) ProtoMessage() {}
 
 func (x *Console) ProtoReflect() protoreflect.Message {
-	mi := &file_cellar_proto_msgTypes[42]
+	mi := &file_cellar_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3660,7 +5145,7 @@ func (x *Console) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Console.ProtoReflect.Descriptor instead.
 func (*Console) Descriptor() ([]byte, []int) {
-	return file_cellar_proto_rawDescGZIP(), []int{42}
+	return file_cellar_proto_rawDescGZIP(), []int{55}
 }
 
 func (x *Console) GetId() string {
@@ -3707,7 +5192,7 @@ type ConsoleRef struct {
 
 func (x *ConsoleRef) Reset() {
 	*x = ConsoleRef{}
-	mi := &file_cellar_proto_msgTypes[43]
+	mi := &file_cellar_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3719,7 +5204,7 @@ func (x *ConsoleRef) String() string {
 func (*ConsoleRef) ProtoMessage() {}
 
 func (x *ConsoleRef) ProtoReflect() protoreflect.Message {
-	mi := &file_cellar_proto_msgTypes[43]
+	mi := &file_cellar_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3732,7 +5217,7 @@ func (x *ConsoleRef) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConsoleRef.ProtoReflect.Descriptor instead.
 func (*ConsoleRef) Descriptor() ([]byte, []int) {
-	return file_cellar_proto_rawDescGZIP(), []int{43}
+	return file_cellar_proto_rawDescGZIP(), []int{56}
 }
 
 func (x *ConsoleRef) GetId() string {
@@ -3759,7 +5244,7 @@ type ExecuteRequest struct {
 
 func (x *ExecuteRequest) Reset() {
 	*x = ExecuteRequest{}
-	mi := &file_cellar_proto_msgTypes[44]
+	mi := &file_cellar_proto_msgTypes[57]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3771,7 +5256,7 @@ func (x *ExecuteRequest) String() string {
 func (*ExecuteRequest) ProtoMessage() {}
 
 func (x *ExecuteRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cellar_proto_msgTypes[44]
+	mi := &file_cellar_proto_msgTypes[57]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3784,7 +5269,7 @@ func (x *ExecuteRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ExecuteRequest.ProtoReflect.Descriptor instead.
 func (*ExecuteRequest) Descriptor() ([]byte, []int) {
-	return file_cellar_proto_rawDescGZIP(), []int{44}
+	return file_cellar_proto_rawDescGZIP(), []int{57}
 }
 
 func (x *ExecuteRequest) GetConsoleId() string {
@@ -3831,7 +5316,7 @@ type StatementsRequest struct {
 
 func (x *StatementsRequest) Reset() {
 	*x = StatementsRequest{}
-	mi := &file_cellar_proto_msgTypes[45]
+	mi := &file_cellar_proto_msgTypes[58]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3843,7 +5328,7 @@ func (x *StatementsRequest) String() string {
 func (*StatementsRequest) ProtoMessage() {}
 
 func (x *StatementsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cellar_proto_msgTypes[45]
+	mi := &file_cellar_proto_msgTypes[58]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3856,7 +5341,7 @@ func (x *StatementsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatementsRequest.ProtoReflect.Descriptor instead.
 func (*StatementsRequest) Descriptor() ([]byte, []int) {
-	return file_cellar_proto_rawDescGZIP(), []int{45}
+	return file_cellar_proto_rawDescGZIP(), []int{58}
 }
 
 func (x *StatementsRequest) GetSql() string {
@@ -3876,7 +5361,7 @@ type StatementRange struct {
 
 func (x *StatementRange) Reset() {
 	*x = StatementRange{}
-	mi := &file_cellar_proto_msgTypes[46]
+	mi := &file_cellar_proto_msgTypes[59]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3888,7 +5373,7 @@ func (x *StatementRange) String() string {
 func (*StatementRange) ProtoMessage() {}
 
 func (x *StatementRange) ProtoReflect() protoreflect.Message {
-	mi := &file_cellar_proto_msgTypes[46]
+	mi := &file_cellar_proto_msgTypes[59]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3901,7 +5386,7 @@ func (x *StatementRange) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatementRange.ProtoReflect.Descriptor instead.
 func (*StatementRange) Descriptor() ([]byte, []int) {
-	return file_cellar_proto_rawDescGZIP(), []int{46}
+	return file_cellar_proto_rawDescGZIP(), []int{59}
 }
 
 func (x *StatementRange) GetStart() int32 {
@@ -3927,7 +5412,7 @@ type StatementsReply struct {
 
 func (x *StatementsReply) Reset() {
 	*x = StatementsReply{}
-	mi := &file_cellar_proto_msgTypes[47]
+	mi := &file_cellar_proto_msgTypes[60]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3939,7 +5424,7 @@ func (x *StatementsReply) String() string {
 func (*StatementsReply) ProtoMessage() {}
 
 func (x *StatementsReply) ProtoReflect() protoreflect.Message {
-	mi := &file_cellar_proto_msgTypes[47]
+	mi := &file_cellar_proto_msgTypes[60]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3952,7 +5437,7 @@ func (x *StatementsReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatementsReply.ProtoReflect.Descriptor instead.
 func (*StatementsReply) Descriptor() ([]byte, []int) {
-	return file_cellar_proto_rawDescGZIP(), []int{47}
+	return file_cellar_proto_rawDescGZIP(), []int{60}
 }
 
 func (x *StatementsReply) GetStatements() []*StatementRange {
@@ -3975,7 +5460,7 @@ type ExecuteReply struct {
 
 func (x *ExecuteReply) Reset() {
 	*x = ExecuteReply{}
-	mi := &file_cellar_proto_msgTypes[48]
+	mi := &file_cellar_proto_msgTypes[61]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3987,7 +5472,7 @@ func (x *ExecuteReply) String() string {
 func (*ExecuteReply) ProtoMessage() {}
 
 func (x *ExecuteReply) ProtoReflect() protoreflect.Message {
-	mi := &file_cellar_proto_msgTypes[48]
+	mi := &file_cellar_proto_msgTypes[61]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4000,7 +5485,7 @@ func (x *ExecuteReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ExecuteReply.ProtoReflect.Descriptor instead.
 func (*ExecuteReply) Descriptor() ([]byte, []int) {
-	return file_cellar_proto_rawDescGZIP(), []int{48}
+	return file_cellar_proto_rawDescGZIP(), []int{61}
 }
 
 func (x *ExecuteReply) GetResults() []*ResultSet {
@@ -4205,7 +5690,7 @@ const file_cellar_proto_rawDesc = "" +
 	"\x0eserver_version\x18\x02 \x01(\tR\rserverVersion\x12\x14\n" +
 	"\x05error\x18\x03 \x01(\tR\x05error\x12\x1d\n" +
 	"\n" +
-	"latency_ms\x18\x04 \x01(\x03R\tlatencyMs\"\x95\x01\n" +
+	"latency_ms\x18\x04 \x01(\x03R\tlatencyMs\"\xc2\x02\n" +
 	"\bDatabase\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x14\n" +
 	"\x05owner\x18\x02 \x01(\tR\x05owner\x12\x1d\n" +
@@ -4214,30 +5699,40 @@ const file_cellar_proto_rawDesc = "" +
 	"\vis_template\x18\x04 \x01(\bR\n" +
 	"isTemplate\x12\x1f\n" +
 	"\vcan_connect\x18\x05 \x01(\bR\n" +
-	"canConnect\"q\n" +
+	"canConnect\x12\x1a\n" +
+	"\bencoding\x18\x06 \x01(\tR\bencoding\x12\x18\n" +
+	"\acollate\x18\a \x01(\tR\acollate\x12\x14\n" +
+	"\x05ctype\x18\b \x01(\tR\x05ctype\x12)\n" +
+	"\x10connection_limit\x18\t \x01(\x05R\x0fconnectionLimit\x12\x18\n" +
+	"\acomment\x18\n" +
+	" \x01(\tR\acomment\x12\x1a\n" +
+	"\btemplate\x18\v \x01(\tR\btemplate\"q\n" +
 	"\fDatabaseList\x12:\n" +
 	"\tdatabases\x18\x01 \x03(\v2\x1c.selfhold.cellar.v1.DatabaseR\tdatabases\x12%\n" +
 	"\x0eserver_version\x18\x02 \x01(\tR\rserverVersion\"H\n" +
 	"\x05DbRef\x12#\n" +
 	"\rconnection_id\x18\x01 \x01(\tR\fconnectionId\x12\x1a\n" +
-	"\bdatabase\x18\x02 \x01(\tR\bdatabase\"J\n" +
+	"\bdatabase\x18\x02 \x01(\tR\bdatabase\"d\n" +
 	"\x06Schema\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x14\n" +
 	"\x05owner\x18\x02 \x01(\tR\x05owner\x12\x16\n" +
-	"\x06system\x18\x03 \x01(\bR\x06system\"B\n" +
+	"\x06system\x18\x03 \x01(\bR\x06system\x12\x18\n" +
+	"\acomment\x18\x04 \x01(\tR\acomment\"B\n" +
 	"\n" +
 	"SchemaList\x124\n" +
 	"\aschemas\x18\x01 \x03(\v2\x1a.selfhold.cellar.v1.SchemaR\aschemas\"d\n" +
 	"\tSchemaRef\x12#\n" +
 	"\rconnection_id\x18\x01 \x01(\tR\fconnectionId\x12\x1a\n" +
 	"\bdatabase\x18\x02 \x01(\tR\bdatabase\x12\x16\n" +
-	"\x06schema\x18\x03 \x01(\tR\x06schema\"\xd2\x02\n" +
+	"\x06schema\x18\x03 \x01(\tR\x06schema\"\xc1\x03\n" +
 	"\bDbObject\x125\n" +
 	"\x04kind\x18\x01 \x01(\x0e2!.selfhold.cellar.v1.DbObject.KindR\x04kind\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x18\n" +
 	"\acomment\x18\x03 \x01(\tR\acomment\x12#\n" +
 	"\rrows_estimate\x18\x04 \x01(\x03R\frowsEstimate\x12\x1c\n" +
-	"\tsignature\x18\x05 \x01(\tR\tsignature\"\x9d\x01\n" +
+	"\tsignature\x18\x05 \x01(\tR\tsignature\x12\x16\n" +
+	"\x06labels\x18\x06 \x03(\tR\x06labels\x12\x1b\n" +
+	"\tbase_type\x18\a \x01(\tR\bbaseType\"\xd7\x01\n" +
 	"\x04Kind\x12\x14\n" +
 	"\x10KIND_UNSPECIFIED\x10\x00\x12\t\n" +
 	"\x05TABLE\x10\x01\x12\b\n" +
@@ -4247,7 +5742,14 @@ const file_cellar_proto_rawDesc = "" +
 	"\bFUNCTION\x10\x05\x12\x11\n" +
 	"\rFOREIGN_TABLE\x10\x06\x12\x15\n" +
 	"\x11PARTITIONED_TABLE\x10\a\x12\r\n" +
-	"\tPROCEDURE\x10\b\"D\n" +
+	"\tPROCEDURE\x10\b\x12\b\n" +
+	"\x04ENUM\x10\t\x12\n" +
+	"\n" +
+	"\x06DOMAIN\x10\n" +
+	"\x12\x12\n" +
+	"\x0eCOMPOSITE_TYPE\x10\v\x12\x0e\n" +
+	"\n" +
+	"RANGE_TYPE\x10\f\"D\n" +
 	"\n" +
 	"ObjectList\x126\n" +
 	"\aobjects\x18\x01 \x03(\v2\x1c.selfhold.cellar.v1.DbObjectR\aobjects\"\xcd\x01\n" +
@@ -4284,7 +5786,13 @@ const file_cellar_proto_rawDesc = "" +
 	"\x04type\x18\x02 \x01(\tR\x04type\x12\x1e\n" +
 	"\n" +
 	"definition\x18\x03 \x01(\tR\n" +
-	"definition\"\xd7\x02\n" +
+	"definition\"W\n" +
+	"\aTrigger\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1e\n" +
+	"\n" +
+	"definition\x18\x02 \x01(\tR\n" +
+	"definition\x12\x18\n" +
+	"\aenabled\x18\x03 \x01(\bR\aenabled\"\x90\x03\n" +
 	"\n" +
 	"ObjectInfo\x124\n" +
 	"\x06object\x18\x01 \x01(\v2\x1c.selfhold.cellar.v1.DbObjectR\x06object\x124\n" +
@@ -4296,7 +5804,133 @@ const file_cellar_proto_rawDesc = "" +
 	"primaryKey\x12\x14\n" +
 	"\x05owner\x18\a \x01(\tR\x05owner\x12\x1d\n" +
 	"\n" +
-	"size_bytes\x18\b \x01(\x03R\tsizeBytes\"t\n" +
+	"size_bytes\x18\b \x01(\x03R\tsizeBytes\x127\n" +
+	"\btriggers\x18\t \x03(\v2\x1b.selfhold.cellar.v1.TriggerR\btriggers\"\x9e\x03\n" +
+	"\x04Role\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x14\n" +
+	"\x05login\x18\x02 \x01(\bR\x05login\x12\x1c\n" +
+	"\tsuperuser\x18\x03 \x01(\bR\tsuperuser\x12\x1b\n" +
+	"\tcreate_db\x18\x04 \x01(\bR\bcreateDb\x12\x1f\n" +
+	"\vcreate_role\x18\x05 \x01(\bR\n" +
+	"createRole\x12\x18\n" +
+	"\ainherit\x18\x06 \x01(\bR\ainherit\x12 \n" +
+	"\vreplication\x18\a \x01(\bR\vreplication\x12\x1d\n" +
+	"\n" +
+	"bypass_rls\x18\b \x01(\bR\tbypassRls\x12)\n" +
+	"\x10connection_limit\x18\t \x01(\x05R\x0fconnectionLimit\x12\x1f\n" +
+	"\vvalid_until\x18\n" +
+	" \x01(\tR\n" +
+	"validUntil\x12\x1b\n" +
+	"\tmember_of\x18\v \x03(\tR\bmemberOf\x12\x18\n" +
+	"\acomment\x18\f \x01(\tR\acomment\x12\x16\n" +
+	"\x06system\x18\r \x01(\bR\x06system\x12\x1a\n" +
+	"\bpassword\x18\x0e \x01(\tR\bpassword\":\n" +
+	"\bRoleList\x12.\n" +
+	"\x05roles\x18\x01 \x03(\v2\x18.selfhold.cellar.v1.RoleR\x05roles\"\xa0\x01\n" +
+	"\n" +
+	"ColumnSpec\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1a\n" +
+	"\boriginal\x18\x02 \x01(\tR\boriginal\x12\x12\n" +
+	"\x04type\x18\x03 \x01(\tR\x04type\x12\x1a\n" +
+	"\bnullable\x18\x04 \x01(\bR\bnullable\x12\x18\n" +
+	"\adefault\x18\x05 \x01(\tR\adefault\x12\x18\n" +
+	"\acomment\x18\x06 \x01(\tR\acomment\"\xb9\x02\n" +
+	"\tTableSpec\x12\x16\n" +
+	"\x06schema\x18\x01 \x01(\tR\x06schema\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x18\n" +
+	"\acomment\x18\x03 \x01(\tR\acomment\x12\x14\n" +
+	"\x05owner\x18\x04 \x01(\tR\x05owner\x128\n" +
+	"\acolumns\x18\x05 \x03(\v2\x1e.selfhold.cellar.v1.ColumnSpecR\acolumns\x12\x1f\n" +
+	"\vprimary_key\x18\x06 \x03(\tR\n" +
+	"primaryKey\x12@\n" +
+	"\vconstraints\x18\a \x03(\v2\x1e.selfhold.cellar.v1.ConstraintR\vconstraints\x123\n" +
+	"\aindexes\x18\b \x03(\v2\x19.selfhold.cellar.v1.IndexR\aindexes\"\xf9\x03\n" +
+	"\x06Change\x12#\n" +
+	"\rconnection_id\x18\x01 \x01(\tR\fconnectionId\x12\x1a\n" +
+	"\bdatabase\x18\x02 \x01(\tR\bdatabase\x12-\n" +
+	"\x02op\x18\x03 \x01(\x0e2\x1d.selfhold.cellar.v1.Change.OpR\x02op\x12\x1a\n" +
+	"\boriginal\x18\x04 \x01(\tR\boriginal\x12\x18\n" +
+	"\acascade\x18\x05 \x01(\bR\acascade\x12.\n" +
+	"\x04role\x18\x06 \x01(\v2\x18.selfhold.cellar.v1.RoleH\x00R\x04role\x12.\n" +
+	"\x02db\x18\a \x01(\v2\x1c.selfhold.cellar.v1.DatabaseH\x00R\x02db\x124\n" +
+	"\x06schema\x18\b \x01(\v2\x1a.selfhold.cellar.v1.SchemaH\x00R\x06schema\x125\n" +
+	"\x05table\x18\t \x01(\v2\x1d.selfhold.cellar.v1.TableSpecH\x00R\x05table\x127\n" +
+	"\x06target\x18\n" +
+	" \x01(\v2\x1d.selfhold.cellar.v1.ObjectRefH\x00R\x06target\"9\n" +
+	"\x02Op\x12\x12\n" +
+	"\x0eOP_UNSPECIFIED\x10\x00\x12\n" +
+	"\n" +
+	"\x06CREATE\x10\x01\x12\t\n" +
+	"\x05ALTER\x10\x02\x12\b\n" +
+	"\x04DROP\x10\x03B\b\n" +
+	"\x06object\"n\n" +
+	"\n" +
+	"ChangePlan\x12\x1e\n" +
+	"\n" +
+	"statements\x18\x01 \x03(\tR\n" +
+	"statements\x12\x1a\n" +
+	"\bwarnings\x18\x02 \x03(\tR\bwarnings\x12$\n" +
+	"\rtransactional\x18\x03 \x01(\bR\rtransactional\"-\n" +
+	"\vChangeReply\x12\x1e\n" +
+	"\n" +
+	"statements\x18\x01 \x03(\tR\n" +
+	"statements\"\x97\x01\n" +
+	"\bDumpTool\x123\n" +
+	"\x05place\x18\x01 \x01(\x0e2\x1d.selfhold.cellar.v1.ToolPlaceR\x05place\x12\x12\n" +
+	"\x04path\x18\x02 \x01(\tR\x04path\x12\x18\n" +
+	"\aversion\x18\x03 \x01(\tR\aversion\x12\x14\n" +
+	"\x05major\x18\x04 \x01(\x05R\x05major\x12\x12\n" +
+	"\x04fits\x18\x05 \x01(\bR\x04fits\"\x7f\n" +
+	"\x0eDumpToolsReply\x122\n" +
+	"\x05tools\x18\x01 \x03(\v2\x1c.selfhold.cellar.v1.DumpToolR\x05tools\x12%\n" +
+	"\x0eserver_version\x18\x02 \x01(\tR\rserverVersion\x12\x12\n" +
+	"\x04note\x18\x03 \x01(\tR\x04note\"\xc1\x04\n" +
+	"\vDumpRequest\x12#\n" +
+	"\rconnection_id\x18\x01 \x01(\tR\fconnectionId\x12\x1a\n" +
+	"\bdatabase\x18\x02 \x01(\tR\bdatabase\x12\x12\n" +
+	"\x04path\x18\x03 \x01(\tR\x04path\x12>\n" +
+	"\x06format\x18\x04 \x01(\x0e2&.selfhold.cellar.v1.DumpRequest.FormatR\x06format\x12\x18\n" +
+	"\aschemas\x18\x05 \x03(\tR\aschemas\x125\n" +
+	"\x06tables\x18\x06 \x03(\v2\x1d.selfhold.cellar.v1.ObjectRefR\x06tables\x12\x1f\n" +
+	"\vschema_only\x18\a \x01(\bR\n" +
+	"schemaOnly\x12\x1b\n" +
+	"\tdata_only\x18\b \x01(\bR\bdataOnly\x12\x19\n" +
+	"\bno_owner\x18\t \x01(\bR\anoOwner\x12#\n" +
+	"\rno_privileges\x18\n" +
+	" \x01(\bR\fnoPrivileges\x12\x14\n" +
+	"\x05clean\x18\v \x01(\bR\x05clean\x12'\n" +
+	"\x0fcreate_database\x18\f \x01(\bR\x0ecreateDatabase\x12\x18\n" +
+	"\ainserts\x18\r \x01(\bR\ainserts\x123\n" +
+	"\x05place\x18\x0e \x01(\x0e2\x1d.selfhold.cellar.v1.ToolPlaceR\x05place\"@\n" +
+	"\x06Format\x12\x16\n" +
+	"\x12FORMAT_UNSPECIFIED\x10\x00\x12\t\n" +
+	"\x05PLAIN\x10\x01\x12\n" +
+	"\n" +
+	"\x06CUSTOM\x10\x02\x12\a\n" +
+	"\x03TAR\x10\x03\"\xaa\x03\n" +
+	"\x0eRestoreRequest\x12#\n" +
+	"\rconnection_id\x18\x01 \x01(\tR\fconnectionId\x12\x1a\n" +
+	"\bdatabase\x18\x02 \x01(\tR\bdatabase\x12\x12\n" +
+	"\x04path\x18\x03 \x01(\tR\x04path\x12\x14\n" +
+	"\x05clean\x18\x04 \x01(\bR\x05clean\x12\x19\n" +
+	"\bno_owner\x18\x05 \x01(\bR\anoOwner\x12#\n" +
+	"\rno_privileges\x18\x06 \x01(\bR\fnoPrivileges\x12-\n" +
+	"\x12single_transaction\x18\a \x01(\bR\x11singleTransaction\x12\x1f\n" +
+	"\vschema_only\x18\b \x01(\bR\n" +
+	"schemaOnly\x12\x1b\n" +
+	"\tdata_only\x18\t \x01(\bR\bdataOnly\x12'\n" +
+	"\x0fcreate_database\x18\n" +
+	" \x01(\bR\x0ecreateDatabase\x12\"\n" +
+	"\rexit_on_error\x18\v \x01(\bR\vexitOnError\x123\n" +
+	"\x05place\x18\f \x01(\x0e2\x1d.selfhold.cellar.v1.ToolPlaceR\x05place\"\xa2\x01\n" +
+	"\fDumpProgress\x12\x14\n" +
+	"\x05bytes\x18\x01 \x01(\x03R\x05bytes\x12\x14\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\x12\x10\n" +
+	"\x03log\x18\x03 \x03(\tR\x03log\x12\x12\n" +
+	"\x04done\x18\x04 \x01(\bR\x04done\x12\x14\n" +
+	"\x05error\x18\x05 \x01(\tR\x05error\x12\x12\n" +
+	"\x04tool\x18\x06 \x01(\tR\x04tool\x12\x16\n" +
+	"\x06format\x18\a \x01(\tR\x06format\"t\n" +
 	"\fResultColumn\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x19\n" +
 	"\btype_oid\x18\x02 \x01(\rR\atypeOid\x12\x12\n" +
@@ -4398,7 +6032,12 @@ const file_cellar_proto_rawDesc = "" +
 	"\aresults\x18\x01 \x03(\v2\x1d.selfhold.cellar.v1.ResultSetR\aresults\x12\x1b\n" +
 	"\ttx_status\x18\x02 \x01(\tR\btxStatus\x12\x1f\n" +
 	"\vduration_ms\x18\x03 \x01(\x03R\n" +
-	"durationMs2\xa0\x12\n" +
+	"durationMs*>\n" +
+	"\tToolPlace\x12\x1a\n" +
+	"\x16TOOL_PLACE_UNSPECIFIED\x10\x00\x12\t\n" +
+	"\x05LOCAL\x10\x01\x12\n" +
+	"\n" +
+	"\x06REMOTE\x10\x022\xe4\x15\n" +
 	"\x06Cellar\x12@\n" +
 	"\bGetState\x12\x19.selfhold.cellar.v1.Empty\x1a\x19.selfhold.cellar.v1.State\x12@\n" +
 	"\x06Events\x12\x19.selfhold.cellar.v1.Empty\x1a\x19.selfhold.cellar.v1.Event0\x01\x12H\n" +
@@ -4420,7 +6059,14 @@ const file_cellar_proto_rawDesc = "" +
 	"\rListDatabases\x12\x17.selfhold.cellar.v1.Ref\x1a .selfhold.cellar.v1.DatabaseList\x12H\n" +
 	"\vListSchemas\x12\x19.selfhold.cellar.v1.DbRef\x1a\x1e.selfhold.cellar.v1.SchemaList\x12L\n" +
 	"\vListObjects\x12\x1d.selfhold.cellar.v1.SchemaRef\x1a\x1e.selfhold.cellar.v1.ObjectList\x12O\n" +
-	"\x0eDescribeObject\x12\x1d.selfhold.cellar.v1.ObjectRef\x1a\x1e.selfhold.cellar.v1.ObjectInfo\x12P\n" +
+	"\x0eDescribeObject\x12\x1d.selfhold.cellar.v1.ObjectRef\x1a\x1e.selfhold.cellar.v1.ObjectInfo\x12B\n" +
+	"\tListRoles\x12\x17.selfhold.cellar.v1.Ref\x1a\x1c.selfhold.cellar.v1.RoleList\x12H\n" +
+	"\n" +
+	"PlanChange\x12\x1a.selfhold.cellar.v1.Change\x1a\x1e.selfhold.cellar.v1.ChangePlan\x12J\n" +
+	"\vApplyChange\x12\x1a.selfhold.cellar.v1.Change\x1a\x1f.selfhold.cellar.v1.ChangeReply\x12H\n" +
+	"\tDumpTools\x12\x17.selfhold.cellar.v1.Ref\x1a\".selfhold.cellar.v1.DumpToolsReply\x12K\n" +
+	"\x04Dump\x12\x1f.selfhold.cellar.v1.DumpRequest\x1a .selfhold.cellar.v1.DumpProgress0\x01\x12Q\n" +
+	"\aRestore\x12\".selfhold.cellar.v1.RestoreRequest\x1a .selfhold.cellar.v1.DumpProgress0\x01\x12P\n" +
 	"\tReadTable\x12$.selfhold.cellar.v1.ReadTableRequest\x1a\x1d.selfhold.cellar.v1.ResultSet\x12L\n" +
 	"\n" +
 	"ApplyEdits\x12\x1f.selfhold.cellar.v1.EditRequest\x1a\x1d.selfhold.cellar.v1.EditReply\x12E\n" +
@@ -4448,169 +6094,214 @@ func file_cellar_proto_rawDescGZIP() []byte {
 	return file_cellar_proto_rawDescData
 }
 
-var file_cellar_proto_enumTypes = make([]protoimpl.EnumInfo, 9)
-var file_cellar_proto_msgTypes = make([]protoimpl.MessageInfo, 49)
+var file_cellar_proto_enumTypes = make([]protoimpl.EnumInfo, 12)
+var file_cellar_proto_msgTypes = make([]protoimpl.MessageInfo, 62)
 var file_cellar_proto_goTypes = []any{
-	(SyncState_Phase)(0),        // 0: selfhold.cellar.v1.SyncState.Phase
-	(Event_Kind)(0),             // 1: selfhold.cellar.v1.Event.Kind
-	(Server_Auth)(0),            // 2: selfhold.cellar.v1.Server.Auth
-	(HostKey_Status)(0),         // 3: selfhold.cellar.v1.HostKey.Status
-	(DiscoveredService_Kind)(0), // 4: selfhold.cellar.v1.DiscoveredService.Kind
-	(Connection_Kind)(0),        // 5: selfhold.cellar.v1.Connection.Kind
-	(Connection_SslMode)(0),     // 6: selfhold.cellar.v1.Connection.SslMode
-	(DbObject_Kind)(0),          // 7: selfhold.cellar.v1.DbObject.Kind
-	(RowEdit_Op)(0),             // 8: selfhold.cellar.v1.RowEdit.Op
-	(*Empty)(nil),               // 9: selfhold.cellar.v1.Empty
-	(*Ref)(nil),                 // 10: selfhold.cellar.v1.Ref
-	(*State)(nil),               // 11: selfhold.cellar.v1.State
-	(*SyncState)(nil),           // 12: selfhold.cellar.v1.SyncState
-	(*Event)(nil),               // 13: selfhold.cellar.v1.Event
-	(*Server)(nil),              // 14: selfhold.cellar.v1.Server
-	(*ServerList)(nil),          // 15: selfhold.cellar.v1.ServerList
-	(*ConnectRequest)(nil),      // 16: selfhold.cellar.v1.ConnectRequest
-	(*HostKey)(nil),             // 17: selfhold.cellar.v1.HostKey
-	(*ConnectReply)(nil),        // 18: selfhold.cellar.v1.ConnectReply
-	(*TrustRequest)(nil),        // 19: selfhold.cellar.v1.TrustRequest
-	(*DiscoveredService)(nil),   // 20: selfhold.cellar.v1.DiscoveredService
-	(*DiscoverReply)(nil),       // 21: selfhold.cellar.v1.DiscoverReply
-	(*Key)(nil),                 // 22: selfhold.cellar.v1.Key
-	(*KeyList)(nil),             // 23: selfhold.cellar.v1.KeyList
-	(*LocalKey)(nil),            // 24: selfhold.cellar.v1.LocalKey
-	(*Connection)(nil),          // 25: selfhold.cellar.v1.Connection
-	(*ConnectionList)(nil),      // 26: selfhold.cellar.v1.ConnectionList
-	(*TestReply)(nil),           // 27: selfhold.cellar.v1.TestReply
-	(*Database)(nil),            // 28: selfhold.cellar.v1.Database
-	(*DatabaseList)(nil),        // 29: selfhold.cellar.v1.DatabaseList
-	(*DbRef)(nil),               // 30: selfhold.cellar.v1.DbRef
-	(*Schema)(nil),              // 31: selfhold.cellar.v1.Schema
-	(*SchemaList)(nil),          // 32: selfhold.cellar.v1.SchemaList
-	(*SchemaRef)(nil),           // 33: selfhold.cellar.v1.SchemaRef
-	(*DbObject)(nil),            // 34: selfhold.cellar.v1.DbObject
-	(*ObjectList)(nil),          // 35: selfhold.cellar.v1.ObjectList
-	(*ObjectRef)(nil),           // 36: selfhold.cellar.v1.ObjectRef
-	(*Column)(nil),              // 37: selfhold.cellar.v1.Column
-	(*Index)(nil),               // 38: selfhold.cellar.v1.Index
-	(*Constraint)(nil),          // 39: selfhold.cellar.v1.Constraint
-	(*ObjectInfo)(nil),          // 40: selfhold.cellar.v1.ObjectInfo
-	(*ResultColumn)(nil),        // 41: selfhold.cellar.v1.ResultColumn
-	(*Cell)(nil),                // 42: selfhold.cellar.v1.Cell
-	(*Row)(nil),                 // 43: selfhold.cellar.v1.Row
-	(*ResultSet)(nil),           // 44: selfhold.cellar.v1.ResultSet
-	(*Sort)(nil),                // 45: selfhold.cellar.v1.Sort
-	(*ReadTableRequest)(nil),    // 46: selfhold.cellar.v1.ReadTableRequest
-	(*EditValue)(nil),           // 47: selfhold.cellar.v1.EditValue
-	(*RowEdit)(nil),             // 48: selfhold.cellar.v1.RowEdit
-	(*EditRequest)(nil),         // 49: selfhold.cellar.v1.EditRequest
-	(*EditReply)(nil),           // 50: selfhold.cellar.v1.EditReply
-	(*Console)(nil),             // 51: selfhold.cellar.v1.Console
-	(*ConsoleRef)(nil),          // 52: selfhold.cellar.v1.ConsoleRef
-	(*ExecuteRequest)(nil),      // 53: selfhold.cellar.v1.ExecuteRequest
-	(*StatementsRequest)(nil),   // 54: selfhold.cellar.v1.StatementsRequest
-	(*StatementRange)(nil),      // 55: selfhold.cellar.v1.StatementRange
-	(*StatementsReply)(nil),     // 56: selfhold.cellar.v1.StatementsReply
-	(*ExecuteReply)(nil),        // 57: selfhold.cellar.v1.ExecuteReply
+	(ToolPlace)(0),              // 0: selfhold.cellar.v1.ToolPlace
+	(SyncState_Phase)(0),        // 1: selfhold.cellar.v1.SyncState.Phase
+	(Event_Kind)(0),             // 2: selfhold.cellar.v1.Event.Kind
+	(Server_Auth)(0),            // 3: selfhold.cellar.v1.Server.Auth
+	(HostKey_Status)(0),         // 4: selfhold.cellar.v1.HostKey.Status
+	(DiscoveredService_Kind)(0), // 5: selfhold.cellar.v1.DiscoveredService.Kind
+	(Connection_Kind)(0),        // 6: selfhold.cellar.v1.Connection.Kind
+	(Connection_SslMode)(0),     // 7: selfhold.cellar.v1.Connection.SslMode
+	(DbObject_Kind)(0),          // 8: selfhold.cellar.v1.DbObject.Kind
+	(Change_Op)(0),              // 9: selfhold.cellar.v1.Change.Op
+	(DumpRequest_Format)(0),     // 10: selfhold.cellar.v1.DumpRequest.Format
+	(RowEdit_Op)(0),             // 11: selfhold.cellar.v1.RowEdit.Op
+	(*Empty)(nil),               // 12: selfhold.cellar.v1.Empty
+	(*Ref)(nil),                 // 13: selfhold.cellar.v1.Ref
+	(*State)(nil),               // 14: selfhold.cellar.v1.State
+	(*SyncState)(nil),           // 15: selfhold.cellar.v1.SyncState
+	(*Event)(nil),               // 16: selfhold.cellar.v1.Event
+	(*Server)(nil),              // 17: selfhold.cellar.v1.Server
+	(*ServerList)(nil),          // 18: selfhold.cellar.v1.ServerList
+	(*ConnectRequest)(nil),      // 19: selfhold.cellar.v1.ConnectRequest
+	(*HostKey)(nil),             // 20: selfhold.cellar.v1.HostKey
+	(*ConnectReply)(nil),        // 21: selfhold.cellar.v1.ConnectReply
+	(*TrustRequest)(nil),        // 22: selfhold.cellar.v1.TrustRequest
+	(*DiscoveredService)(nil),   // 23: selfhold.cellar.v1.DiscoveredService
+	(*DiscoverReply)(nil),       // 24: selfhold.cellar.v1.DiscoverReply
+	(*Key)(nil),                 // 25: selfhold.cellar.v1.Key
+	(*KeyList)(nil),             // 26: selfhold.cellar.v1.KeyList
+	(*LocalKey)(nil),            // 27: selfhold.cellar.v1.LocalKey
+	(*Connection)(nil),          // 28: selfhold.cellar.v1.Connection
+	(*ConnectionList)(nil),      // 29: selfhold.cellar.v1.ConnectionList
+	(*TestReply)(nil),           // 30: selfhold.cellar.v1.TestReply
+	(*Database)(nil),            // 31: selfhold.cellar.v1.Database
+	(*DatabaseList)(nil),        // 32: selfhold.cellar.v1.DatabaseList
+	(*DbRef)(nil),               // 33: selfhold.cellar.v1.DbRef
+	(*Schema)(nil),              // 34: selfhold.cellar.v1.Schema
+	(*SchemaList)(nil),          // 35: selfhold.cellar.v1.SchemaList
+	(*SchemaRef)(nil),           // 36: selfhold.cellar.v1.SchemaRef
+	(*DbObject)(nil),            // 37: selfhold.cellar.v1.DbObject
+	(*ObjectList)(nil),          // 38: selfhold.cellar.v1.ObjectList
+	(*ObjectRef)(nil),           // 39: selfhold.cellar.v1.ObjectRef
+	(*Column)(nil),              // 40: selfhold.cellar.v1.Column
+	(*Index)(nil),               // 41: selfhold.cellar.v1.Index
+	(*Constraint)(nil),          // 42: selfhold.cellar.v1.Constraint
+	(*Trigger)(nil),             // 43: selfhold.cellar.v1.Trigger
+	(*ObjectInfo)(nil),          // 44: selfhold.cellar.v1.ObjectInfo
+	(*Role)(nil),                // 45: selfhold.cellar.v1.Role
+	(*RoleList)(nil),            // 46: selfhold.cellar.v1.RoleList
+	(*ColumnSpec)(nil),          // 47: selfhold.cellar.v1.ColumnSpec
+	(*TableSpec)(nil),           // 48: selfhold.cellar.v1.TableSpec
+	(*Change)(nil),              // 49: selfhold.cellar.v1.Change
+	(*ChangePlan)(nil),          // 50: selfhold.cellar.v1.ChangePlan
+	(*ChangeReply)(nil),         // 51: selfhold.cellar.v1.ChangeReply
+	(*DumpTool)(nil),            // 52: selfhold.cellar.v1.DumpTool
+	(*DumpToolsReply)(nil),      // 53: selfhold.cellar.v1.DumpToolsReply
+	(*DumpRequest)(nil),         // 54: selfhold.cellar.v1.DumpRequest
+	(*RestoreRequest)(nil),      // 55: selfhold.cellar.v1.RestoreRequest
+	(*DumpProgress)(nil),        // 56: selfhold.cellar.v1.DumpProgress
+	(*ResultColumn)(nil),        // 57: selfhold.cellar.v1.ResultColumn
+	(*Cell)(nil),                // 58: selfhold.cellar.v1.Cell
+	(*Row)(nil),                 // 59: selfhold.cellar.v1.Row
+	(*ResultSet)(nil),           // 60: selfhold.cellar.v1.ResultSet
+	(*Sort)(nil),                // 61: selfhold.cellar.v1.Sort
+	(*ReadTableRequest)(nil),    // 62: selfhold.cellar.v1.ReadTableRequest
+	(*EditValue)(nil),           // 63: selfhold.cellar.v1.EditValue
+	(*RowEdit)(nil),             // 64: selfhold.cellar.v1.RowEdit
+	(*EditRequest)(nil),         // 65: selfhold.cellar.v1.EditRequest
+	(*EditReply)(nil),           // 66: selfhold.cellar.v1.EditReply
+	(*Console)(nil),             // 67: selfhold.cellar.v1.Console
+	(*ConsoleRef)(nil),          // 68: selfhold.cellar.v1.ConsoleRef
+	(*ExecuteRequest)(nil),      // 69: selfhold.cellar.v1.ExecuteRequest
+	(*StatementsRequest)(nil),   // 70: selfhold.cellar.v1.StatementsRequest
+	(*StatementRange)(nil),      // 71: selfhold.cellar.v1.StatementRange
+	(*StatementsReply)(nil),     // 72: selfhold.cellar.v1.StatementsReply
+	(*ExecuteReply)(nil),        // 73: selfhold.cellar.v1.ExecuteReply
 }
 var file_cellar_proto_depIdxs = []int32{
-	12, // 0: selfhold.cellar.v1.State.sync:type_name -> selfhold.cellar.v1.SyncState
-	0,  // 1: selfhold.cellar.v1.SyncState.phase:type_name -> selfhold.cellar.v1.SyncState.Phase
-	1,  // 2: selfhold.cellar.v1.Event.kind:type_name -> selfhold.cellar.v1.Event.Kind
-	2,  // 3: selfhold.cellar.v1.Server.auth:type_name -> selfhold.cellar.v1.Server.Auth
-	14, // 4: selfhold.cellar.v1.ServerList.servers:type_name -> selfhold.cellar.v1.Server
-	3,  // 5: selfhold.cellar.v1.HostKey.status:type_name -> selfhold.cellar.v1.HostKey.Status
-	17, // 6: selfhold.cellar.v1.ConnectReply.host_key:type_name -> selfhold.cellar.v1.HostKey
-	4,  // 7: selfhold.cellar.v1.DiscoveredService.kind:type_name -> selfhold.cellar.v1.DiscoveredService.Kind
-	20, // 8: selfhold.cellar.v1.DiscoverReply.services:type_name -> selfhold.cellar.v1.DiscoveredService
-	22, // 9: selfhold.cellar.v1.KeyList.keys:type_name -> selfhold.cellar.v1.Key
-	5,  // 10: selfhold.cellar.v1.Connection.kind:type_name -> selfhold.cellar.v1.Connection.Kind
-	6,  // 11: selfhold.cellar.v1.Connection.ssl_mode:type_name -> selfhold.cellar.v1.Connection.SslMode
-	25, // 12: selfhold.cellar.v1.ConnectionList.connections:type_name -> selfhold.cellar.v1.Connection
-	28, // 13: selfhold.cellar.v1.DatabaseList.databases:type_name -> selfhold.cellar.v1.Database
-	31, // 14: selfhold.cellar.v1.SchemaList.schemas:type_name -> selfhold.cellar.v1.Schema
-	7,  // 15: selfhold.cellar.v1.DbObject.kind:type_name -> selfhold.cellar.v1.DbObject.Kind
-	34, // 16: selfhold.cellar.v1.ObjectList.objects:type_name -> selfhold.cellar.v1.DbObject
-	7,  // 17: selfhold.cellar.v1.ObjectRef.kind:type_name -> selfhold.cellar.v1.DbObject.Kind
-	34, // 18: selfhold.cellar.v1.ObjectInfo.object:type_name -> selfhold.cellar.v1.DbObject
-	37, // 19: selfhold.cellar.v1.ObjectInfo.columns:type_name -> selfhold.cellar.v1.Column
-	38, // 20: selfhold.cellar.v1.ObjectInfo.indexes:type_name -> selfhold.cellar.v1.Index
-	39, // 21: selfhold.cellar.v1.ObjectInfo.constraints:type_name -> selfhold.cellar.v1.Constraint
-	42, // 22: selfhold.cellar.v1.Row.cells:type_name -> selfhold.cellar.v1.Cell
-	41, // 23: selfhold.cellar.v1.ResultSet.columns:type_name -> selfhold.cellar.v1.ResultColumn
-	43, // 24: selfhold.cellar.v1.ResultSet.rows:type_name -> selfhold.cellar.v1.Row
-	45, // 25: selfhold.cellar.v1.ReadTableRequest.sort:type_name -> selfhold.cellar.v1.Sort
-	42, // 26: selfhold.cellar.v1.EditValue.value:type_name -> selfhold.cellar.v1.Cell
-	8,  // 27: selfhold.cellar.v1.RowEdit.op:type_name -> selfhold.cellar.v1.RowEdit.Op
-	47, // 28: selfhold.cellar.v1.RowEdit.key:type_name -> selfhold.cellar.v1.EditValue
-	47, // 29: selfhold.cellar.v1.RowEdit.values:type_name -> selfhold.cellar.v1.EditValue
-	48, // 30: selfhold.cellar.v1.EditRequest.edits:type_name -> selfhold.cellar.v1.RowEdit
-	55, // 31: selfhold.cellar.v1.StatementsReply.statements:type_name -> selfhold.cellar.v1.StatementRange
-	44, // 32: selfhold.cellar.v1.ExecuteReply.results:type_name -> selfhold.cellar.v1.ResultSet
-	9,  // 33: selfhold.cellar.v1.Cellar.GetState:input_type -> selfhold.cellar.v1.Empty
-	9,  // 34: selfhold.cellar.v1.Cellar.Events:input_type -> selfhold.cellar.v1.Empty
-	9,  // 35: selfhold.cellar.v1.Cellar.ListServers:input_type -> selfhold.cellar.v1.Empty
-	14, // 36: selfhold.cellar.v1.Cellar.SaveServer:input_type -> selfhold.cellar.v1.Server
-	10, // 37: selfhold.cellar.v1.Cellar.DeleteServer:input_type -> selfhold.cellar.v1.Ref
-	16, // 38: selfhold.cellar.v1.Cellar.ConnectServer:input_type -> selfhold.cellar.v1.ConnectRequest
-	19, // 39: selfhold.cellar.v1.Cellar.TrustHostKey:input_type -> selfhold.cellar.v1.TrustRequest
-	10, // 40: selfhold.cellar.v1.Cellar.DisconnectServer:input_type -> selfhold.cellar.v1.Ref
-	10, // 41: selfhold.cellar.v1.Cellar.Discover:input_type -> selfhold.cellar.v1.Ref
-	9,  // 42: selfhold.cellar.v1.Cellar.ListKeys:input_type -> selfhold.cellar.v1.Empty
-	24, // 43: selfhold.cellar.v1.Cellar.SaveLocalKey:input_type -> selfhold.cellar.v1.LocalKey
-	10, // 44: selfhold.cellar.v1.Cellar.DeleteLocalKey:input_type -> selfhold.cellar.v1.Ref
-	9,  // 45: selfhold.cellar.v1.Cellar.ListConnections:input_type -> selfhold.cellar.v1.Empty
-	25, // 46: selfhold.cellar.v1.Cellar.SaveConnection:input_type -> selfhold.cellar.v1.Connection
-	10, // 47: selfhold.cellar.v1.Cellar.DeleteConnection:input_type -> selfhold.cellar.v1.Ref
-	25, // 48: selfhold.cellar.v1.Cellar.TestConnection:input_type -> selfhold.cellar.v1.Connection
-	10, // 49: selfhold.cellar.v1.Cellar.ListDatabases:input_type -> selfhold.cellar.v1.Ref
-	30, // 50: selfhold.cellar.v1.Cellar.ListSchemas:input_type -> selfhold.cellar.v1.DbRef
-	33, // 51: selfhold.cellar.v1.Cellar.ListObjects:input_type -> selfhold.cellar.v1.SchemaRef
-	36, // 52: selfhold.cellar.v1.Cellar.DescribeObject:input_type -> selfhold.cellar.v1.ObjectRef
-	46, // 53: selfhold.cellar.v1.Cellar.ReadTable:input_type -> selfhold.cellar.v1.ReadTableRequest
-	49, // 54: selfhold.cellar.v1.Cellar.ApplyEdits:input_type -> selfhold.cellar.v1.EditRequest
-	30, // 55: selfhold.cellar.v1.Cellar.OpenConsole:input_type -> selfhold.cellar.v1.DbRef
-	52, // 56: selfhold.cellar.v1.Cellar.CloseConsole:input_type -> selfhold.cellar.v1.ConsoleRef
-	53, // 57: selfhold.cellar.v1.Cellar.Execute:input_type -> selfhold.cellar.v1.ExecuteRequest
-	52, // 58: selfhold.cellar.v1.Cellar.Cancel:input_type -> selfhold.cellar.v1.ConsoleRef
-	54, // 59: selfhold.cellar.v1.Cellar.Statements:input_type -> selfhold.cellar.v1.StatementsRequest
-	9,  // 60: selfhold.cellar.v1.Cellar.EnableSync:input_type -> selfhold.cellar.v1.Empty
-	9,  // 61: selfhold.cellar.v1.Cellar.DisableSync:input_type -> selfhold.cellar.v1.Empty
-	9,  // 62: selfhold.cellar.v1.Cellar.SyncNow:input_type -> selfhold.cellar.v1.Empty
-	9,  // 63: selfhold.cellar.v1.Cellar.MoveServersToShard:input_type -> selfhold.cellar.v1.Empty
-	11, // 64: selfhold.cellar.v1.Cellar.GetState:output_type -> selfhold.cellar.v1.State
-	13, // 65: selfhold.cellar.v1.Cellar.Events:output_type -> selfhold.cellar.v1.Event
-	15, // 66: selfhold.cellar.v1.Cellar.ListServers:output_type -> selfhold.cellar.v1.ServerList
-	14, // 67: selfhold.cellar.v1.Cellar.SaveServer:output_type -> selfhold.cellar.v1.Server
-	9,  // 68: selfhold.cellar.v1.Cellar.DeleteServer:output_type -> selfhold.cellar.v1.Empty
-	18, // 69: selfhold.cellar.v1.Cellar.ConnectServer:output_type -> selfhold.cellar.v1.ConnectReply
-	14, // 70: selfhold.cellar.v1.Cellar.TrustHostKey:output_type -> selfhold.cellar.v1.Server
-	9,  // 71: selfhold.cellar.v1.Cellar.DisconnectServer:output_type -> selfhold.cellar.v1.Empty
-	21, // 72: selfhold.cellar.v1.Cellar.Discover:output_type -> selfhold.cellar.v1.DiscoverReply
-	23, // 73: selfhold.cellar.v1.Cellar.ListKeys:output_type -> selfhold.cellar.v1.KeyList
-	22, // 74: selfhold.cellar.v1.Cellar.SaveLocalKey:output_type -> selfhold.cellar.v1.Key
-	9,  // 75: selfhold.cellar.v1.Cellar.DeleteLocalKey:output_type -> selfhold.cellar.v1.Empty
-	26, // 76: selfhold.cellar.v1.Cellar.ListConnections:output_type -> selfhold.cellar.v1.ConnectionList
-	25, // 77: selfhold.cellar.v1.Cellar.SaveConnection:output_type -> selfhold.cellar.v1.Connection
-	9,  // 78: selfhold.cellar.v1.Cellar.DeleteConnection:output_type -> selfhold.cellar.v1.Empty
-	27, // 79: selfhold.cellar.v1.Cellar.TestConnection:output_type -> selfhold.cellar.v1.TestReply
-	29, // 80: selfhold.cellar.v1.Cellar.ListDatabases:output_type -> selfhold.cellar.v1.DatabaseList
-	32, // 81: selfhold.cellar.v1.Cellar.ListSchemas:output_type -> selfhold.cellar.v1.SchemaList
-	35, // 82: selfhold.cellar.v1.Cellar.ListObjects:output_type -> selfhold.cellar.v1.ObjectList
-	40, // 83: selfhold.cellar.v1.Cellar.DescribeObject:output_type -> selfhold.cellar.v1.ObjectInfo
-	44, // 84: selfhold.cellar.v1.Cellar.ReadTable:output_type -> selfhold.cellar.v1.ResultSet
-	50, // 85: selfhold.cellar.v1.Cellar.ApplyEdits:output_type -> selfhold.cellar.v1.EditReply
-	51, // 86: selfhold.cellar.v1.Cellar.OpenConsole:output_type -> selfhold.cellar.v1.Console
-	9,  // 87: selfhold.cellar.v1.Cellar.CloseConsole:output_type -> selfhold.cellar.v1.Empty
-	57, // 88: selfhold.cellar.v1.Cellar.Execute:output_type -> selfhold.cellar.v1.ExecuteReply
-	9,  // 89: selfhold.cellar.v1.Cellar.Cancel:output_type -> selfhold.cellar.v1.Empty
-	56, // 90: selfhold.cellar.v1.Cellar.Statements:output_type -> selfhold.cellar.v1.StatementsReply
-	12, // 91: selfhold.cellar.v1.Cellar.EnableSync:output_type -> selfhold.cellar.v1.SyncState
-	12, // 92: selfhold.cellar.v1.Cellar.DisableSync:output_type -> selfhold.cellar.v1.SyncState
-	12, // 93: selfhold.cellar.v1.Cellar.SyncNow:output_type -> selfhold.cellar.v1.SyncState
-	12, // 94: selfhold.cellar.v1.Cellar.MoveServersToShard:output_type -> selfhold.cellar.v1.SyncState
-	64, // [64:95] is the sub-list for method output_type
-	33, // [33:64] is the sub-list for method input_type
-	33, // [33:33] is the sub-list for extension type_name
-	33, // [33:33] is the sub-list for extension extendee
-	0,  // [0:33] is the sub-list for field type_name
+	15, // 0: selfhold.cellar.v1.State.sync:type_name -> selfhold.cellar.v1.SyncState
+	1,  // 1: selfhold.cellar.v1.SyncState.phase:type_name -> selfhold.cellar.v1.SyncState.Phase
+	2,  // 2: selfhold.cellar.v1.Event.kind:type_name -> selfhold.cellar.v1.Event.Kind
+	3,  // 3: selfhold.cellar.v1.Server.auth:type_name -> selfhold.cellar.v1.Server.Auth
+	17, // 4: selfhold.cellar.v1.ServerList.servers:type_name -> selfhold.cellar.v1.Server
+	4,  // 5: selfhold.cellar.v1.HostKey.status:type_name -> selfhold.cellar.v1.HostKey.Status
+	20, // 6: selfhold.cellar.v1.ConnectReply.host_key:type_name -> selfhold.cellar.v1.HostKey
+	5,  // 7: selfhold.cellar.v1.DiscoveredService.kind:type_name -> selfhold.cellar.v1.DiscoveredService.Kind
+	23, // 8: selfhold.cellar.v1.DiscoverReply.services:type_name -> selfhold.cellar.v1.DiscoveredService
+	25, // 9: selfhold.cellar.v1.KeyList.keys:type_name -> selfhold.cellar.v1.Key
+	6,  // 10: selfhold.cellar.v1.Connection.kind:type_name -> selfhold.cellar.v1.Connection.Kind
+	7,  // 11: selfhold.cellar.v1.Connection.ssl_mode:type_name -> selfhold.cellar.v1.Connection.SslMode
+	28, // 12: selfhold.cellar.v1.ConnectionList.connections:type_name -> selfhold.cellar.v1.Connection
+	31, // 13: selfhold.cellar.v1.DatabaseList.databases:type_name -> selfhold.cellar.v1.Database
+	34, // 14: selfhold.cellar.v1.SchemaList.schemas:type_name -> selfhold.cellar.v1.Schema
+	8,  // 15: selfhold.cellar.v1.DbObject.kind:type_name -> selfhold.cellar.v1.DbObject.Kind
+	37, // 16: selfhold.cellar.v1.ObjectList.objects:type_name -> selfhold.cellar.v1.DbObject
+	8,  // 17: selfhold.cellar.v1.ObjectRef.kind:type_name -> selfhold.cellar.v1.DbObject.Kind
+	37, // 18: selfhold.cellar.v1.ObjectInfo.object:type_name -> selfhold.cellar.v1.DbObject
+	40, // 19: selfhold.cellar.v1.ObjectInfo.columns:type_name -> selfhold.cellar.v1.Column
+	41, // 20: selfhold.cellar.v1.ObjectInfo.indexes:type_name -> selfhold.cellar.v1.Index
+	42, // 21: selfhold.cellar.v1.ObjectInfo.constraints:type_name -> selfhold.cellar.v1.Constraint
+	43, // 22: selfhold.cellar.v1.ObjectInfo.triggers:type_name -> selfhold.cellar.v1.Trigger
+	45, // 23: selfhold.cellar.v1.RoleList.roles:type_name -> selfhold.cellar.v1.Role
+	47, // 24: selfhold.cellar.v1.TableSpec.columns:type_name -> selfhold.cellar.v1.ColumnSpec
+	42, // 25: selfhold.cellar.v1.TableSpec.constraints:type_name -> selfhold.cellar.v1.Constraint
+	41, // 26: selfhold.cellar.v1.TableSpec.indexes:type_name -> selfhold.cellar.v1.Index
+	9,  // 27: selfhold.cellar.v1.Change.op:type_name -> selfhold.cellar.v1.Change.Op
+	45, // 28: selfhold.cellar.v1.Change.role:type_name -> selfhold.cellar.v1.Role
+	31, // 29: selfhold.cellar.v1.Change.db:type_name -> selfhold.cellar.v1.Database
+	34, // 30: selfhold.cellar.v1.Change.schema:type_name -> selfhold.cellar.v1.Schema
+	48, // 31: selfhold.cellar.v1.Change.table:type_name -> selfhold.cellar.v1.TableSpec
+	39, // 32: selfhold.cellar.v1.Change.target:type_name -> selfhold.cellar.v1.ObjectRef
+	0,  // 33: selfhold.cellar.v1.DumpTool.place:type_name -> selfhold.cellar.v1.ToolPlace
+	52, // 34: selfhold.cellar.v1.DumpToolsReply.tools:type_name -> selfhold.cellar.v1.DumpTool
+	10, // 35: selfhold.cellar.v1.DumpRequest.format:type_name -> selfhold.cellar.v1.DumpRequest.Format
+	39, // 36: selfhold.cellar.v1.DumpRequest.tables:type_name -> selfhold.cellar.v1.ObjectRef
+	0,  // 37: selfhold.cellar.v1.DumpRequest.place:type_name -> selfhold.cellar.v1.ToolPlace
+	0,  // 38: selfhold.cellar.v1.RestoreRequest.place:type_name -> selfhold.cellar.v1.ToolPlace
+	58, // 39: selfhold.cellar.v1.Row.cells:type_name -> selfhold.cellar.v1.Cell
+	57, // 40: selfhold.cellar.v1.ResultSet.columns:type_name -> selfhold.cellar.v1.ResultColumn
+	59, // 41: selfhold.cellar.v1.ResultSet.rows:type_name -> selfhold.cellar.v1.Row
+	61, // 42: selfhold.cellar.v1.ReadTableRequest.sort:type_name -> selfhold.cellar.v1.Sort
+	58, // 43: selfhold.cellar.v1.EditValue.value:type_name -> selfhold.cellar.v1.Cell
+	11, // 44: selfhold.cellar.v1.RowEdit.op:type_name -> selfhold.cellar.v1.RowEdit.Op
+	63, // 45: selfhold.cellar.v1.RowEdit.key:type_name -> selfhold.cellar.v1.EditValue
+	63, // 46: selfhold.cellar.v1.RowEdit.values:type_name -> selfhold.cellar.v1.EditValue
+	64, // 47: selfhold.cellar.v1.EditRequest.edits:type_name -> selfhold.cellar.v1.RowEdit
+	71, // 48: selfhold.cellar.v1.StatementsReply.statements:type_name -> selfhold.cellar.v1.StatementRange
+	60, // 49: selfhold.cellar.v1.ExecuteReply.results:type_name -> selfhold.cellar.v1.ResultSet
+	12, // 50: selfhold.cellar.v1.Cellar.GetState:input_type -> selfhold.cellar.v1.Empty
+	12, // 51: selfhold.cellar.v1.Cellar.Events:input_type -> selfhold.cellar.v1.Empty
+	12, // 52: selfhold.cellar.v1.Cellar.ListServers:input_type -> selfhold.cellar.v1.Empty
+	17, // 53: selfhold.cellar.v1.Cellar.SaveServer:input_type -> selfhold.cellar.v1.Server
+	13, // 54: selfhold.cellar.v1.Cellar.DeleteServer:input_type -> selfhold.cellar.v1.Ref
+	19, // 55: selfhold.cellar.v1.Cellar.ConnectServer:input_type -> selfhold.cellar.v1.ConnectRequest
+	22, // 56: selfhold.cellar.v1.Cellar.TrustHostKey:input_type -> selfhold.cellar.v1.TrustRequest
+	13, // 57: selfhold.cellar.v1.Cellar.DisconnectServer:input_type -> selfhold.cellar.v1.Ref
+	13, // 58: selfhold.cellar.v1.Cellar.Discover:input_type -> selfhold.cellar.v1.Ref
+	12, // 59: selfhold.cellar.v1.Cellar.ListKeys:input_type -> selfhold.cellar.v1.Empty
+	27, // 60: selfhold.cellar.v1.Cellar.SaveLocalKey:input_type -> selfhold.cellar.v1.LocalKey
+	13, // 61: selfhold.cellar.v1.Cellar.DeleteLocalKey:input_type -> selfhold.cellar.v1.Ref
+	12, // 62: selfhold.cellar.v1.Cellar.ListConnections:input_type -> selfhold.cellar.v1.Empty
+	28, // 63: selfhold.cellar.v1.Cellar.SaveConnection:input_type -> selfhold.cellar.v1.Connection
+	13, // 64: selfhold.cellar.v1.Cellar.DeleteConnection:input_type -> selfhold.cellar.v1.Ref
+	28, // 65: selfhold.cellar.v1.Cellar.TestConnection:input_type -> selfhold.cellar.v1.Connection
+	13, // 66: selfhold.cellar.v1.Cellar.ListDatabases:input_type -> selfhold.cellar.v1.Ref
+	33, // 67: selfhold.cellar.v1.Cellar.ListSchemas:input_type -> selfhold.cellar.v1.DbRef
+	36, // 68: selfhold.cellar.v1.Cellar.ListObjects:input_type -> selfhold.cellar.v1.SchemaRef
+	39, // 69: selfhold.cellar.v1.Cellar.DescribeObject:input_type -> selfhold.cellar.v1.ObjectRef
+	13, // 70: selfhold.cellar.v1.Cellar.ListRoles:input_type -> selfhold.cellar.v1.Ref
+	49, // 71: selfhold.cellar.v1.Cellar.PlanChange:input_type -> selfhold.cellar.v1.Change
+	49, // 72: selfhold.cellar.v1.Cellar.ApplyChange:input_type -> selfhold.cellar.v1.Change
+	13, // 73: selfhold.cellar.v1.Cellar.DumpTools:input_type -> selfhold.cellar.v1.Ref
+	54, // 74: selfhold.cellar.v1.Cellar.Dump:input_type -> selfhold.cellar.v1.DumpRequest
+	55, // 75: selfhold.cellar.v1.Cellar.Restore:input_type -> selfhold.cellar.v1.RestoreRequest
+	62, // 76: selfhold.cellar.v1.Cellar.ReadTable:input_type -> selfhold.cellar.v1.ReadTableRequest
+	65, // 77: selfhold.cellar.v1.Cellar.ApplyEdits:input_type -> selfhold.cellar.v1.EditRequest
+	33, // 78: selfhold.cellar.v1.Cellar.OpenConsole:input_type -> selfhold.cellar.v1.DbRef
+	68, // 79: selfhold.cellar.v1.Cellar.CloseConsole:input_type -> selfhold.cellar.v1.ConsoleRef
+	69, // 80: selfhold.cellar.v1.Cellar.Execute:input_type -> selfhold.cellar.v1.ExecuteRequest
+	68, // 81: selfhold.cellar.v1.Cellar.Cancel:input_type -> selfhold.cellar.v1.ConsoleRef
+	70, // 82: selfhold.cellar.v1.Cellar.Statements:input_type -> selfhold.cellar.v1.StatementsRequest
+	12, // 83: selfhold.cellar.v1.Cellar.EnableSync:input_type -> selfhold.cellar.v1.Empty
+	12, // 84: selfhold.cellar.v1.Cellar.DisableSync:input_type -> selfhold.cellar.v1.Empty
+	12, // 85: selfhold.cellar.v1.Cellar.SyncNow:input_type -> selfhold.cellar.v1.Empty
+	12, // 86: selfhold.cellar.v1.Cellar.MoveServersToShard:input_type -> selfhold.cellar.v1.Empty
+	14, // 87: selfhold.cellar.v1.Cellar.GetState:output_type -> selfhold.cellar.v1.State
+	16, // 88: selfhold.cellar.v1.Cellar.Events:output_type -> selfhold.cellar.v1.Event
+	18, // 89: selfhold.cellar.v1.Cellar.ListServers:output_type -> selfhold.cellar.v1.ServerList
+	17, // 90: selfhold.cellar.v1.Cellar.SaveServer:output_type -> selfhold.cellar.v1.Server
+	12, // 91: selfhold.cellar.v1.Cellar.DeleteServer:output_type -> selfhold.cellar.v1.Empty
+	21, // 92: selfhold.cellar.v1.Cellar.ConnectServer:output_type -> selfhold.cellar.v1.ConnectReply
+	17, // 93: selfhold.cellar.v1.Cellar.TrustHostKey:output_type -> selfhold.cellar.v1.Server
+	12, // 94: selfhold.cellar.v1.Cellar.DisconnectServer:output_type -> selfhold.cellar.v1.Empty
+	24, // 95: selfhold.cellar.v1.Cellar.Discover:output_type -> selfhold.cellar.v1.DiscoverReply
+	26, // 96: selfhold.cellar.v1.Cellar.ListKeys:output_type -> selfhold.cellar.v1.KeyList
+	25, // 97: selfhold.cellar.v1.Cellar.SaveLocalKey:output_type -> selfhold.cellar.v1.Key
+	12, // 98: selfhold.cellar.v1.Cellar.DeleteLocalKey:output_type -> selfhold.cellar.v1.Empty
+	29, // 99: selfhold.cellar.v1.Cellar.ListConnections:output_type -> selfhold.cellar.v1.ConnectionList
+	28, // 100: selfhold.cellar.v1.Cellar.SaveConnection:output_type -> selfhold.cellar.v1.Connection
+	12, // 101: selfhold.cellar.v1.Cellar.DeleteConnection:output_type -> selfhold.cellar.v1.Empty
+	30, // 102: selfhold.cellar.v1.Cellar.TestConnection:output_type -> selfhold.cellar.v1.TestReply
+	32, // 103: selfhold.cellar.v1.Cellar.ListDatabases:output_type -> selfhold.cellar.v1.DatabaseList
+	35, // 104: selfhold.cellar.v1.Cellar.ListSchemas:output_type -> selfhold.cellar.v1.SchemaList
+	38, // 105: selfhold.cellar.v1.Cellar.ListObjects:output_type -> selfhold.cellar.v1.ObjectList
+	44, // 106: selfhold.cellar.v1.Cellar.DescribeObject:output_type -> selfhold.cellar.v1.ObjectInfo
+	46, // 107: selfhold.cellar.v1.Cellar.ListRoles:output_type -> selfhold.cellar.v1.RoleList
+	50, // 108: selfhold.cellar.v1.Cellar.PlanChange:output_type -> selfhold.cellar.v1.ChangePlan
+	51, // 109: selfhold.cellar.v1.Cellar.ApplyChange:output_type -> selfhold.cellar.v1.ChangeReply
+	53, // 110: selfhold.cellar.v1.Cellar.DumpTools:output_type -> selfhold.cellar.v1.DumpToolsReply
+	56, // 111: selfhold.cellar.v1.Cellar.Dump:output_type -> selfhold.cellar.v1.DumpProgress
+	56, // 112: selfhold.cellar.v1.Cellar.Restore:output_type -> selfhold.cellar.v1.DumpProgress
+	60, // 113: selfhold.cellar.v1.Cellar.ReadTable:output_type -> selfhold.cellar.v1.ResultSet
+	66, // 114: selfhold.cellar.v1.Cellar.ApplyEdits:output_type -> selfhold.cellar.v1.EditReply
+	67, // 115: selfhold.cellar.v1.Cellar.OpenConsole:output_type -> selfhold.cellar.v1.Console
+	12, // 116: selfhold.cellar.v1.Cellar.CloseConsole:output_type -> selfhold.cellar.v1.Empty
+	73, // 117: selfhold.cellar.v1.Cellar.Execute:output_type -> selfhold.cellar.v1.ExecuteReply
+	12, // 118: selfhold.cellar.v1.Cellar.Cancel:output_type -> selfhold.cellar.v1.Empty
+	72, // 119: selfhold.cellar.v1.Cellar.Statements:output_type -> selfhold.cellar.v1.StatementsReply
+	15, // 120: selfhold.cellar.v1.Cellar.EnableSync:output_type -> selfhold.cellar.v1.SyncState
+	15, // 121: selfhold.cellar.v1.Cellar.DisableSync:output_type -> selfhold.cellar.v1.SyncState
+	15, // 122: selfhold.cellar.v1.Cellar.SyncNow:output_type -> selfhold.cellar.v1.SyncState
+	15, // 123: selfhold.cellar.v1.Cellar.MoveServersToShard:output_type -> selfhold.cellar.v1.SyncState
+	87, // [87:124] is the sub-list for method output_type
+	50, // [50:87] is the sub-list for method input_type
+	50, // [50:50] is the sub-list for extension type_name
+	50, // [50:50] is the sub-list for extension extendee
+	0,  // [0:50] is the sub-list for field type_name
 }
 
 func init() { file_cellar_proto_init() }
@@ -4618,13 +6309,20 @@ func file_cellar_proto_init() {
 	if File_cellar_proto != nil {
 		return
 	}
+	file_cellar_proto_msgTypes[37].OneofWrappers = []any{
+		(*Change_Role)(nil),
+		(*Change_Db)(nil),
+		(*Change_Schema)(nil),
+		(*Change_Table)(nil),
+		(*Change_Target)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_cellar_proto_rawDesc), len(file_cellar_proto_rawDesc)),
-			NumEnums:      9,
-			NumMessages:   49,
+			NumEnums:      12,
+			NumMessages:   62,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

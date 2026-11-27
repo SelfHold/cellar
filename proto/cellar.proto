@@ -49,6 +49,28 @@ service Cellar {
   // ListObjects returns tables, views, sequences, functions of one schema.
   rpc ListObjects(SchemaRef) returns (ObjectList);
   rpc DescribeObject(ObjectRef) returns (ObjectInfo);
+  // ListRoles returns the roles (users and groups) of the connection's
+  // server; the pg_* built-in roles are marked system.
+  rpc ListRoles(Ref) returns (RoleList);
+
+  // --- DDL: create, alter, drop -------------------------------------------
+  // PlanChange returns the statements a change would run (the preview of
+  // the create / modify dialogs). Passwords are masked in it.
+  rpc PlanChange(Change) returns (ChangePlan);
+  // ApplyChange runs them: in one transaction where PostgreSQL allows it
+  // (CREATE / DROP DATABASE run on their own).
+  rpc ApplyChange(Change) returns (ChangeReply);
+
+  // --- dumps (pg_dump, pg_restore, psql) ------------------------------------
+  // DumpTools says which tools run where for a connection: on this device
+  // (tunnelled through SSH) or on the server.
+  rpc DumpTools(Ref) returns (DumpToolsReply);
+  // Dump writes a database (or some of its schemas / tables) to a file on
+  // this device; cancel the stream to stop it.
+  rpc Dump(DumpRequest) returns (stream DumpProgress);
+  // Restore loads a dump file (plain SQL through psql, custom / tar
+  // through pg_restore) into a database.
+  rpc Restore(RestoreRequest) returns (stream DumpProgress);
 
   // --- data ---------------------------------------------------------------
   // ReadTable returns one page of a table or view.
@@ -308,6 +330,13 @@ message Database {
   int64 size_bytes = 3;
   bool is_template = 4;
   bool can_connect = 5;
+  string encoding = 6;
+  string collate = 7;
+  string ctype = 8;
+  int32 connection_limit = 9; // -1 = no limit
+  string comment = 10;
+  // Create only: the template to copy ("" = template1).
+  string template = 11;
 }
 
 message DatabaseList {
@@ -324,6 +353,7 @@ message Schema {
   string name = 1;
   string owner = 2;
   bool system = 3; // pg_catalog, information_schema, pg_toast...
+  string comment = 4;
 }
 
 message SchemaList {
@@ -347,12 +377,19 @@ message DbObject {
     FOREIGN_TABLE = 6;
     PARTITIONED_TABLE = 7;
     PROCEDURE = 8;
+    ENUM = 9;
+    DOMAIN = 10;
+    COMPOSITE_TYPE = 11;
+    RANGE_TYPE = 12;
   }
   Kind kind = 1;
   string name = 2;
   string comment = 3;
   int64 rows_estimate = 4; // tables: pg_class.reltuples (-1 unknown)
   string signature = 5;    // functions: argument types
+  // Enums: the labels; domains, ranges: the base / sub type.
+  repeated string labels = 6;
+  string base_type = 7;
 }
 
 message ObjectList {
@@ -394,6 +431,12 @@ message Constraint {
   string definition = 3;
 }
 
+message Trigger {
+  string name = 1;
+  string definition = 2; // pg_get_triggerdef
+  bool enabled = 3;
+}
+
 message ObjectInfo {
   DbObject object = 1;
   repeated Column columns = 2;
@@ -403,6 +446,173 @@ message ObjectInfo {
   repeated string primary_key = 6;
   string owner = 7;
   int64 size_bytes = 8;
+  repeated Trigger triggers = 9;
+}
+
+// --- server objects ----------------------------------------------------------
+
+message Role {
+  string name = 1;
+  bool login = 2; // a user; false: a group role
+  bool superuser = 3;
+  bool create_db = 4;
+  bool create_role = 5;
+  bool inherit = 6;
+  bool replication = 7;
+  bool bypass_rls = 8;
+  int32 connection_limit = 9; // -1 = no limit
+  string valid_until = 10;    // the password's expiry as typed, "" = never
+  repeated string member_of = 11;
+  string comment = 12;
+  bool system = 13; // pg_* built-in roles
+  // Changes only: the new password ("" = keep). Never sent back. It is
+  // hashed in the core (SCRAM-SHA-256 or md5, as the server keeps them)
+  // before it goes to the server.
+  string password = 14;
+}
+
+message RoleList {
+  repeated Role roles = 1;
+}
+
+// --- DDL ------------------------------------------------------------------------
+
+message ColumnSpec {
+  string name = 1;
+  string original = 2; // the column's current name, "" = a new column
+  string type = 3;
+  bool nullable = 4;
+  string default = 5; // an expression, "" = none
+  string comment = 6;
+}
+
+// A table as the create / modify dialog wants it. Changes are worked out
+// against the table as it is in the database now.
+message TableSpec {
+  string schema = 1;
+  string name = 2;
+  string comment = 3;
+  string owner = 4; // "" = keep (create: the current user)
+  repeated ColumnSpec columns = 5;
+  repeated string primary_key = 6; // column names, in order
+  // Other constraints, by name (an unnamed new one gets the server's
+  // name): definition as pg_get_constraintdef prints it.
+  repeated Constraint constraints = 7;
+  // Indexes other than the constraints' own. definition: what follows
+  // "ON <table>" ("(a, b)", "USING gin (tags)"), or the whole CREATE INDEX
+  // statement as DescribeObject returns it.
+  repeated Index indexes = 8;
+}
+
+message Change {
+  string connection_id = 1;
+  // Where schema, table and object changes run.
+  string database = 2;
+  enum Op {
+    OP_UNSPECIFIED = 0;
+    CREATE = 1;
+    ALTER = 2;
+    DROP = 3;
+  }
+  Op op = 3;
+  // ALTER / DROP: the current name (of the role, database, schema or
+  // table); a different name in the object renames it.
+  string original = 4;
+  // DROP: also drop what depends on it (databases: WITH (FORCE), ending
+  // the sessions on it).
+  bool cascade = 5;
+  oneof object {
+    Role role = 6;
+    Database db = 7;
+    Schema schema = 8;
+    TableSpec table = 9;
+    ObjectRef target = 10; // DROP of any schema object
+  }
+}
+
+message ChangePlan {
+  repeated string statements = 1;
+  repeated string warnings = 2;
+  // false: the statements run one by one (CREATE / DROP DATABASE).
+  bool transactional = 3;
+}
+
+message ChangeReply {
+  repeated string statements = 1; // as run (passwords masked)
+}
+
+// --- dumps -------------------------------------------------------------------
+
+enum ToolPlace {
+  TOOL_PLACE_UNSPECIFIED = 0; // auto: this device if its tools fit, else the server
+  LOCAL = 1;
+  REMOTE = 2; // on the server, over SSH
+}
+
+message DumpTool {
+  ToolPlace place = 1;
+  string path = 2;    // pg_dump's path; pg_restore and psql are next to it
+  string version = 3; // "17.2"
+  int32 major = 4;
+  // pg_dump of this version can dump the database server (its major is
+  // not older than the server's).
+  bool fits = 5;
+}
+
+message DumpToolsReply {
+  repeated DumpTool tools = 1;
+  string server_version = 2;
+  // Why there is no fitting tool ("" = there is one).
+  string note = 3;
+}
+
+message DumpRequest {
+  string connection_id = 1;
+  string database = 2;
+  string path = 3; // the file to write on this device
+  enum Format {
+    FORMAT_UNSPECIFIED = 0; // plain
+    PLAIN = 1;  // SQL, restored with psql
+    CUSTOM = 2; // pg_restore's compressed archive
+    TAR = 3;
+  }
+  Format format = 4;
+  repeated string schemas = 5; // only these ("" = all)
+  repeated ObjectRef tables = 6; // only these tables (schema, name)
+  bool schema_only = 7;
+  bool data_only = 8;
+  bool no_owner = 9;
+  bool no_privileges = 10;
+  bool clean = 11;  // DROP ... IF EXISTS before each CREATE
+  bool create_database = 12; // CREATE DATABASE and connect to it
+  bool inserts = 13; // INSERT statements instead of COPY
+  ToolPlace place = 14;
+}
+
+message RestoreRequest {
+  string connection_id = 1;
+  string database = 2;
+  string path = 3; // the dump file on this device
+  bool clean = 4;  // custom / tar: drop objects before creating them
+  bool no_owner = 5;
+  bool no_privileges = 6;
+  bool single_transaction = 7;
+  bool schema_only = 8;
+  bool data_only = 9;
+  bool create_database = 10; // custom / tar: create the dump's database first
+  bool exit_on_error = 11;
+  ToolPlace place = 12;
+}
+
+message DumpProgress {
+  int64 bytes = 1;  // written (dump) / read (restore) so far
+  int64 total = 2;  // restore: the file's size; dump: 0
+  repeated string log = 3; // new lines of the tool's output
+  bool done = 4;
+  string error = 5; // set with done when it failed
+  // The first message: what runs ("pg_dump 17.2 on this device").
+  string tool = 6;
+  string format = 7; // restore: "plain", "custom", "tar"
 }
 
 // --- data --------------------------------------------------------------------

@@ -44,6 +44,12 @@ const (
 	Cellar_ListSchemas_FullMethodName        = "/selfhold.cellar.v1.Cellar/ListSchemas"
 	Cellar_ListObjects_FullMethodName        = "/selfhold.cellar.v1.Cellar/ListObjects"
 	Cellar_DescribeObject_FullMethodName     = "/selfhold.cellar.v1.Cellar/DescribeObject"
+	Cellar_ListRoles_FullMethodName          = "/selfhold.cellar.v1.Cellar/ListRoles"
+	Cellar_PlanChange_FullMethodName         = "/selfhold.cellar.v1.Cellar/PlanChange"
+	Cellar_ApplyChange_FullMethodName        = "/selfhold.cellar.v1.Cellar/ApplyChange"
+	Cellar_DumpTools_FullMethodName          = "/selfhold.cellar.v1.Cellar/DumpTools"
+	Cellar_Dump_FullMethodName               = "/selfhold.cellar.v1.Cellar/Dump"
+	Cellar_Restore_FullMethodName            = "/selfhold.cellar.v1.Cellar/Restore"
 	Cellar_ReadTable_FullMethodName          = "/selfhold.cellar.v1.Cellar/ReadTable"
 	Cellar_ApplyEdits_FullMethodName         = "/selfhold.cellar.v1.Cellar/ApplyEdits"
 	Cellar_OpenConsole_FullMethodName        = "/selfhold.cellar.v1.Cellar/OpenConsole"
@@ -97,6 +103,26 @@ type CellarClient interface {
 	// ListObjects returns tables, views, sequences, functions of one schema.
 	ListObjects(ctx context.Context, in *SchemaRef, opts ...grpc.CallOption) (*ObjectList, error)
 	DescribeObject(ctx context.Context, in *ObjectRef, opts ...grpc.CallOption) (*ObjectInfo, error)
+	// ListRoles returns the roles (users and groups) of the connection's
+	// server; the pg_* built-in roles are marked system.
+	ListRoles(ctx context.Context, in *Ref, opts ...grpc.CallOption) (*RoleList, error)
+	// --- DDL: create, alter, drop -------------------------------------------
+	// PlanChange returns the statements a change would run (the preview of
+	// the create / modify dialogs). Passwords are masked in it.
+	PlanChange(ctx context.Context, in *Change, opts ...grpc.CallOption) (*ChangePlan, error)
+	// ApplyChange runs them: in one transaction where PostgreSQL allows it
+	// (CREATE / DROP DATABASE run on their own).
+	ApplyChange(ctx context.Context, in *Change, opts ...grpc.CallOption) (*ChangeReply, error)
+	// --- dumps (pg_dump, pg_restore, psql) ------------------------------------
+	// DumpTools says which tools run where for a connection: on this device
+	// (tunnelled through SSH) or on the server.
+	DumpTools(ctx context.Context, in *Ref, opts ...grpc.CallOption) (*DumpToolsReply, error)
+	// Dump writes a database (or some of its schemas / tables) to a file on
+	// this device; cancel the stream to stop it.
+	Dump(ctx context.Context, in *DumpRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DumpProgress], error)
+	// Restore loads a dump file (plain SQL through psql, custom / tar
+	// through pg_restore) into a database.
+	Restore(ctx context.Context, in *RestoreRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DumpProgress], error)
 	// --- data ---------------------------------------------------------------
 	// ReadTable returns one page of a table or view.
 	ReadTable(ctx context.Context, in *ReadTableRequest, opts ...grpc.CallOption) (*ResultSet, error)
@@ -344,6 +370,84 @@ func (c *cellarClient) DescribeObject(ctx context.Context, in *ObjectRef, opts .
 	return out, nil
 }
 
+func (c *cellarClient) ListRoles(ctx context.Context, in *Ref, opts ...grpc.CallOption) (*RoleList, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RoleList)
+	err := c.cc.Invoke(ctx, Cellar_ListRoles_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cellarClient) PlanChange(ctx context.Context, in *Change, opts ...grpc.CallOption) (*ChangePlan, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ChangePlan)
+	err := c.cc.Invoke(ctx, Cellar_PlanChange_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cellarClient) ApplyChange(ctx context.Context, in *Change, opts ...grpc.CallOption) (*ChangeReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ChangeReply)
+	err := c.cc.Invoke(ctx, Cellar_ApplyChange_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cellarClient) DumpTools(ctx context.Context, in *Ref, opts ...grpc.CallOption) (*DumpToolsReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DumpToolsReply)
+	err := c.cc.Invoke(ctx, Cellar_DumpTools_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cellarClient) Dump(ctx context.Context, in *DumpRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DumpProgress], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &Cellar_ServiceDesc.Streams[1], Cellar_Dump_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[DumpRequest, DumpProgress]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Cellar_DumpClient = grpc.ServerStreamingClient[DumpProgress]
+
+func (c *cellarClient) Restore(ctx context.Context, in *RestoreRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DumpProgress], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &Cellar_ServiceDesc.Streams[2], Cellar_Restore_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[RestoreRequest, DumpProgress]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Cellar_RestoreClient = grpc.ServerStreamingClient[DumpProgress]
+
 func (c *cellarClient) ReadTable(ctx context.Context, in *ReadTableRequest, opts ...grpc.CallOption) (*ResultSet, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ResultSet)
@@ -494,6 +598,26 @@ type CellarServer interface {
 	// ListObjects returns tables, views, sequences, functions of one schema.
 	ListObjects(context.Context, *SchemaRef) (*ObjectList, error)
 	DescribeObject(context.Context, *ObjectRef) (*ObjectInfo, error)
+	// ListRoles returns the roles (users and groups) of the connection's
+	// server; the pg_* built-in roles are marked system.
+	ListRoles(context.Context, *Ref) (*RoleList, error)
+	// --- DDL: create, alter, drop -------------------------------------------
+	// PlanChange returns the statements a change would run (the preview of
+	// the create / modify dialogs). Passwords are masked in it.
+	PlanChange(context.Context, *Change) (*ChangePlan, error)
+	// ApplyChange runs them: in one transaction where PostgreSQL allows it
+	// (CREATE / DROP DATABASE run on their own).
+	ApplyChange(context.Context, *Change) (*ChangeReply, error)
+	// --- dumps (pg_dump, pg_restore, psql) ------------------------------------
+	// DumpTools says which tools run where for a connection: on this device
+	// (tunnelled through SSH) or on the server.
+	DumpTools(context.Context, *Ref) (*DumpToolsReply, error)
+	// Dump writes a database (or some of its schemas / tables) to a file on
+	// this device; cancel the stream to stop it.
+	Dump(*DumpRequest, grpc.ServerStreamingServer[DumpProgress]) error
+	// Restore loads a dump file (plain SQL through psql, custom / tar
+	// through pg_restore) into a database.
+	Restore(*RestoreRequest, grpc.ServerStreamingServer[DumpProgress]) error
 	// --- data ---------------------------------------------------------------
 	// ReadTable returns one page of a table or view.
 	ReadTable(context.Context, *ReadTableRequest) (*ResultSet, error)
@@ -591,6 +715,24 @@ func (UnimplementedCellarServer) ListObjects(context.Context, *SchemaRef) (*Obje
 }
 func (UnimplementedCellarServer) DescribeObject(context.Context, *ObjectRef) (*ObjectInfo, error) {
 	return nil, status.Error(codes.Unimplemented, "method DescribeObject not implemented")
+}
+func (UnimplementedCellarServer) ListRoles(context.Context, *Ref) (*RoleList, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListRoles not implemented")
+}
+func (UnimplementedCellarServer) PlanChange(context.Context, *Change) (*ChangePlan, error) {
+	return nil, status.Error(codes.Unimplemented, "method PlanChange not implemented")
+}
+func (UnimplementedCellarServer) ApplyChange(context.Context, *Change) (*ChangeReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method ApplyChange not implemented")
+}
+func (UnimplementedCellarServer) DumpTools(context.Context, *Ref) (*DumpToolsReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method DumpTools not implemented")
+}
+func (UnimplementedCellarServer) Dump(*DumpRequest, grpc.ServerStreamingServer[DumpProgress]) error {
+	return status.Error(codes.Unimplemented, "method Dump not implemented")
+}
+func (UnimplementedCellarServer) Restore(*RestoreRequest, grpc.ServerStreamingServer[DumpProgress]) error {
+	return status.Error(codes.Unimplemented, "method Restore not implemented")
 }
 func (UnimplementedCellarServer) ReadTable(context.Context, *ReadTableRequest) (*ResultSet, error) {
 	return nil, status.Error(codes.Unimplemented, "method ReadTable not implemented")
@@ -999,6 +1141,100 @@ func _Cellar_DescribeObject_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Cellar_ListRoles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Ref)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CellarServer).ListRoles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Cellar_ListRoles_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CellarServer).ListRoles(ctx, req.(*Ref))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Cellar_PlanChange_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Change)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CellarServer).PlanChange(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Cellar_PlanChange_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CellarServer).PlanChange(ctx, req.(*Change))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Cellar_ApplyChange_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Change)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CellarServer).ApplyChange(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Cellar_ApplyChange_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CellarServer).ApplyChange(ctx, req.(*Change))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Cellar_DumpTools_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Ref)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CellarServer).DumpTools(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Cellar_DumpTools_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CellarServer).DumpTools(ctx, req.(*Ref))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Cellar_Dump_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(DumpRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(CellarServer).Dump(m, &grpc.GenericServerStream[DumpRequest, DumpProgress]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Cellar_DumpServer = grpc.ServerStreamingServer[DumpProgress]
+
+func _Cellar_Restore_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(RestoreRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(CellarServer).Restore(m, &grpc.GenericServerStream[RestoreRequest, DumpProgress]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Cellar_RestoreServer = grpc.ServerStreamingServer[DumpProgress]
+
 func _Cellar_ReadTable_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ReadTableRequest)
 	if err := dec(in); err != nil {
@@ -1281,6 +1517,22 @@ var Cellar_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Cellar_DescribeObject_Handler,
 		},
 		{
+			MethodName: "ListRoles",
+			Handler:    _Cellar_ListRoles_Handler,
+		},
+		{
+			MethodName: "PlanChange",
+			Handler:    _Cellar_PlanChange_Handler,
+		},
+		{
+			MethodName: "ApplyChange",
+			Handler:    _Cellar_ApplyChange_Handler,
+		},
+		{
+			MethodName: "DumpTools",
+			Handler:    _Cellar_DumpTools_Handler,
+		},
+		{
 			MethodName: "ReadTable",
 			Handler:    _Cellar_ReadTable_Handler,
 		},
@@ -1329,6 +1581,16 @@ var Cellar_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "Events",
 			Handler:       _Cellar_Events_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "Dump",
+			Handler:       _Cellar_Dump_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "Restore",
+			Handler:       _Cellar_Restore_Handler,
 			ServerStreams: true,
 		},
 	},

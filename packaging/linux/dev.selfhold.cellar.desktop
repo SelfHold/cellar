@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=Cellar
+GenericName=Database Manager
+Comment=Database manager for PostgreSQL, reached over SSH
+Exec=/usr/bin/cellar
+Icon=dev.selfhold.cellar
+Terminal=false
+Categories=Development;Database;
+Keywords=database;sql;postgresql;postgres;ssh;
+StartupWMClass=dev.selfhold.cellar
+StartupNotify=true

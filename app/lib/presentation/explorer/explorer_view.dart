@@ -8,13 +8,17 @@ import '../../core/theme/typography.dart';
 import '../../data/rpc/core_client.dart';
 import '../../data/rpc/gen/cellar.pbgrpc.dart' as pb;
 import '../common/hm.dart';
+import '../admin/admin_dialogs.dart';
+import '../admin/change_panel.dart';
+import '../admin/dump_dialog.dart';
+import '../admin/table_dialog.dart';
 import '../servers/discover_dialog.dart';
 import '../servers/server_dialogs.dart';
 import '../settings/settings_dialog.dart';
 import '../workspace/workspace_controller.dart';
 import 'explorer_controller.dart';
 
-enum _Act { connect, disconnect, discover, newConnection, edit, delete, console, refresh, openData, structure, selectConsole, copyName, newServer }
+enum _Act { connect, disconnect, discover, newConnection, edit, delete, console, refresh, openData, structure, selectConsole, copyName, newServer, newDatabase, newRole, editRole, dropRole, editDatabase, dropDatabase, newSchema, editSchema, dropSchema, newTable, editTable, dropObject, dump, restore }
 
 /// The left panel (DataGrip's Database Explorer): servers in folders, the
 /// databases found on them, schemas and their objects.
@@ -115,6 +119,12 @@ class ExplorerView extends StatelessWidget {
       case NodeKind.database:
       case NodeKind.schema:
         ws.openConsole(p!, connName: r.connection?.name ?? '');
+      case NodeKind.role:
+        _admin(context, r, _Act.editRole);
+      case NodeKind.key:
+      case NodeKind.idx:
+      case NodeKind.trigger:
+        ws.openObject(p!);
       default:
         _tap(context, r);
     }
@@ -138,14 +148,46 @@ class ExplorerView extends StatelessWidget {
       case NodeKind.connection:
         items.addAll([
           (value: _Act.console, label: tr('New console', 'Новая консоль')),
+          (value: _Act.newDatabase, label: tr('New database…', 'Новая база данных…')),
+          (value: _Act.newRole, label: tr('New user…', 'Новый пользователь…')),
           (value: _Act.refresh, label: tr('Refresh', 'Обновить')),
           (value: _Act.edit, label: tr('Edit…', 'Изменить…')),
           (value: _Act.delete, label: tr('Delete', 'Удалить')),
         ]);
+      case NodeKind.roles:
+        items.addAll([
+          (value: _Act.newRole, label: tr('New user…', 'Новый пользователь…')),
+          (value: _Act.refresh, label: tr('Refresh', 'Обновить')),
+        ]);
+      case NodeKind.role:
+        items.addAll([
+          (value: _Act.editRole, label: tr('Modify user…', 'Изменить пользователя…')),
+          (value: _Act.newRole, label: tr('New user…', 'Новый пользователь…')),
+          (value: _Act.copyName, label: tr('Copy the name', 'Копировать имя')),
+          (value: _Act.dropRole, label: tr('Drop user…', 'Удалить пользователя…')),
+        ]);
       case NodeKind.database:
+        items.addAll([
+          (value: _Act.console, label: tr('New console', 'Новая консоль')),
+          (value: _Act.newSchema, label: tr('New schema…', 'Новая схема…')),
+          (value: _Act.editDatabase, label: tr('Modify database…', 'Изменить базу…')),
+          (value: _Act.dump, label: tr('Dump…', 'Дамп…')),
+          (value: _Act.restore, label: tr('Restore from a dump…', 'Восстановить из дампа…')),
+          (value: _Act.refresh, label: tr('Refresh', 'Обновить')),
+          (value: _Act.dropDatabase, label: tr('Drop database…', 'Удалить базу…')),
+        ]);
       case NodeKind.schema:
+        items.addAll([
+          (value: _Act.console, label: tr('New console', 'Новая консоль')),
+          (value: _Act.newTable, label: tr('New table…', 'Новая таблица…')),
+          (value: _Act.editSchema, label: tr('Modify schema…', 'Изменить схему…')),
+          (value: _Act.dump, label: tr('Dump the schema…', 'Дамп схемы…')),
+          (value: _Act.refresh, label: tr('Refresh', 'Обновить')),
+          (value: _Act.dropSchema, label: tr('Drop schema…', 'Удалить схему…')),
+        ]);
       case NodeKind.folder:
         items.addAll([
+          if (r.folder == ObjFolder.tables) (value: _Act.newTable, label: tr('New table…', 'Новая таблица…')),
           (value: _Act.console, label: tr('New console', 'Новая консоль')),
           (value: _Act.refresh, label: tr('Refresh', 'Обновить')),
         ]);
@@ -154,9 +196,23 @@ class ExplorerView extends StatelessWidget {
         items.addAll([
           if (p.readable) (value: _Act.openData, label: tr('Open data', 'Открыть данные')),
           (value: _Act.structure, label: tr('Structure and DDL', 'Структура и DDL')),
+          if (p.table) (value: _Act.editTable, label: tr('Modify table…', 'Изменить таблицу…')),
           if (p.readable) (value: _Act.selectConsole, label: tr('SELECT in a console', 'SELECT в консоли')),
+          if (p.table) (value: _Act.dump, label: tr('Dump the table…', 'Дамп таблицы…')),
           (value: _Act.copyName, label: tr('Copy the qualified name', 'Копировать полное имя')),
           (value: _Act.refresh, label: tr('Refresh', 'Обновить')),
+          (value: _Act.dropObject, label: tr('Drop…', 'Удалить…')),
+        ]);
+      case NodeKind.part:
+      case NodeKind.column:
+      case NodeKind.key:
+      case NodeKind.idx:
+      case NodeKind.trigger:
+        final p = r.path!;
+        items.addAll([
+          if (p.table) (value: _Act.editTable, label: tr('Modify table…', 'Изменить таблицу…')),
+          (value: _Act.structure, label: tr('Structure and DDL', 'Структура и DDL')),
+          if (r.kind != NodeKind.part) (value: _Act.copyName, label: tr('Copy the name', 'Копировать имя')),
         ]);
       default:
         return;
@@ -219,11 +275,125 @@ class ExplorerView extends StatelessWidget {
           final p = r.path!;
           ws.openConsole(DbPath(p.conn, p.db, p.schema), connName: r.connection?.name ?? '', sql: 'SELECT *\nFROM ${_q(p.schema)}.${_q(p.name)}\nLIMIT 100;');
         case _Act.copyName:
-          Clipboard.setData(ClipboardData(text: '${_q(r.path!.schema)}.${_q(r.path!.name)}'));
+          final text = switch (r.kind) {
+            NodeKind.object => '${_q(r.path!.schema)}.${_q(r.path!.name)}',
+            _ => _q(r.label),
+          };
+          Clipboard.setData(ClipboardData(text: text));
+        default:
+          await _admin(context, r, a);
       }
     } catch (e) {
       Toasts.error(r.label, errorText(e));
     }
+  }
+}
+
+extension on ExplorerView {
+  /// Opens SQL from a dialog in a new console on the row's database.
+  OpenConsole _console(TreeRow r) {
+    final p = r.path!;
+    final c = ctl.connection(p.conn);
+    final db = p.db.isNotEmpty ? p.db : (c?.database.isNotEmpty ?? false ? c!.database : 'postgres');
+    return (sql) => ws.openConsole(DbPath(p.conn, db, p.schema), connName: c?.name ?? '', sql: sql);
+  }
+
+  /// The roles of a connection (owner pickers, memberships).
+  Future<List<pb.Role>> _roles(String conn) async {
+    final have = ctl.rolesOf(conn);
+    if (have.isNotEmpty) return have;
+    try {
+      return (await ctl.api.listRoles(pb.Ref(id: conn))).roles;
+    } catch (_) {
+      return const [];
+    }
+  }
+
+  Future<void> _admin(BuildContext context, TreeRow r, _Act a) async {
+    final p = r.path!;
+    final conn = p.conn;
+    final roles = await _roles(conn);
+    if (!context.mounted) return;
+    var done = false;
+    String reload = '';
+    switch (a) {
+      case _Act.newRole:
+        done = await showRoleDialog(context, conn: conn, roles: roles);
+        reload = ExplorerController.rolesKey(conn);
+      case _Act.editRole:
+        done = await showRoleDialog(context, conn: conn, role: r.role, roles: roles);
+        reload = ExplorerController.rolesKey(conn);
+      case _Act.dropRole:
+        done = await showDropDialog(
+          context,
+          title: tr('Drop user ${r.role!.name}?', 'Удалить пользователя ${r.role!.name}?'),
+          message: tr('The role is removed from the server. Objects it owns block this unless they are reassigned.', 'Роль удаляется с сервера. Если ей принадлежат объекты, удаление не пройдёт, пока их не передать.'),
+          cascadeLabel: tr('Hand its objects to me and drop its privileges first (REASSIGN / DROP OWNED)', 'Сначала передать мне её объекты и снять права (REASSIGN / DROP OWNED)'),
+          change: (cascade) => pb.Change(connectionId: conn, op: pb.Change_Op.DROP, original: r.role!.name, cascade: cascade, role: pb.Role(name: r.role!.name)),
+        );
+        reload = ExplorerController.rolesKey(conn);
+      case _Act.newDatabase:
+        done = await showDatabaseDialog(context, conn: conn, roles: roles, all: ctl.databasesOf(conn), openConsole: _console(r));
+        reload = ExplorerController.connectionKey(conn);
+      case _Act.editDatabase:
+        final d = ctl.databasesOf(conn).where((d) => d.name == p.db).firstOrNull ?? pb.Database(name: p.db, connectionLimit: -1);
+        done = await showDatabaseDialog(context, conn: conn, db: d, roles: roles, all: ctl.databasesOf(conn), openConsole: _console(r));
+        if (done) ws.closeDatabase(conn, p.db);
+        reload = ExplorerController.connectionKey(conn);
+      case _Act.dropDatabase:
+        done = await showDropDialog(
+          context,
+          title: tr('Drop database ${p.db}?', 'Удалить базу ${p.db}?'),
+          message: tr('${p.db} and everything in it is deleted on the server. This cannot be undone: dump it first if in doubt.', '${p.db} и всё в ней удаляется на сервере. Это нельзя отменить: если сомневаетесь, сначала сделайте дамп.'),
+          cascadeLabel: tr('End the other sessions on it (FORCE)', 'Завершить другие сессии в ней (FORCE)'),
+          change: (cascade) => pb.Change(connectionId: conn, op: pb.Change_Op.DROP, original: p.db, cascade: cascade, db: pb.Database(name: p.db)),
+        );
+        if (done) ws.closeDatabase(conn, p.db);
+        reload = ExplorerController.connectionKey(conn);
+      case _Act.newSchema:
+        done = await showSchemaDialog(context, conn: conn, db: p.db, roles: roles, openConsole: _console(r));
+        reload = ExplorerController.databaseKey(conn, p.db);
+      case _Act.editSchema:
+        final sc = ctl.schemasOf(conn, p.db).where((x) => x.name == p.schema).firstOrNull ?? pb.Schema(name: p.schema);
+        done = await showSchemaDialog(context, conn: conn, db: p.db, schema: sc, roles: roles, openConsole: _console(r));
+        reload = ExplorerController.databaseKey(conn, p.db);
+      case _Act.dropSchema:
+        done = await showDropDialog(
+          context,
+          title: tr('Drop schema ${p.schema}?', 'Удалить схему ${p.schema}?'),
+          message: tr('Without CASCADE only an empty schema can be dropped.', 'Без CASCADE удаляется только пустая схема.'),
+          change: (cascade) => pb.Change(connectionId: conn, database: p.db, op: pb.Change_Op.DROP, original: p.schema, cascade: cascade, schema: pb.Schema(name: p.schema)),
+        );
+        reload = ExplorerController.databaseKey(conn, p.db);
+      case _Act.newTable:
+        done = await showTableDialog(context, conn: conn, db: p.db, schema: p.schema, roles: roles, openConsole: _console(r));
+        reload = ExplorerController.schemaKey(conn, p.db, p.schema);
+      case _Act.editTable:
+        done = await showTableDialog(context, conn: conn, db: p.db, schema: p.schema, table: p.name, roles: roles, openConsole: _console(r));
+        reload = ExplorerController.schemaKey(conn, p.db, p.schema);
+      case _Act.dropObject:
+        done = await showDropDialog(
+          context,
+          title: tr('Drop ${r.label}?', 'Удалить ${r.label}?'),
+          message: tr('${p.schema}.${p.name} is deleted on the server.', '${p.schema}.${p.name} удаляется на сервере.'),
+          change: (cascade) => pb.Change(connectionId: conn, database: p.db, op: pb.Change_Op.DROP, cascade: cascade, target: pb.ObjectRef(schema: p.schema, name: p.name, kind: p.kind, signature: p.signature)),
+        );
+        if (done) ws.closeObject(p);
+        reload = ExplorerController.schemaKey(conn, p.db, p.schema);
+      case _Act.dump:
+        await showDumpDialog(
+          context,
+          conn: conn,
+          db: p.db,
+          schemas: r.kind == NodeKind.schema ? [p.schema] : const [],
+          tables: r.kind == NodeKind.object ? [pb.ObjectRef(schema: p.schema, name: p.name)] : const [],
+        );
+      case _Act.restore:
+        done = await showRestoreDialog(context, conn: conn, db: p.db);
+        reload = ExplorerController.databaseKey(conn, p.db);
+      default:
+    }
+    if (done && reload.isNotEmpty) ctl.reloadKey(reload);
   }
 }
 
@@ -252,6 +422,12 @@ class _RowViewState extends State<_RowView> {
       NodeKind.server => (Icons.dns, r.server!.connected ? HmColors.ok : HmColors.muted),
       NodeKind.direct => (Icons.computer, HmColors.muted),
       NodeKind.connection => (Icons.storage_rounded, const Color(0xFF336791)),
+      NodeKind.roles => (Icons.group_outlined, HmColors.muted),
+      NodeKind.role => (r.role!.superuser ? Icons.admin_panel_settings_outlined : (r.role!.login ? Icons.person_outline : Icons.groups_outlined), r.role!.system ? HmColors.muted : HmColors.purpleLight),
+      NodeKind.part => (Icons.folder_outlined, HmColors.muted),
+      NodeKind.key => (Icons.vpn_key_outlined, HmColors.warning),
+      NodeKind.idx => (Icons.bolt_outlined, HmColors.active),
+      NodeKind.trigger => (Icons.flash_on_outlined, HmColors.ok),
       NodeKind.database => (Icons.dataset_outlined, HmColors.accent),
       NodeKind.schema => (Icons.account_tree_outlined, HmColors.purpleLight),
       NodeKind.folder => (Icons.folder_outlined, HmColors.muted),
@@ -259,6 +435,8 @@ class _RowViewState extends State<_RowView> {
         pb.DbObject_Kind.VIEW || pb.DbObject_Kind.MATERIALIZED_VIEW => (Icons.visibility_outlined, HmColors.active),
         pb.DbObject_Kind.SEQUENCE => (Icons.format_list_numbered, HmColors.muted),
         pb.DbObject_Kind.FUNCTION || pb.DbObject_Kind.PROCEDURE => (Icons.functions, HmColors.ok),
+        pb.DbObject_Kind.ENUM => (Icons.list_alt_outlined, HmColors.purpleLight),
+        pb.DbObject_Kind.DOMAIN || pb.DbObject_Kind.COMPOSITE_TYPE || pb.DbObject_Kind.RANGE_TYPE => (Icons.category_outlined, HmColors.purpleLight),
         _ => (Icons.table_chart_outlined, HmColors.accent),
       },
       NodeKind.column => (r.column!.primaryKey ? Icons.key : Icons.view_column_outlined, r.column!.primaryKey ? HmColors.warning : HmColors.muted),

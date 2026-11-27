@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:window_manager/window_manager.dart';
+
+import 'core/desktop/desktop_window.dart';
 
 import 'core/i18n.dart';
 import 'core/theme/app_theme.dart';
@@ -55,7 +60,11 @@ class _CellarAppState extends State<CellarApp> {
       supportedLocales: const [Locale('en'), Locale('ru')],
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
       home: const AppShell(),
-      builder: (context, child) => Stack(children: [?child, const ToastHost(bottomOffset: 24)]),
+      builder: (context, child) {
+        final app = Stack(children: [?child, const ToastHost(bottomOffset: 24)]);
+        // Frameless window: the edges resize it.
+        return DesktopWindow.supported && Platform.isLinux ? DragToResizeArea(resizeEdgeSize: 6, child: app) : app;
+      },
     ),
   );
 }

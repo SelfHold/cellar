@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:window_manager/window_manager.dart';
+
+import '../../core/desktop/desktop_window.dart';
 
 import '../../core/i18n.dart';
 import '../../core/settings/app_settings.dart';
@@ -78,6 +81,7 @@ class _AppShellState extends State<AppShell> {
       body: SafeArea(
         child: Column(
           children: [
+            if (DesktopWindow.supported) _Header(mobile: mobile),
             Expanded(
               child: mobile
                   ? explorer
@@ -100,6 +104,95 @@ class _AppShellState extends State<AppShell> {
             ),
             const _StatusBar(),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+final _headerGradient = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [HmColors.tint(HmColors.accent, 0.04), HmColors.tint(HmColors.accent, 0)]);
+
+/// Desktop header, which doubles as the window title bar: drag to move,
+/// double-click to maximize.
+class _Header extends StatelessWidget {
+  const _Header({required this.mobile});
+
+  final bool mobile;
+
+  @override
+  Widget build(BuildContext context) => DragToMoveArea(
+    child: Container(
+      height: mobile ? 56 : null,
+      padding: mobile ? const EdgeInsets.only(left: 16, right: 8) : const EdgeInsets.fromLTRB(32, 14, 12, 14),
+      decoration: BoxDecoration(
+        gradient: _headerGradient,
+        border: const Border(bottom: BorderSide(color: HmColors.border)),
+      ),
+      child: Row(
+        children: [
+          // Takes the free space and gives way first in a narrow window.
+          Expanded(
+            child: Text('Cellar', style: mobile ? HmText.logo.copyWith(fontSize: 18) : HmText.logo, maxLines: 1, overflow: TextOverflow.ellipsis),
+          ),
+          const _WindowButtons(),
+        ],
+      ),
+    ),
+  );
+}
+
+class _WindowButtons extends StatelessWidget {
+  const _WindowButtons();
+
+  @override
+  Widget build(BuildContext context) => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      _WindowButton(icon: Icons.remove, tooltip: tr('Minimize', 'Свернуть'), onTap: DesktopWindow.instance.minimize),
+      _WindowButton(icon: Icons.crop_square, tooltip: tr('Maximize', 'Развернуть'), onTap: DesktopWindow.instance.toggleMaximize),
+      _WindowButton(icon: Icons.close, tooltip: tr('Close', 'Закрыть'), danger: true, onTap: DesktopWindow.instance.close),
+    ],
+  );
+}
+
+class _WindowButton extends StatefulWidget {
+  const _WindowButton({required this.icon, required this.tooltip, required this.onTap, this.danger = false});
+
+  final IconData icon;
+  final String tooltip;
+  final VoidCallback onTap;
+  final bool danger;
+
+  @override
+  State<_WindowButton> createState() => _WindowButtonState();
+}
+
+class _WindowButtonState extends State<_WindowButton> {
+  bool _hot = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final base = widget.danger ? HmColors.error : HmColors.accent;
+    return Tooltip(
+      message: widget.tooltip,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) => setState(() => _hot = true),
+        onExit: (_) => setState(() => _hot = false),
+        child: GestureDetector(
+          onTap: widget.onTap,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            width: 32,
+            height: 28,
+            margin: const EdgeInsets.only(left: 2),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: HmColors.tint(base, _hot ? 0.10 : 0.0),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Icon(widget.icon, size: 16, color: _hot ? base : HmColors.muted),
+          ),
         ),
       ),
     );

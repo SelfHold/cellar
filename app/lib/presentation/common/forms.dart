@@ -95,9 +95,13 @@ class HmTextField extends StatefulWidget {
     this.identifier = false,
     this.formatters,
     this.lines = 1,
+    this.showLabel = true,
   });
 
   final String label;
+
+  /// false: a bare field (grid rows); [label] is still its semantic name.
+  final bool showLabel;
   final TextEditingController? controller;
   final bool required;
   final String? error;
@@ -127,11 +131,9 @@ class _HmTextFieldState extends State<HmTextField> {
   @override
   Widget build(BuildContext context) {
     final hm = Hm.of(context);
-    return HmFormField(
+    final field = Semantics(
+      textField: true,
       label: widget.label,
-      required: widget.required,
-      error: widget.error,
-      hint: widget.hint,
       child: TextField(
         controller: widget.controller,
         autofocus: widget.autofocus,
@@ -166,6 +168,8 @@ class _HmTextFieldState extends State<HmTextField> {
         ),
       ),
     );
+    if (!widget.showLabel) return field;
+    return HmFormField(label: widget.label, required: widget.required, error: widget.error, hint: widget.hint, child: field);
   }
 }
 

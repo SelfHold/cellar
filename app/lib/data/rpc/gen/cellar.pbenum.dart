@@ -14,6 +14,27 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+class ToolPlace extends $pb.ProtobufEnum {
+  static const ToolPlace TOOL_PLACE_UNSPECIFIED =
+      ToolPlace._(0, _omitEnumNames ? '' : 'TOOL_PLACE_UNSPECIFIED');
+  static const ToolPlace LOCAL = ToolPlace._(1, _omitEnumNames ? '' : 'LOCAL');
+  static const ToolPlace REMOTE =
+      ToolPlace._(2, _omitEnumNames ? '' : 'REMOTE');
+
+  static const $core.List<ToolPlace> values = <ToolPlace>[
+    TOOL_PLACE_UNSPECIFIED,
+    LOCAL,
+    REMOTE,
+  ];
+
+  static final $core.List<ToolPlace?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static ToolPlace? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const ToolPlace._(super.value, super.name);
+}
+
 class SyncState_Phase extends $pb.ProtobufEnum {
   static const SyncState_Phase PHASE_UNSPECIFIED =
       SyncState_Phase._(0, _omitEnumNames ? '' : 'PHASE_UNSPECIFIED');
@@ -214,6 +235,14 @@ class DbObject_Kind extends $pb.ProtobufEnum {
       DbObject_Kind._(7, _omitEnumNames ? '' : 'PARTITIONED_TABLE');
   static const DbObject_Kind PROCEDURE =
       DbObject_Kind._(8, _omitEnumNames ? '' : 'PROCEDURE');
+  static const DbObject_Kind ENUM =
+      DbObject_Kind._(9, _omitEnumNames ? '' : 'ENUM');
+  static const DbObject_Kind DOMAIN =
+      DbObject_Kind._(10, _omitEnumNames ? '' : 'DOMAIN');
+  static const DbObject_Kind COMPOSITE_TYPE =
+      DbObject_Kind._(11, _omitEnumNames ? '' : 'COMPOSITE_TYPE');
+  static const DbObject_Kind RANGE_TYPE =
+      DbObject_Kind._(12, _omitEnumNames ? '' : 'RANGE_TYPE');
 
   static const $core.List<DbObject_Kind> values = <DbObject_Kind>[
     KIND_UNSPECIFIED,
@@ -225,14 +254,66 @@ class DbObject_Kind extends $pb.ProtobufEnum {
     FOREIGN_TABLE,
     PARTITIONED_TABLE,
     PROCEDURE,
+    ENUM,
+    DOMAIN,
+    COMPOSITE_TYPE,
+    RANGE_TYPE,
   ];
 
   static final $core.List<DbObject_Kind?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 8);
+      $pb.ProtobufEnum.$_initByValueList(values, 12);
   static DbObject_Kind? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
   const DbObject_Kind._(super.value, super.name);
+}
+
+class Change_Op extends $pb.ProtobufEnum {
+  static const Change_Op OP_UNSPECIFIED =
+      Change_Op._(0, _omitEnumNames ? '' : 'OP_UNSPECIFIED');
+  static const Change_Op CREATE =
+      Change_Op._(1, _omitEnumNames ? '' : 'CREATE');
+  static const Change_Op ALTER = Change_Op._(2, _omitEnumNames ? '' : 'ALTER');
+  static const Change_Op DROP = Change_Op._(3, _omitEnumNames ? '' : 'DROP');
+
+  static const $core.List<Change_Op> values = <Change_Op>[
+    OP_UNSPECIFIED,
+    CREATE,
+    ALTER,
+    DROP,
+  ];
+
+  static final $core.List<Change_Op?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static Change_Op? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const Change_Op._(super.value, super.name);
+}
+
+class DumpRequest_Format extends $pb.ProtobufEnum {
+  static const DumpRequest_Format FORMAT_UNSPECIFIED =
+      DumpRequest_Format._(0, _omitEnumNames ? '' : 'FORMAT_UNSPECIFIED');
+  static const DumpRequest_Format PLAIN =
+      DumpRequest_Format._(1, _omitEnumNames ? '' : 'PLAIN');
+  static const DumpRequest_Format CUSTOM =
+      DumpRequest_Format._(2, _omitEnumNames ? '' : 'CUSTOM');
+  static const DumpRequest_Format TAR =
+      DumpRequest_Format._(3, _omitEnumNames ? '' : 'TAR');
+
+  static const $core.List<DumpRequest_Format> values = <DumpRequest_Format>[
+    FORMAT_UNSPECIFIED,
+    PLAIN,
+    CUSTOM,
+    TAR,
+  ];
+
+  static final $core.List<DumpRequest_Format?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static DumpRequest_Format? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const DumpRequest_Format._(super.value, super.name);
 }
 
 class RowEdit_Op extends $pb.ProtobufEnum {

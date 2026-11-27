@@ -15,6 +15,21 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use toolPlaceDescriptor instead')
+const ToolPlace$json = {
+  '1': 'ToolPlace',
+  '2': [
+    {'1': 'TOOL_PLACE_UNSPECIFIED', '2': 0},
+    {'1': 'LOCAL', '2': 1},
+    {'1': 'REMOTE', '2': 2},
+  ],
+};
+
+/// Descriptor for `ToolPlace`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List toolPlaceDescriptor = $convert.base64Decode(
+    'CglUb29sUGxhY2USGgoWVE9PTF9QTEFDRV9VTlNQRUNJRklFRBAAEgkKBUxPQ0FMEAESCgoGUk'
+    'VNT1RFEAI=');
+
 @$core.Deprecated('Use emptyDescriptor instead')
 const Empty$json = {
   '1': 'Empty',
@@ -564,6 +579,12 @@ const Database$json = {
     {'1': 'size_bytes', '3': 3, '4': 1, '5': 3, '10': 'sizeBytes'},
     {'1': 'is_template', '3': 4, '4': 1, '5': 8, '10': 'isTemplate'},
     {'1': 'can_connect', '3': 5, '4': 1, '5': 8, '10': 'canConnect'},
+    {'1': 'encoding', '3': 6, '4': 1, '5': 9, '10': 'encoding'},
+    {'1': 'collate', '3': 7, '4': 1, '5': 9, '10': 'collate'},
+    {'1': 'ctype', '3': 8, '4': 1, '5': 9, '10': 'ctype'},
+    {'1': 'connection_limit', '3': 9, '4': 1, '5': 5, '10': 'connectionLimit'},
+    {'1': 'comment', '3': 10, '4': 1, '5': 9, '10': 'comment'},
+    {'1': 'template', '3': 11, '4': 1, '5': 9, '10': 'template'},
   ],
 };
 
@@ -571,7 +592,10 @@ const Database$json = {
 final $typed_data.Uint8List databaseDescriptor = $convert.base64Decode(
     'CghEYXRhYmFzZRISCgRuYW1lGAEgASgJUgRuYW1lEhQKBW93bmVyGAIgASgJUgVvd25lchIdCg'
     'pzaXplX2J5dGVzGAMgASgDUglzaXplQnl0ZXMSHwoLaXNfdGVtcGxhdGUYBCABKAhSCmlzVGVt'
-    'cGxhdGUSHwoLY2FuX2Nvbm5lY3QYBSABKAhSCmNhbkNvbm5lY3Q=');
+    'cGxhdGUSHwoLY2FuX2Nvbm5lY3QYBSABKAhSCmNhbkNvbm5lY3QSGgoIZW5jb2RpbmcYBiABKA'
+    'lSCGVuY29kaW5nEhgKB2NvbGxhdGUYByABKAlSB2NvbGxhdGUSFAoFY3R5cGUYCCABKAlSBWN0'
+    'eXBlEikKEGNvbm5lY3Rpb25fbGltaXQYCSABKAVSD2Nvbm5lY3Rpb25MaW1pdBIYCgdjb21tZW'
+    '50GAogASgJUgdjb21tZW50EhoKCHRlbXBsYXRlGAsgASgJUgh0ZW1wbGF0ZQ==');
 
 @$core.Deprecated('Use databaseListDescriptor instead')
 const DatabaseList$json = {
@@ -616,13 +640,14 @@ const Schema$json = {
     {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
     {'1': 'owner', '3': 2, '4': 1, '5': 9, '10': 'owner'},
     {'1': 'system', '3': 3, '4': 1, '5': 8, '10': 'system'},
+    {'1': 'comment', '3': 4, '4': 1, '5': 9, '10': 'comment'},
   ],
 };
 
 /// Descriptor for `Schema`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List schemaDescriptor = $convert.base64Decode(
     'CgZTY2hlbWESEgoEbmFtZRgBIAEoCVIEbmFtZRIUCgVvd25lchgCIAEoCVIFb3duZXISFgoGc3'
-    'lzdGVtGAMgASgIUgZzeXN0ZW0=');
+    'lzdGVtGAMgASgIUgZzeXN0ZW0SGAoHY29tbWVudBgEIAEoCVIHY29tbWVudA==');
 
 @$core.Deprecated('Use schemaListDescriptor instead')
 const SchemaList$json = {
@@ -675,6 +700,8 @@ const DbObject$json = {
     {'1': 'comment', '3': 3, '4': 1, '5': 9, '10': 'comment'},
     {'1': 'rows_estimate', '3': 4, '4': 1, '5': 3, '10': 'rowsEstimate'},
     {'1': 'signature', '3': 5, '4': 1, '5': 9, '10': 'signature'},
+    {'1': 'labels', '3': 6, '4': 3, '5': 9, '10': 'labels'},
+    {'1': 'base_type', '3': 7, '4': 1, '5': 9, '10': 'baseType'},
   ],
   '4': [DbObject_Kind$json],
 };
@@ -692,6 +719,10 @@ const DbObject_Kind$json = {
     {'1': 'FOREIGN_TABLE', '2': 6},
     {'1': 'PARTITIONED_TABLE', '2': 7},
     {'1': 'PROCEDURE', '2': 8},
+    {'1': 'ENUM', '2': 9},
+    {'1': 'DOMAIN', '2': 10},
+    {'1': 'COMPOSITE_TYPE', '2': 11},
+    {'1': 'RANGE_TYPE', '2': 12},
   ],
 };
 
@@ -700,10 +731,12 @@ final $typed_data.Uint8List dbObjectDescriptor = $convert.base64Decode(
     'CghEYk9iamVjdBI1CgRraW5kGAEgASgOMiEuc2VsZmhvbGQuY2VsbGFyLnYxLkRiT2JqZWN0Lk'
     'tpbmRSBGtpbmQSEgoEbmFtZRgCIAEoCVIEbmFtZRIYCgdjb21tZW50GAMgASgJUgdjb21tZW50'
     'EiMKDXJvd3NfZXN0aW1hdGUYBCABKANSDHJvd3NFc3RpbWF0ZRIcCglzaWduYXR1cmUYBSABKA'
-    'lSCXNpZ25hdHVyZSKdAQoES2luZBIUChBLSU5EX1VOU1BFQ0lGSUVEEAASCQoFVEFCTEUQARII'
-    'CgRWSUVXEAISFQoRTUFURVJJQUxJWkVEX1ZJRVcQAxIMCghTRVFVRU5DRRAEEgwKCEZVTkNUSU'
-    '9OEAUSEQoNRk9SRUlHTl9UQUJMRRAGEhUKEVBBUlRJVElPTkVEX1RBQkxFEAcSDQoJUFJPQ0VE'
-    'VVJFEAg=');
+    'lSCXNpZ25hdHVyZRIWCgZsYWJlbHMYBiADKAlSBmxhYmVscxIbCgliYXNlX3R5cGUYByABKAlS'
+    'CGJhc2VUeXBlItcBCgRLaW5kEhQKEEtJTkRfVU5TUEVDSUZJRUQQABIJCgVUQUJMRRABEggKBF'
+    'ZJRVcQAhIVChFNQVRFUklBTElaRURfVklFVxADEgwKCFNFUVVFTkNFEAQSDAoIRlVOQ1RJT04Q'
+    'BRIRCg1GT1JFSUdOX1RBQkxFEAYSFQoRUEFSVElUSU9ORURfVEFCTEUQBxINCglQUk9DRURVUk'
+    'UQCBIICgRFTlVNEAkSCgoGRE9NQUlOEAoSEgoOQ09NUE9TSVRFX1RZUEUQCxIOCgpSQU5HRV9U'
+    'WVBFEAw=');
 
 @$core.Deprecated('Use objectListDescriptor instead')
 const ObjectList$json = {
@@ -808,6 +841,21 @@ final $typed_data.Uint8List constraintDescriptor = $convert.base64Decode(
     'CgpDb25zdHJhaW50EhIKBG5hbWUYASABKAlSBG5hbWUSEgoEdHlwZRgCIAEoCVIEdHlwZRIeCg'
     'pkZWZpbml0aW9uGAMgASgJUgpkZWZpbml0aW9u');
 
+@$core.Deprecated('Use triggerDescriptor instead')
+const Trigger$json = {
+  '1': 'Trigger',
+  '2': [
+    {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
+    {'1': 'definition', '3': 2, '4': 1, '5': 9, '10': 'definition'},
+    {'1': 'enabled', '3': 3, '4': 1, '5': 8, '10': 'enabled'},
+  ],
+};
+
+/// Descriptor for `Trigger`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List triggerDescriptor = $convert.base64Decode(
+    'CgdUcmlnZ2VyEhIKBG5hbWUYASABKAlSBG5hbWUSHgoKZGVmaW5pdGlvbhgCIAEoCVIKZGVmaW'
+    '5pdGlvbhIYCgdlbmFibGVkGAMgASgIUgdlbmFibGVk');
+
 @$core.Deprecated('Use objectInfoDescriptor instead')
 const ObjectInfo$json = {
   '1': 'ObjectInfo',
@@ -848,6 +896,14 @@ const ObjectInfo$json = {
     {'1': 'primary_key', '3': 6, '4': 3, '5': 9, '10': 'primaryKey'},
     {'1': 'owner', '3': 7, '4': 1, '5': 9, '10': 'owner'},
     {'1': 'size_bytes', '3': 8, '4': 1, '5': 3, '10': 'sizeBytes'},
+    {
+      '1': 'triggers',
+      '3': 9,
+      '4': 3,
+      '5': 11,
+      '6': '.selfhold.cellar.v1.Trigger',
+      '10': 'triggers'
+    },
   ],
 };
 
@@ -859,7 +915,422 @@ final $typed_data.Uint8List objectInfoDescriptor = $convert.base64Decode(
     'luZGV4ZXMSQAoLY29uc3RyYWludHMYBCADKAsyHi5zZWxmaG9sZC5jZWxsYXIudjEuQ29uc3Ry'
     'YWludFILY29uc3RyYWludHMSEAoDZGRsGAUgASgJUgNkZGwSHwoLcHJpbWFyeV9rZXkYBiADKA'
     'lSCnByaW1hcnlLZXkSFAoFb3duZXIYByABKAlSBW93bmVyEh0KCnNpemVfYnl0ZXMYCCABKANS'
-    'CXNpemVCeXRlcw==');
+    'CXNpemVCeXRlcxI3Cgh0cmlnZ2VycxgJIAMoCzIbLnNlbGZob2xkLmNlbGxhci52MS5UcmlnZ2'
+    'VyUgh0cmlnZ2Vycw==');
+
+@$core.Deprecated('Use roleDescriptor instead')
+const Role$json = {
+  '1': 'Role',
+  '2': [
+    {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
+    {'1': 'login', '3': 2, '4': 1, '5': 8, '10': 'login'},
+    {'1': 'superuser', '3': 3, '4': 1, '5': 8, '10': 'superuser'},
+    {'1': 'create_db', '3': 4, '4': 1, '5': 8, '10': 'createDb'},
+    {'1': 'create_role', '3': 5, '4': 1, '5': 8, '10': 'createRole'},
+    {'1': 'inherit', '3': 6, '4': 1, '5': 8, '10': 'inherit'},
+    {'1': 'replication', '3': 7, '4': 1, '5': 8, '10': 'replication'},
+    {'1': 'bypass_rls', '3': 8, '4': 1, '5': 8, '10': 'bypassRls'},
+    {'1': 'connection_limit', '3': 9, '4': 1, '5': 5, '10': 'connectionLimit'},
+    {'1': 'valid_until', '3': 10, '4': 1, '5': 9, '10': 'validUntil'},
+    {'1': 'member_of', '3': 11, '4': 3, '5': 9, '10': 'memberOf'},
+    {'1': 'comment', '3': 12, '4': 1, '5': 9, '10': 'comment'},
+    {'1': 'system', '3': 13, '4': 1, '5': 8, '10': 'system'},
+    {'1': 'password', '3': 14, '4': 1, '5': 9, '10': 'password'},
+  ],
+};
+
+/// Descriptor for `Role`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List roleDescriptor = $convert.base64Decode(
+    'CgRSb2xlEhIKBG5hbWUYASABKAlSBG5hbWUSFAoFbG9naW4YAiABKAhSBWxvZ2luEhwKCXN1cG'
+    'VydXNlchgDIAEoCFIJc3VwZXJ1c2VyEhsKCWNyZWF0ZV9kYhgEIAEoCFIIY3JlYXRlRGISHwoL'
+    'Y3JlYXRlX3JvbGUYBSABKAhSCmNyZWF0ZVJvbGUSGAoHaW5oZXJpdBgGIAEoCFIHaW5oZXJpdB'
+    'IgCgtyZXBsaWNhdGlvbhgHIAEoCFILcmVwbGljYXRpb24SHQoKYnlwYXNzX3JscxgIIAEoCFIJ'
+    'YnlwYXNzUmxzEikKEGNvbm5lY3Rpb25fbGltaXQYCSABKAVSD2Nvbm5lY3Rpb25MaW1pdBIfCg'
+    't2YWxpZF91bnRpbBgKIAEoCVIKdmFsaWRVbnRpbBIbCgltZW1iZXJfb2YYCyADKAlSCG1lbWJl'
+    'ck9mEhgKB2NvbW1lbnQYDCABKAlSB2NvbW1lbnQSFgoGc3lzdGVtGA0gASgIUgZzeXN0ZW0SGg'
+    'oIcGFzc3dvcmQYDiABKAlSCHBhc3N3b3Jk');
+
+@$core.Deprecated('Use roleListDescriptor instead')
+const RoleList$json = {
+  '1': 'RoleList',
+  '2': [
+    {
+      '1': 'roles',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.selfhold.cellar.v1.Role',
+      '10': 'roles'
+    },
+  ],
+};
+
+/// Descriptor for `RoleList`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List roleListDescriptor = $convert.base64Decode(
+    'CghSb2xlTGlzdBIuCgVyb2xlcxgBIAMoCzIYLnNlbGZob2xkLmNlbGxhci52MS5Sb2xlUgVyb2'
+    'xlcw==');
+
+@$core.Deprecated('Use columnSpecDescriptor instead')
+const ColumnSpec$json = {
+  '1': 'ColumnSpec',
+  '2': [
+    {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
+    {'1': 'original', '3': 2, '4': 1, '5': 9, '10': 'original'},
+    {'1': 'type', '3': 3, '4': 1, '5': 9, '10': 'type'},
+    {'1': 'nullable', '3': 4, '4': 1, '5': 8, '10': 'nullable'},
+    {'1': 'default', '3': 5, '4': 1, '5': 9, '10': 'default'},
+    {'1': 'comment', '3': 6, '4': 1, '5': 9, '10': 'comment'},
+  ],
+};
+
+/// Descriptor for `ColumnSpec`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List columnSpecDescriptor = $convert.base64Decode(
+    'CgpDb2x1bW5TcGVjEhIKBG5hbWUYASABKAlSBG5hbWUSGgoIb3JpZ2luYWwYAiABKAlSCG9yaW'
+    'dpbmFsEhIKBHR5cGUYAyABKAlSBHR5cGUSGgoIbnVsbGFibGUYBCABKAhSCG51bGxhYmxlEhgK'
+    'B2RlZmF1bHQYBSABKAlSB2RlZmF1bHQSGAoHY29tbWVudBgGIAEoCVIHY29tbWVudA==');
+
+@$core.Deprecated('Use tableSpecDescriptor instead')
+const TableSpec$json = {
+  '1': 'TableSpec',
+  '2': [
+    {'1': 'schema', '3': 1, '4': 1, '5': 9, '10': 'schema'},
+    {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
+    {'1': 'comment', '3': 3, '4': 1, '5': 9, '10': 'comment'},
+    {'1': 'owner', '3': 4, '4': 1, '5': 9, '10': 'owner'},
+    {
+      '1': 'columns',
+      '3': 5,
+      '4': 3,
+      '5': 11,
+      '6': '.selfhold.cellar.v1.ColumnSpec',
+      '10': 'columns'
+    },
+    {'1': 'primary_key', '3': 6, '4': 3, '5': 9, '10': 'primaryKey'},
+    {
+      '1': 'constraints',
+      '3': 7,
+      '4': 3,
+      '5': 11,
+      '6': '.selfhold.cellar.v1.Constraint',
+      '10': 'constraints'
+    },
+    {
+      '1': 'indexes',
+      '3': 8,
+      '4': 3,
+      '5': 11,
+      '6': '.selfhold.cellar.v1.Index',
+      '10': 'indexes'
+    },
+  ],
+};
+
+/// Descriptor for `TableSpec`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List tableSpecDescriptor = $convert.base64Decode(
+    'CglUYWJsZVNwZWMSFgoGc2NoZW1hGAEgASgJUgZzY2hlbWESEgoEbmFtZRgCIAEoCVIEbmFtZR'
+    'IYCgdjb21tZW50GAMgASgJUgdjb21tZW50EhQKBW93bmVyGAQgASgJUgVvd25lchI4Cgdjb2x1'
+    'bW5zGAUgAygLMh4uc2VsZmhvbGQuY2VsbGFyLnYxLkNvbHVtblNwZWNSB2NvbHVtbnMSHwoLcH'
+    'JpbWFyeV9rZXkYBiADKAlSCnByaW1hcnlLZXkSQAoLY29uc3RyYWludHMYByADKAsyHi5zZWxm'
+    'aG9sZC5jZWxsYXIudjEuQ29uc3RyYWludFILY29uc3RyYWludHMSMwoHaW5kZXhlcxgIIAMoCz'
+    'IZLnNlbGZob2xkLmNlbGxhci52MS5JbmRleFIHaW5kZXhlcw==');
+
+@$core.Deprecated('Use changeDescriptor instead')
+const Change$json = {
+  '1': 'Change',
+  '2': [
+    {'1': 'connection_id', '3': 1, '4': 1, '5': 9, '10': 'connectionId'},
+    {'1': 'database', '3': 2, '4': 1, '5': 9, '10': 'database'},
+    {
+      '1': 'op',
+      '3': 3,
+      '4': 1,
+      '5': 14,
+      '6': '.selfhold.cellar.v1.Change.Op',
+      '10': 'op'
+    },
+    {'1': 'original', '3': 4, '4': 1, '5': 9, '10': 'original'},
+    {'1': 'cascade', '3': 5, '4': 1, '5': 8, '10': 'cascade'},
+    {
+      '1': 'role',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.selfhold.cellar.v1.Role',
+      '9': 0,
+      '10': 'role'
+    },
+    {
+      '1': 'db',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.selfhold.cellar.v1.Database',
+      '9': 0,
+      '10': 'db'
+    },
+    {
+      '1': 'schema',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.selfhold.cellar.v1.Schema',
+      '9': 0,
+      '10': 'schema'
+    },
+    {
+      '1': 'table',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.selfhold.cellar.v1.TableSpec',
+      '9': 0,
+      '10': 'table'
+    },
+    {
+      '1': 'target',
+      '3': 10,
+      '4': 1,
+      '5': 11,
+      '6': '.selfhold.cellar.v1.ObjectRef',
+      '9': 0,
+      '10': 'target'
+    },
+  ],
+  '4': [Change_Op$json],
+  '8': [
+    {'1': 'object'},
+  ],
+};
+
+@$core.Deprecated('Use changeDescriptor instead')
+const Change_Op$json = {
+  '1': 'Op',
+  '2': [
+    {'1': 'OP_UNSPECIFIED', '2': 0},
+    {'1': 'CREATE', '2': 1},
+    {'1': 'ALTER', '2': 2},
+    {'1': 'DROP', '2': 3},
+  ],
+};
+
+/// Descriptor for `Change`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List changeDescriptor = $convert.base64Decode(
+    'CgZDaGFuZ2USIwoNY29ubmVjdGlvbl9pZBgBIAEoCVIMY29ubmVjdGlvbklkEhoKCGRhdGFiYX'
+    'NlGAIgASgJUghkYXRhYmFzZRItCgJvcBgDIAEoDjIdLnNlbGZob2xkLmNlbGxhci52MS5DaGFu'
+    'Z2UuT3BSAm9wEhoKCG9yaWdpbmFsGAQgASgJUghvcmlnaW5hbBIYCgdjYXNjYWRlGAUgASgIUg'
+    'djYXNjYWRlEi4KBHJvbGUYBiABKAsyGC5zZWxmaG9sZC5jZWxsYXIudjEuUm9sZUgAUgRyb2xl'
+    'Ei4KAmRiGAcgASgLMhwuc2VsZmhvbGQuY2VsbGFyLnYxLkRhdGFiYXNlSABSAmRiEjQKBnNjaG'
+    'VtYRgIIAEoCzIaLnNlbGZob2xkLmNlbGxhci52MS5TY2hlbWFIAFIGc2NoZW1hEjUKBXRhYmxl'
+    'GAkgASgLMh0uc2VsZmhvbGQuY2VsbGFyLnYxLlRhYmxlU3BlY0gAUgV0YWJsZRI3CgZ0YXJnZX'
+    'QYCiABKAsyHS5zZWxmaG9sZC5jZWxsYXIudjEuT2JqZWN0UmVmSABSBnRhcmdldCI5CgJPcBIS'
+    'Cg5PUF9VTlNQRUNJRklFRBAAEgoKBkNSRUFURRABEgkKBUFMVEVSEAISCAoERFJPUBADQggKBm'
+    '9iamVjdA==');
+
+@$core.Deprecated('Use changePlanDescriptor instead')
+const ChangePlan$json = {
+  '1': 'ChangePlan',
+  '2': [
+    {'1': 'statements', '3': 1, '4': 3, '5': 9, '10': 'statements'},
+    {'1': 'warnings', '3': 2, '4': 3, '5': 9, '10': 'warnings'},
+    {'1': 'transactional', '3': 3, '4': 1, '5': 8, '10': 'transactional'},
+  ],
+};
+
+/// Descriptor for `ChangePlan`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List changePlanDescriptor = $convert.base64Decode(
+    'CgpDaGFuZ2VQbGFuEh4KCnN0YXRlbWVudHMYASADKAlSCnN0YXRlbWVudHMSGgoId2FybmluZ3'
+    'MYAiADKAlSCHdhcm5pbmdzEiQKDXRyYW5zYWN0aW9uYWwYAyABKAhSDXRyYW5zYWN0aW9uYWw=');
+
+@$core.Deprecated('Use changeReplyDescriptor instead')
+const ChangeReply$json = {
+  '1': 'ChangeReply',
+  '2': [
+    {'1': 'statements', '3': 1, '4': 3, '5': 9, '10': 'statements'},
+  ],
+};
+
+/// Descriptor for `ChangeReply`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List changeReplyDescriptor = $convert.base64Decode(
+    'CgtDaGFuZ2VSZXBseRIeCgpzdGF0ZW1lbnRzGAEgAygJUgpzdGF0ZW1lbnRz');
+
+@$core.Deprecated('Use dumpToolDescriptor instead')
+const DumpTool$json = {
+  '1': 'DumpTool',
+  '2': [
+    {
+      '1': 'place',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.selfhold.cellar.v1.ToolPlace',
+      '10': 'place'
+    },
+    {'1': 'path', '3': 2, '4': 1, '5': 9, '10': 'path'},
+    {'1': 'version', '3': 3, '4': 1, '5': 9, '10': 'version'},
+    {'1': 'major', '3': 4, '4': 1, '5': 5, '10': 'major'},
+    {'1': 'fits', '3': 5, '4': 1, '5': 8, '10': 'fits'},
+  ],
+};
+
+/// Descriptor for `DumpTool`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List dumpToolDescriptor = $convert.base64Decode(
+    'CghEdW1wVG9vbBIzCgVwbGFjZRgBIAEoDjIdLnNlbGZob2xkLmNlbGxhci52MS5Ub29sUGxhY2'
+    'VSBXBsYWNlEhIKBHBhdGgYAiABKAlSBHBhdGgSGAoHdmVyc2lvbhgDIAEoCVIHdmVyc2lvbhIU'
+    'CgVtYWpvchgEIAEoBVIFbWFqb3ISEgoEZml0cxgFIAEoCFIEZml0cw==');
+
+@$core.Deprecated('Use dumpToolsReplyDescriptor instead')
+const DumpToolsReply$json = {
+  '1': 'DumpToolsReply',
+  '2': [
+    {
+      '1': 'tools',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.selfhold.cellar.v1.DumpTool',
+      '10': 'tools'
+    },
+    {'1': 'server_version', '3': 2, '4': 1, '5': 9, '10': 'serverVersion'},
+    {'1': 'note', '3': 3, '4': 1, '5': 9, '10': 'note'},
+  ],
+};
+
+/// Descriptor for `DumpToolsReply`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List dumpToolsReplyDescriptor = $convert.base64Decode(
+    'Cg5EdW1wVG9vbHNSZXBseRIyCgV0b29scxgBIAMoCzIcLnNlbGZob2xkLmNlbGxhci52MS5EdW'
+    '1wVG9vbFIFdG9vbHMSJQoOc2VydmVyX3ZlcnNpb24YAiABKAlSDXNlcnZlclZlcnNpb24SEgoE'
+    'bm90ZRgDIAEoCVIEbm90ZQ==');
+
+@$core.Deprecated('Use dumpRequestDescriptor instead')
+const DumpRequest$json = {
+  '1': 'DumpRequest',
+  '2': [
+    {'1': 'connection_id', '3': 1, '4': 1, '5': 9, '10': 'connectionId'},
+    {'1': 'database', '3': 2, '4': 1, '5': 9, '10': 'database'},
+    {'1': 'path', '3': 3, '4': 1, '5': 9, '10': 'path'},
+    {
+      '1': 'format',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.selfhold.cellar.v1.DumpRequest.Format',
+      '10': 'format'
+    },
+    {'1': 'schemas', '3': 5, '4': 3, '5': 9, '10': 'schemas'},
+    {
+      '1': 'tables',
+      '3': 6,
+      '4': 3,
+      '5': 11,
+      '6': '.selfhold.cellar.v1.ObjectRef',
+      '10': 'tables'
+    },
+    {'1': 'schema_only', '3': 7, '4': 1, '5': 8, '10': 'schemaOnly'},
+    {'1': 'data_only', '3': 8, '4': 1, '5': 8, '10': 'dataOnly'},
+    {'1': 'no_owner', '3': 9, '4': 1, '5': 8, '10': 'noOwner'},
+    {'1': 'no_privileges', '3': 10, '4': 1, '5': 8, '10': 'noPrivileges'},
+    {'1': 'clean', '3': 11, '4': 1, '5': 8, '10': 'clean'},
+    {'1': 'create_database', '3': 12, '4': 1, '5': 8, '10': 'createDatabase'},
+    {'1': 'inserts', '3': 13, '4': 1, '5': 8, '10': 'inserts'},
+    {
+      '1': 'place',
+      '3': 14,
+      '4': 1,
+      '5': 14,
+      '6': '.selfhold.cellar.v1.ToolPlace',
+      '10': 'place'
+    },
+  ],
+  '4': [DumpRequest_Format$json],
+};
+
+@$core.Deprecated('Use dumpRequestDescriptor instead')
+const DumpRequest_Format$json = {
+  '1': 'Format',
+  '2': [
+    {'1': 'FORMAT_UNSPECIFIED', '2': 0},
+    {'1': 'PLAIN', '2': 1},
+    {'1': 'CUSTOM', '2': 2},
+    {'1': 'TAR', '2': 3},
+  ],
+};
+
+/// Descriptor for `DumpRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List dumpRequestDescriptor = $convert.base64Decode(
+    'CgtEdW1wUmVxdWVzdBIjCg1jb25uZWN0aW9uX2lkGAEgASgJUgxjb25uZWN0aW9uSWQSGgoIZG'
+    'F0YWJhc2UYAiABKAlSCGRhdGFiYXNlEhIKBHBhdGgYAyABKAlSBHBhdGgSPgoGZm9ybWF0GAQg'
+    'ASgOMiYuc2VsZmhvbGQuY2VsbGFyLnYxLkR1bXBSZXF1ZXN0LkZvcm1hdFIGZm9ybWF0EhgKB3'
+    'NjaGVtYXMYBSADKAlSB3NjaGVtYXMSNQoGdGFibGVzGAYgAygLMh0uc2VsZmhvbGQuY2VsbGFy'
+    'LnYxLk9iamVjdFJlZlIGdGFibGVzEh8KC3NjaGVtYV9vbmx5GAcgASgIUgpzY2hlbWFPbmx5Eh'
+    'sKCWRhdGFfb25seRgIIAEoCFIIZGF0YU9ubHkSGQoIbm9fb3duZXIYCSABKAhSB25vT3duZXIS'
+    'IwoNbm9fcHJpdmlsZWdlcxgKIAEoCFIMbm9Qcml2aWxlZ2VzEhQKBWNsZWFuGAsgASgIUgVjbG'
+    'VhbhInCg9jcmVhdGVfZGF0YWJhc2UYDCABKAhSDmNyZWF0ZURhdGFiYXNlEhgKB2luc2VydHMY'
+    'DSABKAhSB2luc2VydHMSMwoFcGxhY2UYDiABKA4yHS5zZWxmaG9sZC5jZWxsYXIudjEuVG9vbF'
+    'BsYWNlUgVwbGFjZSJACgZGb3JtYXQSFgoSRk9STUFUX1VOU1BFQ0lGSUVEEAASCQoFUExBSU4Q'
+    'ARIKCgZDVVNUT00QAhIHCgNUQVIQAw==');
+
+@$core.Deprecated('Use restoreRequestDescriptor instead')
+const RestoreRequest$json = {
+  '1': 'RestoreRequest',
+  '2': [
+    {'1': 'connection_id', '3': 1, '4': 1, '5': 9, '10': 'connectionId'},
+    {'1': 'database', '3': 2, '4': 1, '5': 9, '10': 'database'},
+    {'1': 'path', '3': 3, '4': 1, '5': 9, '10': 'path'},
+    {'1': 'clean', '3': 4, '4': 1, '5': 8, '10': 'clean'},
+    {'1': 'no_owner', '3': 5, '4': 1, '5': 8, '10': 'noOwner'},
+    {'1': 'no_privileges', '3': 6, '4': 1, '5': 8, '10': 'noPrivileges'},
+    {
+      '1': 'single_transaction',
+      '3': 7,
+      '4': 1,
+      '5': 8,
+      '10': 'singleTransaction'
+    },
+    {'1': 'schema_only', '3': 8, '4': 1, '5': 8, '10': 'schemaOnly'},
+    {'1': 'data_only', '3': 9, '4': 1, '5': 8, '10': 'dataOnly'},
+    {'1': 'create_database', '3': 10, '4': 1, '5': 8, '10': 'createDatabase'},
+    {'1': 'exit_on_error', '3': 11, '4': 1, '5': 8, '10': 'exitOnError'},
+    {
+      '1': 'place',
+      '3': 12,
+      '4': 1,
+      '5': 14,
+      '6': '.selfhold.cellar.v1.ToolPlace',
+      '10': 'place'
+    },
+  ],
+};
+
+/// Descriptor for `RestoreRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List restoreRequestDescriptor = $convert.base64Decode(
+    'Cg5SZXN0b3JlUmVxdWVzdBIjCg1jb25uZWN0aW9uX2lkGAEgASgJUgxjb25uZWN0aW9uSWQSGg'
+    'oIZGF0YWJhc2UYAiABKAlSCGRhdGFiYXNlEhIKBHBhdGgYAyABKAlSBHBhdGgSFAoFY2xlYW4Y'
+    'BCABKAhSBWNsZWFuEhkKCG5vX293bmVyGAUgASgIUgdub093bmVyEiMKDW5vX3ByaXZpbGVnZX'
+    'MYBiABKAhSDG5vUHJpdmlsZWdlcxItChJzaW5nbGVfdHJhbnNhY3Rpb24YByABKAhSEXNpbmds'
+    'ZVRyYW5zYWN0aW9uEh8KC3NjaGVtYV9vbmx5GAggASgIUgpzY2hlbWFPbmx5EhsKCWRhdGFfb2'
+    '5seRgJIAEoCFIIZGF0YU9ubHkSJwoPY3JlYXRlX2RhdGFiYXNlGAogASgIUg5jcmVhdGVEYXRh'
+    'YmFzZRIiCg1leGl0X29uX2Vycm9yGAsgASgIUgtleGl0T25FcnJvchIzCgVwbGFjZRgMIAEoDj'
+    'IdLnNlbGZob2xkLmNlbGxhci52MS5Ub29sUGxhY2VSBXBsYWNl');
+
+@$core.Deprecated('Use dumpProgressDescriptor instead')
+const DumpProgress$json = {
+  '1': 'DumpProgress',
+  '2': [
+    {'1': 'bytes', '3': 1, '4': 1, '5': 3, '10': 'bytes'},
+    {'1': 'total', '3': 2, '4': 1, '5': 3, '10': 'total'},
+    {'1': 'log', '3': 3, '4': 3, '5': 9, '10': 'log'},
+    {'1': 'done', '3': 4, '4': 1, '5': 8, '10': 'done'},
+    {'1': 'error', '3': 5, '4': 1, '5': 9, '10': 'error'},
+    {'1': 'tool', '3': 6, '4': 1, '5': 9, '10': 'tool'},
+    {'1': 'format', '3': 7, '4': 1, '5': 9, '10': 'format'},
+  ],
+};
+
+/// Descriptor for `DumpProgress`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List dumpProgressDescriptor = $convert.base64Decode(
+    'CgxEdW1wUHJvZ3Jlc3MSFAoFYnl0ZXMYASABKANSBWJ5dGVzEhQKBXRvdGFsGAIgASgDUgV0b3'
+    'RhbBIQCgNsb2cYAyADKAlSA2xvZxISCgRkb25lGAQgASgIUgRkb25lEhQKBWVycm9yGAUgASgJ'
+    'UgVlcnJvchISCgR0b29sGAYgASgJUgR0b29sEhYKBmZvcm1hdBgHIAEoCVIGZm9ybWF0');
 
 @$core.Deprecated('Use resultColumnDescriptor instead')
 const ResultColumn$json = {

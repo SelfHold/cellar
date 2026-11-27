@@ -26,7 +26,8 @@ and the sync with Shard; the app only draws and never holds credentials.
 | `core/store` | the document (servers, connections, tombstones), its merge, the per-device file, sealing |
 | `core/sshx` | SSH client pool (one client per server, keepalive, jump servers), host keys; `sshtest` is an in-process SSH server for tests |
 | `core/discover` | the discovery script and the checks of its candidates |
-| `core/pg` | pgx pools, metadata, table data and edits, consoles, the statement splitter |
+| `core/pg` | pgx pools, metadata, table data and edits, consoles, the statement splitter, DDL plans for the create / modify / drop dialogs, password hashing |
+| `core/dump` | runs `pg_dump`, `pg_restore` and `psql` on this device (tunnelled through SSH) or on the server |
 | `core/keychain` | OS keychain access (and a no-op variant) |
 | `core/shard` | the client of Shard's Connector API and the syncer; `fake` is an in-memory Shard for tests |
 
@@ -67,6 +68,18 @@ The code relies on these properties; changes that break them will not be merged.
 - **Consoles** pin one session. `Execute` runs the statement at the cursor (UTF-16 offsets,
   the editor's units) or all statements, stopping at the first error. `pg.Split` knows
   strings, `E''`, quoted identifiers, dollar quotes and nested comments.
+- **DDL** is worked out in the core (`PlanChange`) against the object as it is in the
+  database now, never from what the app last saw; the preview masks passwords and
+  `ApplyChange` runs the same plan, in one transaction unless a statement cannot run in one
+  (`CREATE` / `DROP DATABASE`). New role passwords are hashed in the core (SCRAM-SHA-256, or
+  md5 when the server's `password_encryption` says so) and never sent in clear text.
+  Read-only connections refuse changes and restores.
+- **Dumps.** The dump file lives on this device; its bytes stream through the tool's stdin
+  or stdout. Tools on this device reach a database behind SSH through a unix socket in a
+  private temporary directory (TLS, for `sslmode=require`, is set up by the core on the far
+  side of it), never a TCP port other users could reach. Tools on the server get the
+  password as the first line of stdin, kept only in their environment (not in the command
+  line, not on disk). A dump is written to a `.part` file (0600) and renamed when complete.
 - **Discovery** runs one read-only script (`discover.Script`). From containers' environment
   only `POSTGRES_USER` / `POSTGRES_DB` are passed on; no passwords leave the server. Every
   candidate is checked with a PostgreSQL `SSLRequest` through SSH; unnamed ports that do not

@@ -28,7 +28,9 @@ class _ObjectTabState extends State<ObjectTab> {
   String? _error;
   int _tab = 0;
 
-  bool get _routine => widget.path.kind == pb.DbObject_Kind.FUNCTION || widget.path.kind == pb.DbObject_Kind.PROCEDURE || widget.path.kind == pb.DbObject_Kind.SEQUENCE;
+  bool get _routine => widget.path.ddlOnly;
+
+  bool get _type => widget.path.kind == pb.DbObject_Kind.COMPOSITE_TYPE;
 
   @override
   void initState() {
@@ -54,8 +56,9 @@ class _ObjectTabState extends State<ObjectTab> {
     if (i == null) return const HmLoading();
     final tabs = [
       if (!_routine) (0, '${tr('Columns', 'Колонки')} ${i.columns.length}'),
-      if (!_routine) (1, '${tr('Indexes', 'Индексы')} ${i.indexes.length}'),
-      if (!_routine) (2, '${tr('Constraints', 'Ограничения')} ${i.constraints.length}'),
+      if (!_routine && !_type) (1, '${tr('Indexes', 'Индексы')} ${i.indexes.length}'),
+      if (!_routine && !_type) (2, '${tr('Constraints', 'Ограничения')} ${i.constraints.length}'),
+      if (i.triggers.isNotEmpty) (4, '${tr('Triggers', 'Триггеры')} ${i.triggers.length}'),
       (3, 'DDL'),
     ];
     return Column(
@@ -126,6 +129,19 @@ class _ObjectTabState extends State<ObjectTab> {
             return pb.Cell(text: switch (c) {
               0 => x.name,
               1 => x.type,
+              _ => x.definition,
+            });
+          },
+        );
+      case 4:
+        return ResultGrid(
+          columns: const [GridColumn('name', ''), GridColumn('enabled', ''), GridColumn('definition', '')],
+          rowCount: i.triggers.length,
+          cell: (r, c) {
+            final x = i.triggers[r];
+            return pb.Cell(text: switch (c) {
+              0 => x.name,
+              1 => x.enabled ? 'yes' : 'no',
               _ => x.definition,
             });
           },

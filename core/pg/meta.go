@@ -67,7 +67,9 @@ func (m *Manager) Databases(ctx context.Context, connID string) (*pb.DatabaseLis
 		out.ServerVersion = c.PgConn().ParameterStatus("server_version")
 		rows, err := c.Query(ctx, `SELECT datname, pg_get_userbyid(datdba),
 			CASE WHEN has_database_privilege(oid, 'CONNECT') THEN pg_database_size(oid) ELSE -1 END,
-			datistemplate, datallowconn AND has_database_privilege(oid, 'CONNECT')
+			datistemplate, datallowconn AND has_database_privilege(oid, 'CONNECT'),
+			pg_encoding_to_char(encoding), datcollate::text, datctype::text, datconnlimit::int4,
+			coalesce(shobj_description(oid, 'pg_database'), '')
 			FROM pg_database ORDER BY datistemplate, datname`)
 		if err != nil {
 			return err
@@ -75,7 +77,8 @@ func (m *Manager) Databases(ctx context.Context, connID string) (*pb.DatabaseLis
 		defer rows.Close()
 		for rows.Next() {
 			d := &pb.Database{}
-			if err := rows.Scan(&d.Name, &d.Owner, &d.SizeBytes, &d.IsTemplate, &d.CanConnect); err != nil {
+			if err := rows.Scan(&d.Name, &d.Owner, &d.SizeBytes, &d.IsTemplate, &d.CanConnect,
+				&d.Encoding, &d.Collate, &d.Ctype, &d.ConnectionLimit, &d.Comment); err != nil {
 				return err
 			}
 			out.Databases = append(out.Databases, d)
@@ -91,17 +94,18 @@ func (m *Manager) Schemas(ctx context.Context, connID, db string) (*pb.SchemaLis
 	err := m.Acquire(ctx, connID, db, func(c *pgx.Conn) error {
 		out.Schemas = nil
 		rows, err := c.Query(ctx, `SELECT nspname, pg_get_userbyid(nspowner),
+			coalesce(obj_description(oid, 'pg_namespace'), ''),
 			nspname IN ('pg_catalog', 'information_schema') OR nspname LIKE 'pg\_toast%' OR nspname LIKE 'pg\_temp\_%'
 			FROM pg_namespace
 			WHERE nspname NOT LIKE 'pg\_toast\_temp\_%'
-			ORDER BY 3, nspname <> 'public', nspname`)
+			ORDER BY 4, nspname <> 'public', nspname`)
 		if err != nil {
 			return err
 		}
 		defer rows.Close()
 		for rows.Next() {
 			s := &pb.Schema{}
-			if err := rows.Scan(&s.Name, &s.Owner, &s.System); err != nil {
+			if err := rows.Scan(&s.Name, &s.Owner, &s.Comment, &s.System); err != nil {
 				return err
 			}
 			out.Schemas = append(out.Schemas, s)
@@ -142,6 +146,11 @@ func (m *Manager) Objects(ctx context.Context, connID, db, schema string) (*pb.O
 		if err := rows.Err(); err != nil {
 			return err
 		}
+		types, err := userTypes(ctx, c, schema)
+		if err != nil {
+			return err
+		}
+		out.Objects = append(out.Objects, types...)
 		// prokind: 11+; older servers have only functions.
 		prokind := "CASE WHEN p.prokind = 'p' THEN 'p' ELSE 'f' END"
 		filter := "p.prokind IN ('f','p','w')"
@@ -152,6 +161,7 @@ func (m *Manager) Objects(ctx context.Context, connID, db, schema string) (*pb.O
 			coalesce(obj_description(p.oid, 'pg_proc'), '')
 			FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace
 			WHERE n.nspname = `+Literal(schema)+` AND `+filter+`
+			AND NOT EXISTS (SELECT 1 FROM pg_depend d WHERE d.classid = 'pg_proc'::regclass AND d.objid = p.oid AND d.deptype = 'i')
 			ORDER BY p.proname, 3`)
 		if err != nil {
 			return err
@@ -167,6 +177,161 @@ func (m *Manager) Objects(ctx context.Context, connID, db, schema string) (*pb.O
 				k = pb.DbObject_PROCEDURE
 			}
 			out.Objects = append(out.Objects, &pb.DbObject{Kind: k, Name: name, Signature: sig, Comment: comment, RowsEstimate: -1})
+		}
+		return rows.Err()
+	})
+	return out, err
+}
+
+var typeKinds = map[string]pb.DbObject_Kind{"e": pb.DbObject_ENUM, "d": pb.DbObject_DOMAIN, "c": pb.DbObject_COMPOSITE_TYPE, "r": pb.DbObject_RANGE_TYPE}
+
+// userTypes lists the enums, domains, composite and range types of a
+// schema (not the row types of tables, nor array types).
+func userTypes(ctx context.Context, c *pgx.Conn, schema string, name ...string) ([]*pb.DbObject, error) {
+	where := ""
+	if len(name) > 0 {
+		where = " AND t.typname = " + Literal(name[0])
+	}
+	rows, err := c.Query(ctx, `SELECT t.typname, t.typtype::text, coalesce(obj_description(t.oid, 'pg_type'), ''),
+		coalesce((SELECT array_agg(e.enumlabel::text ORDER BY e.enumsortorder) FROM pg_enum e WHERE e.enumtypid = t.oid), '{}'),
+		CASE t.typtype WHEN 'd' THEN format_type(t.typbasetype, t.typtypmod)
+			WHEN 'r' THEN coalesce((SELECT format_type(r.rngsubtype, NULL) FROM pg_range r WHERE r.rngtypid = t.oid), '')
+			ELSE '' END
+		FROM pg_type t JOIN pg_namespace n ON n.oid = t.typnamespace
+		WHERE n.nspname = `+Literal(schema)+where+` AND t.typtype IN ('e','d','c','r')
+		AND (t.typtype <> 'c' OR (SELECT cl.relkind FROM pg_class cl WHERE cl.oid = t.typrelid) = 'c')
+		ORDER BY t.typname`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var out []*pb.DbObject
+	for rows.Next() {
+		o := &pb.DbObject{RowsEstimate: -1}
+		var kind string
+		if err := rows.Scan(&o.Name, &kind, &o.Comment, &o.Labels, &o.BaseType); err != nil {
+			return nil, err
+		}
+		o.Kind = typeKinds[kind]
+		out = append(out, o)
+	}
+	return out, rows.Err()
+}
+
+// typeDDL describes a user type: its CREATE statement and, for composite
+// types, its attributes as columns.
+func typeDDL(ctx context.Context, c *pgx.Conn, r *pb.ObjectRef, out *pb.ObjectInfo) error {
+	qn := Ident(r.Schema) + "." + Ident(r.Name)
+	ts, err := userTypes(ctx, c, r.Schema, r.Name)
+	if err != nil {
+		return err
+	}
+	if len(ts) == 0 {
+		return fmt.Errorf("%s does not exist (any more)", qn)
+	}
+	t := ts[0]
+	out.Object = t
+	if err := c.QueryRow(ctx, `SELECT pg_get_userbyid(t.typowner) FROM pg_type t JOIN pg_namespace n ON n.oid = t.typnamespace
+		WHERE n.nspname = `+Literal(r.Schema)+` AND t.typname = `+Literal(r.Name)).Scan(&out.Owner); err != nil {
+		return err
+	}
+	var b strings.Builder
+	switch t.Kind {
+	case pb.DbObject_ENUM:
+		var ls []string
+		for _, l := range t.Labels {
+			ls = append(ls, "    "+Literal(l))
+		}
+		b.WriteString("CREATE TYPE " + qn + " AS ENUM (\n" + strings.Join(ls, ",\n") + "\n);")
+	case pb.DbObject_DOMAIN:
+		var def string
+		var notNull bool
+		if err := c.QueryRow(ctx, `SELECT coalesce(t.typdefault, ''), t.typnotnull FROM pg_type t JOIN pg_namespace n ON n.oid = t.typnamespace
+			WHERE n.nspname = `+Literal(r.Schema)+` AND t.typname = `+Literal(r.Name)).Scan(&def, &notNull); err != nil {
+			return err
+		}
+		b.WriteString("CREATE DOMAIN " + qn + " AS " + t.BaseType)
+		if def != "" {
+			b.WriteString("\n    DEFAULT " + def)
+		}
+		if notNull {
+			b.WriteString("\n    NOT NULL")
+		}
+		rows, err := c.Query(ctx, `SELECT co.conname, pg_get_constraintdef(co.oid) FROM pg_constraint co
+			JOIN pg_type t ON t.oid = co.contypid JOIN pg_namespace n ON n.oid = t.typnamespace
+			WHERE n.nspname = `+Literal(r.Schema)+` AND t.typname = `+Literal(r.Name)+` AND co.contype = 'c' ORDER BY co.conname`)
+		if err != nil {
+			return err
+		}
+		for rows.Next() {
+			k := &pb.Constraint{Type: "CHECK"}
+			if err := rows.Scan(&k.Name, &k.Definition); err != nil {
+				rows.Close()
+				return err
+			}
+			out.Constraints = append(out.Constraints, k)
+			b.WriteString("\n    CONSTRAINT " + Ident(k.Name) + " " + k.Definition)
+		}
+		rows.Close()
+		if err := rows.Err(); err != nil {
+			return err
+		}
+		b.WriteString(";")
+	case pb.DbObject_RANGE_TYPE:
+		b.WriteString("CREATE TYPE " + qn + " AS RANGE (\n    SUBTYPE = " + t.BaseType + "\n);")
+	case pb.DbObject_COMPOSITE_TYPE:
+		cols, _, err := columns(ctx, c, r.Schema, r.Name)
+		if err != nil {
+			return err
+		}
+		out.Columns = cols
+		var ls []string
+		for _, col := range cols {
+			ls = append(ls, "    "+Ident(col.Name)+" "+col.Type)
+		}
+		b.WriteString("CREATE TYPE " + qn + " AS (\n" + strings.Join(ls, ",\n") + "\n);")
+	}
+	if t.Comment != "" {
+		kw := "TYPE"
+		if t.Kind == pb.DbObject_DOMAIN {
+			kw = "DOMAIN"
+		}
+		b.WriteString("\n\nCOMMENT ON " + kw + " " + qn + " IS " + Literal(t.Comment) + ";")
+	}
+	out.Ddl = b.String()
+	return nil
+}
+
+// Roles lists the roles of the server.
+func (m *Manager) Roles(ctx context.Context, connID string) (*pb.RoleList, error) {
+	out := &pb.RoleList{}
+	err := m.Acquire(ctx, connID, "", func(c *pgx.Conn) error {
+		out.Roles = nil
+		bypass := "r.rolbypassrls"
+		if Major(c) < 10 { // 9.5 and 9.6 have it too, older servers do not
+			bypass = "false"
+		}
+		rows, err := c.Query(ctx, `SELECT r.rolname, r.rolcanlogin, r.rolsuper, r.rolcreatedb, r.rolcreaterole, r.rolinherit,
+			r.rolreplication, `+bypass+`, r.rolconnlimit::int4, coalesce(r.rolvaliduntil::text, ''),
+			coalesce((SELECT array_agg(g.rolname::text ORDER BY g.rolname) FROM pg_auth_members am JOIN pg_roles g ON g.oid = am.roleid
+				WHERE am.member = r.oid), '{}'),
+			coalesce(shobj_description(r.oid, 'pg_authid'), ''),
+			r.rolname LIKE 'pg\_%'
+			FROM pg_roles r ORDER BY r.rolname LIKE 'pg\_%', r.rolname`)
+		if err != nil {
+			return err
+		}
+		defer rows.Close()
+		for rows.Next() {
+			x := &pb.Role{}
+			if err := rows.Scan(&x.Name, &x.Login, &x.Superuser, &x.CreateDb, &x.CreateRole, &x.Inherit, &x.Replication, &x.BypassRls,
+				&x.ConnectionLimit, &x.ValidUntil, &x.MemberOf, &x.Comment, &x.System); err != nil {
+				return err
+			}
+			if x.ValidUntil == "infinity" {
+				x.ValidUntil = ""
+			}
+			out.Roles = append(out.Roles, x)
 		}
 		return rows.Err()
 	})
@@ -242,6 +407,8 @@ func (m *Manager) Describe(ctx context.Context, r *pb.ObjectRef) (*pb.ObjectInfo
 			}
 			out.Ddl = fmt.Sprintf("CREATE SEQUENCE %s\n    AS %s\n    START WITH %d\n    INCREMENT BY %d\n    MINVALUE %d\n    MAXVALUE %d\n    %s;", qn, typ, start, inc, minv, maxv, cyc)
 			return nil
+		case pb.DbObject_ENUM, pb.DbObject_DOMAIN, pb.DbObject_COMPOSITE_TYPE, pb.DbObject_RANGE_TYPE:
+			return typeDDL(ctx, c, r, out)
 		}
 		var kind, comment string
 		var size int64
@@ -297,6 +464,21 @@ func (m *Manager) Describe(ctx context.Context, r *pb.ObjectRef) (*pb.ObjectInfo
 				continue // shown on the column
 			}
 			out.Constraints = append(out.Constraints, k)
+		}
+		rows.Close()
+		rows, err = c.Query(ctx, `SELECT t.tgname, pg_get_triggerdef(t.oid, true), t.tgenabled <> 'D'
+			FROM pg_trigger t JOIN pg_class cl ON cl.oid = t.tgrelid JOIN pg_namespace n ON n.oid = cl.relnamespace
+			WHERE n.nspname = `+Literal(r.Schema)+` AND cl.relname = `+Literal(r.Name)+` AND NOT t.tgisinternal ORDER BY t.tgname`)
+		if err != nil {
+			return err
+		}
+		for rows.Next() {
+			tg := &pb.Trigger{}
+			if err := rows.Scan(&tg.Name, &tg.Definition, &tg.Enabled); err != nil {
+				rows.Close()
+				return err
+			}
+			out.Triggers = append(out.Triggers, tg)
 		}
 		rows.Close()
 		switch kind {
@@ -367,6 +549,12 @@ func tableDDL(qn, kind string, info *pb.ObjectInfo) string {
 		if c.Comment != "" {
 			b.WriteString("\nCOMMENT ON COLUMN " + qn + "." + Ident(c.Name) + " IS " + Literal(c.Comment) + ";")
 		}
+	}
+	for i, t := range info.Triggers {
+		if i == 0 {
+			b.WriteString("\n")
+		}
+		b.WriteString("\n" + t.Definition + ";")
 	}
 	return b.String()
 }

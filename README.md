@@ -37,8 +37,24 @@ but expect rough edges and breaking changes. Not done yet:
   mode (`disable` / `prefer` / `require`), read-only sessions, a colour tag, a filter for
   which databases to show, a connection test.
 - **Explorer**: servers → connections → databases → schemas → tables, views, materialized
-  views, foreign tables, sequences and routines, with columns. System schemas are hidden
-  unless you turn them on.
+  views, foreign tables, sequences, routines, enums, domains and composite / range types.
+  Tables open into columns, keys and checks, indexes and triggers. Next to the databases,
+  a connection lists the server's users and roles. System schemas and the built-in `pg_*`
+  roles are hidden unless you turn them on.
+- **Create, modify, drop** from the context menu, as in DataGrip: users and roles
+  (privileges, memberships, connection limit, password expiry), databases, schemas and
+  tables (columns, primary key, constraints, indexes, comments, owner), and dropping any
+  schema object. Every dialog shows the SQL it will run before you execute it, or opens it
+  in a console instead. Changes run in one transaction where PostgreSQL allows it. A new
+  password is hashed on this device (SCRAM-SHA-256, or md5 if the server keeps md5
+  passwords), so the server never receives it in clear text.
+- **Dumps and restores** with PostgreSQL's own tools: `pg_dump` of a database, a schema
+  or a table (SQL, custom or tar format), and restores of SQL files through `psql` and of
+  archives through `pg_restore`, with progress and the tools' log. The tools run on this
+  device, reaching the database through the server's SSH connection over a private unix
+  socket, or on the server itself over SSH when this device has no fitting `pg_dump`
+  (`pg_dump` must not be older than the database server). The file always stays on this
+  device; the database password is passed to the tools in their environment only.
 - **Table viewer and editor**: paging, sorting by column, a `WHERE` filter, inline editing,
   inserting and deleting rows. Edits are submitted in one transaction; every `UPDATE` or
   `DELETE` must hit exactly one row (by primary key, else by `ctid`), otherwise everything
@@ -127,6 +143,8 @@ Prerequisites:
 
 ```bash
 make build-linux   # release bundle in builds/linux/ (executable: cellar)
+make package-linux # deb, rpm and Arch packages in builds/packages (PKG=archlinux for one)
+make icons         # re-render the PNG icons from the SVGs in branding/ (rsvg-convert)
 make app-run       # run the app in debug mode
 make core-lib      # only the core's C archive (app/build/core/libcellar.a)
 make proto         # regenerate core/rpc/pb, core/shard/pb, app/lib/data/rpc/gen

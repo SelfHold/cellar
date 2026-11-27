@@ -135,6 +135,94 @@ Future<void> _scenario() async {
   await _pause(500);
   await _snap('ddl');
 
+  // A table's parts: columns, keys, indexes.
+  await _tap(await _waitText('orders', exact: true));
+  await _tap(await _waitText('keys and checks', exact: true, timeout: 20));
+  await _pause(500);
+  await _snap('table-parts');
+
+  // Server objects: users. Create one (the password is hashed here).
+  await _tap(await _waitText('users and roles', exact: true));
+  await _pause(800);
+  await _tap(await _waitText('users and roles', exact: true), secondary: true);
+  await _tap(await _waitText('New user…'));
+  await _type('Name', 'reporter');
+  await _type('Password', 'rep0rt');
+  await _waitText('CREATE ROLE reporter', timeout: 10);
+  await _pause(500);
+  await _snap('new-user');
+  await _tap(await _waitText('Create', exact: true));
+  await _waitText('reporter', exact: true, timeout: 20);
+  await _tap(await _waitText('reporter', exact: true), secondary: true);
+  await _tap(await _waitText('Modify user…'));
+  await _tap(await _waitText('Create databases', exact: true));
+  await _waitText('CREATEDB', timeout: 10);
+  await _pause(400);
+  await _snap('modify-user');
+  await _tap(await _waitText('Apply', exact: true));
+  await _pause(1200);
+
+  // A database, a table in it.
+  await _tap(await _waitText('cellar-e2e-pg'), secondary: true);
+  await _tap(await _waitText('New database…'));
+  await _type('Name', 'cellar_e2e');
+  await _waitText('CREATE DATABASE cellar_e2e', timeout: 10);
+  await _snap('new-database');
+  await _tap(await _waitText('Create', exact: true));
+  await _waitText('cellar_e2e', exact: true, timeout: 20);
+  await _pause(800);
+  await _tap(await _waitText('analytics', exact: true), secondary: true);
+  await _tap(await _waitText('New table…'));
+  await _type('Name', 'metrics');
+  await _tap(await _waitText('Add column'));
+  await _waitText('CREATE TABLE analytics.metrics', timeout: 10);
+  await _pause(600);
+  await _snap('new-table');
+  await _tap(await _waitText('Create', exact: true));
+  await _pause(1500);
+  await _tap(await _waitText('metrics', exact: true, timeout: 20), secondary: true);
+  await _tap(await _waitText('Modify table…'));
+  await _waitText('COLUMNS', exact: true, timeout: 10);
+  await _pause(600);
+  await _snap('modify-table');
+  await _tap(await _waitText('Cancel', exact: true));
+  await _pause(500);
+
+  // Dump shop, restore it into the new database, drop that.
+  final dumpFile = '${_out.parent.path}/shop.dump';
+  await _tap(await _waitText('shop', exact: true), secondary: true);
+  await _tap(await _waitText('Dump…'));
+  await _type('Save to', dumpFile);
+  await _tap(await _waitText('custom', exact: true));
+  await _waitText('pg_dump:', timeout: 20);
+  await _pause(500);
+  await _snap('dump-form');
+  await _tap(await _waitText('Dump', exact: true));
+  await _waitText('Saved to', timeout: 60);
+  await _pause(300);
+  await _snap('dump-done');
+  await _tap(await _waitText('Close', exact: true));
+  await _pause(500);
+  await _tap(await _waitText('cellar_e2e', exact: true), secondary: true);
+  await _tap(await _waitText('Restore from a dump…'));
+  await _type('Dump file', dumpFile);
+  await _tap(await _waitText('No owners (--no-owner)'));
+  await _tap(await _waitText('Restore', exact: true));
+  await _waitText('Restored into', timeout: 60);
+  await _pause(300);
+  await _snap('restore-done');
+  await _tap(await _waitText('Close', exact: true));
+  await _pause(800);
+  await _tap(await _waitText('cellar_e2e', exact: true), secondary: true);
+  await _tap(await _waitText('Drop database…'));
+  await _tap(await _waitText('End the other sessions on it (FORCE)'));
+  await _waitText('WITH (FORCE)', timeout: 10);
+  await _snap('drop-database');
+  await _tap(await _waitText('Drop', exact: true));
+  await _pause(2000);
+  if (_find('cellar_e2e', exact: true).isNotEmpty) throw StateError('cellar_e2e is still there');
+  await _snap('dropped');
+
   // Settings / Shard.
   await _tap(_iconButton('Settings and Shard'));
   await _pause(800);

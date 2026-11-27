@@ -755,6 +755,34 @@ func (s *Service) DescribeObject(ctx context.Context, r *pb.ObjectRef) (*pb.Obje
 	return out, grpcErr(err)
 }
 
+func (s *Service) ListRoles(ctx context.Context, r *pb.Ref) (*pb.RoleList, error) {
+	out, err := s.PG.Roles(ctx, r.Id)
+	return out, grpcErr(err)
+}
+
+func (s *Service) PlanChange(ctx context.Context, r *pb.Change) (*pb.ChangePlan, error) {
+	p, err := s.PG.Plan(ctx, r, false)
+	if err != nil {
+		return nil, grpcErr(err)
+	}
+	return &pb.ChangePlan{Statements: p.Show, Warnings: p.Warnings, Transactional: p.Transactional}, nil
+}
+
+func (s *Service) ApplyChange(ctx context.Context, r *pb.Change) (*pb.ChangeReply, error) {
+	done, err := s.PG.Apply(ctx, r)
+	if err != nil {
+		if errors.Is(err, pg.ErrNoChange) {
+			return nil, status.Error(codes.FailedPrecondition, err.Error())
+		}
+		if len(done) > 0 {
+			s.logf("warn", "change on %s stopped after %d statements", r.ConnectionId, len(done))
+		}
+		return nil, grpcErr(err)
+	}
+	s.logf("info", "change on %s: %d statements", r.ConnectionId, len(done))
+	return &pb.ChangeReply{Statements: done}, nil
+}
+
 func (s *Service) ReadTable(ctx context.Context, r *pb.ReadTableRequest) (*pb.ResultSet, error) {
 	out, err := s.PG.ReadTable(ctx, r)
 	return out, grpcErr(err)

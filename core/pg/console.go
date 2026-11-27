@@ -12,8 +12,8 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 
-	"dbmanager/core/rpc/pb"
-	"dbmanager/core/store"
+	"github.com/SelfHold/cellar/core/rpc/pb"
+	"github.com/SelfHold/cellar/core/store"
 )
 
 // Console is one pinned session: what a statement leaves behind

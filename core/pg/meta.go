@@ -7,7 +7,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	"dbmanager/core/rpc/pb"
+	"github.com/SelfHold/cellar/core/rpc/pb"
 )
 
 // Major is the server's major version (16 for "16.4 (Debian ...)", 9

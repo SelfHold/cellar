@@ -8,16 +8,16 @@ import 'presentation/common/overlays.dart';
 import 'presentation/core/core_cubit.dart';
 import 'presentation/shell/app_shell.dart';
 
-class DbManagerApp extends StatefulWidget {
-  const DbManagerApp({super.key, required this.core});
+class CellarApp extends StatefulWidget {
+  const CellarApp({super.key, required this.core});
 
   final CoreCubit core;
 
   @override
-  State<DbManagerApp> createState() => _DbManagerAppState();
+  State<CellarApp> createState() => _CellarAppState();
 }
 
-class _DbManagerAppState extends State<DbManagerApp> {
+class _CellarAppState extends State<CellarApp> {
   @override
   void initState() {
     super.initState();
@@ -46,7 +46,7 @@ class _DbManagerAppState extends State<DbManagerApp> {
   Widget build(BuildContext context) => BlocProvider.value(
     value: widget.core,
     child: MaterialApp(
-      title: 'DB Manager',
+      title: 'Cellar',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.dark,
       darkTheme: AppTheme.dark,

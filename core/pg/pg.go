@@ -19,7 +19,7 @@ import (
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"dbmanager/core/store"
+	"github.com/SelfHold/cellar/core/store"
 )
 
 // Dial opens a TCP connection to addr, from the server the database is
@@ -30,7 +30,7 @@ type Dial func(ctx context.Context, addr string) (net.Conn, error)
 type Opener func(ctx context.Context, connectionID string) (store.Connection, Dial, error)
 
 // AppName is sent as application_name.
-const AppName = "DB Manager"
+const AppName = "Cellar"
 
 // Config builds a pgx configuration for one database of c. Host names
 // are resolved where dial connects from (the SSH server), never here.

@@ -1,5 +1,5 @@
-// Package store keeps DB Manager's lists: servers and database connections
-// (the document that is synced through CloudSync as one record) and what
+// Package store keeps Cellar's lists: servers and database connections
+// (the document that is synced through Shard as one record) and what
 // belongs to this device only (pasted SSH keys). Both files are sealed on
 // disk with a key from the OS keychain (see seal.go).
 package store
@@ -25,14 +25,14 @@ const (
 	AuthAgent    = "agent"
 )
 
-// Key id prefixes: a key of CloudSync's safe, or one kept on this device.
+// Key id prefixes: a key of Shard's safe, or one kept on this device.
 const (
 	SafeKeyPrefix  = "safe:"
 	LocalKeyPrefix = "local:"
 )
 
-// Server is a machine reached over SSH. With CloudSync's "servers" scope
-// the list lives in CloudSync (shared with other apps); otherwise in Doc.
+// Server is a machine reached over SSH. With Shard's "servers" scope
+// the list lives in Shard (shared with other apps); otherwise in Doc.
 type Server struct {
 	ID           string            `json:"id"`
 	Name         string            `json:"name"`
@@ -48,7 +48,7 @@ type Server struct {
 	Notes        string            `json:"notes,omitempty"`
 	Extra        map[string][]byte `json:"extra,omitempty"`
 	UpdatedMs    int64             `json:"updated_ms"`
-	// Shared: the entry lives in CloudSync's list (not encoded).
+	// Shared: the entry lives in Shard's list (not encoded).
 	Shared   bool   `json:"-"`
 	Revision string `json:"-"`
 }
@@ -99,7 +99,7 @@ type Removed struct {
 	AtMs int64  `json:"at_ms"`
 }
 
-// Doc is the synced document (record "dbmanager.json").
+// Doc is the synced document (record "cellar.json").
 type Doc struct {
 	Version     int          `json:"version"`
 	Servers     []Server     `json:"servers"`

@@ -1,11 +1,11 @@
-// Package cloudsync connects DB Manager to CloudSync (now Shard; CONNECTOR.md,
-// § 13–14 for the scopes below): a client of CloudSync's Connector API — gRPC over
-// CloudSync's socket on desktops, its bound service on Android (through
+// Package shard connects Cellar to Shard (CONNECTOR.md,
+// § 13–14 for the scopes below): a client of Shard's Connector API — gRPC over
+// Shard's socket on desktops, its bound service on Android (through
 // the app, Binder) — and the Syncer that keeps the app's document in a
 // record, reads the shared server list (scope "servers") and the SSH keys
-// of the safe (scope "ssh_keys"). CloudSync is a separate program that may
+// of the safe (scope "ssh_keys"). Shard is a separate program that may
 // be missing, stopped or locked at any moment: the app works without it.
-package cloudsync
+package shard
 
 import (
 	"context"
@@ -26,16 +26,16 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
 
-	"dbmanager/core/cloudsync/pb"
+	"github.com/SelfHold/cellar/core/shard/pb"
 )
 
 // APIVersion is the Connector API version this client speaks.
 const APIVersion = 1
 
-// ErrNotRunning: CloudSync is not installed or not running here.
-var ErrNotRunning = errors.New("CloudSync is not running")
+// ErrNotRunning: Shard is not installed or not running here.
+var ErrNotRunning = errors.New("Shard is not running")
 
-// Client is one connection to CloudSync.
+// Client is one connection to Shard.
 type Client interface {
 	Hello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error)
 	RequestPairing(ctx context.Context, r *pb.PairingRequest) (*pb.PairingTicket, error)
@@ -61,26 +61,26 @@ type Client interface {
 	Close() error
 }
 
-// Dialer connects to CloudSync. A missing CloudSync is ErrNotRunning.
+// Dialer connects to Shard. A missing Shard is ErrNotRunning.
 type Dialer interface {
 	Dial(ctx context.Context, token string) (Client, error)
 	// UsesToken: the pairing gives a bearer token to keep (desktops).
 	// Android knows the caller from Binder and has none.
 	UsesToken() bool
-	// CanOpen: the app can open CloudSync for the user (Android).
+	// CanOpen: the app can open Shard for the user (Android).
 	CanOpen() bool
 }
 
-// --- desktops: gRPC on CloudSync's socket ------------------------------------
+// --- desktops: gRPC on Shard's socket ------------------------------------
 
-// EndpointFile is where CloudSync's daemon writes its connector address:
-// <user config dir>/cloudsync/connector.json.
+// EndpointFile is where Shard's daemon writes its connector address:
+// <user config dir>/selfhold/shard/connector.json.
 func EndpointFile() string {
 	dir, err := os.UserConfigDir()
 	if err != nil {
 		dir = "."
 	}
-	return filepath.Join(dir, "cloudsync", "connector.json")
+	return filepath.Join(dir, "selfhold", "shard", "connector.json")
 }
 
 // Desktop dials the daemon whose address is in File (EndpointFile when
@@ -127,7 +127,7 @@ func (d Desktop) Dial(ctx context.Context, token string) (Client, error) {
 		}
 		return ctx
 	}
-	cc, err := grpc.NewClient("passthrough:///cloudsync",
+	cc, err := grpc.NewClient("passthrough:///shard",
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithContextDialer(func(ctx context.Context, _ string) (net.Conn, error) {
 			return (&net.Dialer{}).DialContext(ctx, network, addr)
@@ -146,8 +146,8 @@ func (d Desktop) Dial(ctx context.Context, token string) (Client, error) {
 	return c, nil
 }
 
-// ErrTooNew: CloudSync speaks a newer, incompatible API.
-var ErrTooNew = errors.New("CloudSync is newer than this DB Manager: update DB Manager")
+// ErrTooNew: Shard speaks a newer, incompatible API.
+var ErrTooNew = errors.New("Shard is newer than this Cellar: update Cellar")
 
 type grpcClient struct {
 	cc    *grpc.ClientConn
@@ -213,18 +213,18 @@ func (c *grpcClient) Watch(ctx context.Context) (func() (*pb.Change, error), err
 	}, nil
 }
 
-// wrap keeps CloudSync's answers as they are. A broken connection is
+// wrap keeps Shard's answers as they are. A broken connection is
 // UNAVAILABLE too, like "offline": the syncer retries either way, and a
-// CloudSync that stopped ends the Watch, so the syncer dials again and
+// Shard that stopped ends the Watch, so the syncer dials again and
 // finds it gone.
 func wrap[T any](v T, err error) (T, error) { return v, err }
 
 func transport(err error) error { return err }
 
-// --- Android: CloudSync's bound service, through the app ----------------------
+// --- Android: Shard's bound service, through the app ----------------------
 
-// Binder is CloudSync's bound service (ICloudSyncConnector.aidl), bound by
-// the app's Kotlin side. Calls fail with an error when CloudSync is not
+// Binder is Shard's bound service (IShardConnector.aidl), bound by
+// the app's Kotlin side. Calls fail with an error when Shard is not
 // installed or the binding broke.
 type Binder interface {
 	// Call runs one unary method; the answer is a serialized CallReply.
@@ -241,7 +241,7 @@ type BinderWatcher interface {
 	OnEnd(reply []byte)
 }
 
-// Android dials CloudSync through the app's Binder.
+// Android dials Shard through the app's Binder.
 type Android struct{ Binder Binder }
 
 func (Android) UsesToken() bool { return false }
@@ -279,7 +279,7 @@ func call[T proto.Message](ctx context.Context, b *binderClient, method string, 
 	}
 	var cr pb.CallReply
 	if err := proto.Unmarshal(out, &cr); err != nil {
-		return zero, fmt.Errorf("cloudsync: bad reply: %w", err)
+		return zero, fmt.Errorf("shard: bad reply: %w", err)
 	}
 	if cr.Code != 0 {
 		if codes.Code(cr.Code) == codes.Unavailable && strings.Contains(cr.Message, "not running") {
@@ -288,7 +288,7 @@ func call[T proto.Message](ctx context.Context, b *binderClient, method string, 
 		return zero, status.Error(codes.Code(cr.Code), cr.Message)
 	}
 	if err := proto.Unmarshal(cr.Payload, reply); err != nil {
-		return zero, fmt.Errorf("cloudsync: bad reply: %w", err)
+		return zero, fmt.Errorf("shard: bad reply: %w", err)
 	}
 	return reply, nil
 }
@@ -350,7 +350,7 @@ func (b *binderClient) Watch(ctx context.Context) (func() (*pb.Change, error), e
 			var c pb.Change
 			if err := proto.Unmarshal(data, &c); err != nil {
 				stop()
-				return nil, fmt.Errorf("cloudsync: bad change: %w", err)
+				return nil, fmt.Errorf("shard: bad change: %w", err)
 			}
 			return &c, nil
 		case err := <-w.end:

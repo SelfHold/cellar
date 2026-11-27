@@ -6,7 +6,7 @@ import '../../core/i18n.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/typography.dart';
 import '../../data/rpc/core_client.dart';
-import '../../data/rpc/gen/dbm.pbgrpc.dart' as pb;
+import '../../data/rpc/gen/cellar.pbgrpc.dart' as pb;
 import '../common/hm.dart';
 import '../core/core_cubit.dart';
 import '../explorer/explorer_controller.dart';

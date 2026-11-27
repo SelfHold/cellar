@@ -1,4 +1,4 @@
-package dev.dbmanager.dbmanager
+package dev.selfhold.cellar
 
 import io.flutter.embedding.android.FlutterActivity
 

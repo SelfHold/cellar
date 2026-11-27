@@ -1,6 +1,6 @@
 // This is a generated file - do not edit.
 //
-// Generated from dbm.proto.
+// Generated from cellar.proto.
 
 // @dart = 3.3
 
@@ -16,12 +16,12 @@ import 'dart:core' as $core;
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'dbm.pb.dart' as $0;
+import 'cellar.pb.dart' as $0;
 
-export 'dbm.pb.dart';
+export 'cellar.pb.dart';
 
-@$pb.GrpcServiceName('dbm.v1.DBManager')
-class DBManagerClient extends $grpc.Client {
+@$pb.GrpcServiceName('selfhold.cellar.v1.Cellar')
+class CellarClient extends $grpc.Client {
   /// The hostname for this service.
   static const $core.String defaultHost = '';
 
@@ -30,7 +30,7 @@ class DBManagerClient extends $grpc.Client {
     '',
   ];
 
-  DBManagerClient(super.channel, {super.options, super.interceptors});
+  CellarClient(super.channel, {super.options, super.interceptors});
 
   $grpc.ResponseFuture<$0.State> getState(
     $0.Empty request, {
@@ -49,7 +49,7 @@ class DBManagerClient extends $grpc.Client {
         options: options);
   }
 
-  /// --- servers (shared through CloudSync when its "servers" scope is on) ---
+  /// --- servers (shared through Shard when its "servers" scope is on) ---
   $grpc.ResponseFuture<$0.ServerList> listServers(
     $0.Empty request, {
     $grpc.CallOptions? options,
@@ -105,7 +105,7 @@ class DBManagerClient extends $grpc.Client {
     return $createUnaryCall(_$discover, request, options: options);
   }
 
-  /// --- SSH keys: CloudSync's safe (scope "ssh_keys") + keys of this device --
+  /// --- SSH keys: Shard's safe (scope "ssh_keys") + keys of this device --
   $grpc.ResponseFuture<$0.KeyList> listKeys(
     $0.Empty request, {
     $grpc.CallOptions? options,
@@ -250,7 +250,7 @@ class DBManagerClient extends $grpc.Client {
     return $createUnaryCall(_$statements, request, options: options);
   }
 
-  /// --- CloudSync ----------------------------------------------------------
+  /// --- Shard ----------------------------------------------------------
   /// EnableSync pairs (if needed) and returns the code to show; the result
   /// comes as a SYNC event.
   $grpc.ResponseFuture<$0.SyncState> enableSync(
@@ -274,158 +274,157 @@ class DBManagerClient extends $grpc.Client {
     return $createUnaryCall(_$syncNow, request, options: options);
   }
 
-  /// MoveServersToCloudSync copies this app's own servers into the shared
+  /// MoveServersToShard copies this app's own servers into the shared
   /// list (once the "servers" scope is granted) and drops the own copy.
-  $grpc.ResponseFuture<$0.SyncState> moveServersToCloudSync(
+  $grpc.ResponseFuture<$0.SyncState> moveServersToShard(
     $0.Empty request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$moveServersToCloudSync, request,
-        options: options);
+    return $createUnaryCall(_$moveServersToShard, request, options: options);
   }
 
   // method descriptors
 
   static final _$getState = $grpc.ClientMethod<$0.Empty, $0.State>(
-      '/dbm.v1.DBManager/GetState',
+      '/selfhold.cellar.v1.Cellar/GetState',
       ($0.Empty value) => value.writeToBuffer(),
       $0.State.fromBuffer);
   static final _$events = $grpc.ClientMethod<$0.Empty, $0.Event>(
-      '/dbm.v1.DBManager/Events',
+      '/selfhold.cellar.v1.Cellar/Events',
       ($0.Empty value) => value.writeToBuffer(),
       $0.Event.fromBuffer);
   static final _$listServers = $grpc.ClientMethod<$0.Empty, $0.ServerList>(
-      '/dbm.v1.DBManager/ListServers',
+      '/selfhold.cellar.v1.Cellar/ListServers',
       ($0.Empty value) => value.writeToBuffer(),
       $0.ServerList.fromBuffer);
   static final _$saveServer = $grpc.ClientMethod<$0.Server, $0.Server>(
-      '/dbm.v1.DBManager/SaveServer',
+      '/selfhold.cellar.v1.Cellar/SaveServer',
       ($0.Server value) => value.writeToBuffer(),
       $0.Server.fromBuffer);
   static final _$deleteServer = $grpc.ClientMethod<$0.Ref, $0.Empty>(
-      '/dbm.v1.DBManager/DeleteServer',
+      '/selfhold.cellar.v1.Cellar/DeleteServer',
       ($0.Ref value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
   static final _$connectServer =
       $grpc.ClientMethod<$0.ConnectRequest, $0.ConnectReply>(
-          '/dbm.v1.DBManager/ConnectServer',
+          '/selfhold.cellar.v1.Cellar/ConnectServer',
           ($0.ConnectRequest value) => value.writeToBuffer(),
           $0.ConnectReply.fromBuffer);
   static final _$trustHostKey = $grpc.ClientMethod<$0.TrustRequest, $0.Server>(
-      '/dbm.v1.DBManager/TrustHostKey',
+      '/selfhold.cellar.v1.Cellar/TrustHostKey',
       ($0.TrustRequest value) => value.writeToBuffer(),
       $0.Server.fromBuffer);
   static final _$disconnectServer = $grpc.ClientMethod<$0.Ref, $0.Empty>(
-      '/dbm.v1.DBManager/DisconnectServer',
+      '/selfhold.cellar.v1.Cellar/DisconnectServer',
       ($0.Ref value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
   static final _$discover = $grpc.ClientMethod<$0.Ref, $0.DiscoverReply>(
-      '/dbm.v1.DBManager/Discover',
+      '/selfhold.cellar.v1.Cellar/Discover',
       ($0.Ref value) => value.writeToBuffer(),
       $0.DiscoverReply.fromBuffer);
   static final _$listKeys = $grpc.ClientMethod<$0.Empty, $0.KeyList>(
-      '/dbm.v1.DBManager/ListKeys',
+      '/selfhold.cellar.v1.Cellar/ListKeys',
       ($0.Empty value) => value.writeToBuffer(),
       $0.KeyList.fromBuffer);
   static final _$saveLocalKey = $grpc.ClientMethod<$0.LocalKey, $0.Key>(
-      '/dbm.v1.DBManager/SaveLocalKey',
+      '/selfhold.cellar.v1.Cellar/SaveLocalKey',
       ($0.LocalKey value) => value.writeToBuffer(),
       $0.Key.fromBuffer);
   static final _$deleteLocalKey = $grpc.ClientMethod<$0.Ref, $0.Empty>(
-      '/dbm.v1.DBManager/DeleteLocalKey',
+      '/selfhold.cellar.v1.Cellar/DeleteLocalKey',
       ($0.Ref value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
   static final _$listConnections =
       $grpc.ClientMethod<$0.Empty, $0.ConnectionList>(
-          '/dbm.v1.DBManager/ListConnections',
+          '/selfhold.cellar.v1.Cellar/ListConnections',
           ($0.Empty value) => value.writeToBuffer(),
           $0.ConnectionList.fromBuffer);
   static final _$saveConnection =
       $grpc.ClientMethod<$0.Connection, $0.Connection>(
-          '/dbm.v1.DBManager/SaveConnection',
+          '/selfhold.cellar.v1.Cellar/SaveConnection',
           ($0.Connection value) => value.writeToBuffer(),
           $0.Connection.fromBuffer);
   static final _$deleteConnection = $grpc.ClientMethod<$0.Ref, $0.Empty>(
-      '/dbm.v1.DBManager/DeleteConnection',
+      '/selfhold.cellar.v1.Cellar/DeleteConnection',
       ($0.Ref value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
   static final _$testConnection =
       $grpc.ClientMethod<$0.Connection, $0.TestReply>(
-          '/dbm.v1.DBManager/TestConnection',
+          '/selfhold.cellar.v1.Cellar/TestConnection',
           ($0.Connection value) => value.writeToBuffer(),
           $0.TestReply.fromBuffer);
   static final _$listDatabases = $grpc.ClientMethod<$0.Ref, $0.DatabaseList>(
-      '/dbm.v1.DBManager/ListDatabases',
+      '/selfhold.cellar.v1.Cellar/ListDatabases',
       ($0.Ref value) => value.writeToBuffer(),
       $0.DatabaseList.fromBuffer);
   static final _$listSchemas = $grpc.ClientMethod<$0.DbRef, $0.SchemaList>(
-      '/dbm.v1.DBManager/ListSchemas',
+      '/selfhold.cellar.v1.Cellar/ListSchemas',
       ($0.DbRef value) => value.writeToBuffer(),
       $0.SchemaList.fromBuffer);
   static final _$listObjects = $grpc.ClientMethod<$0.SchemaRef, $0.ObjectList>(
-      '/dbm.v1.DBManager/ListObjects',
+      '/selfhold.cellar.v1.Cellar/ListObjects',
       ($0.SchemaRef value) => value.writeToBuffer(),
       $0.ObjectList.fromBuffer);
   static final _$describeObject =
       $grpc.ClientMethod<$0.ObjectRef, $0.ObjectInfo>(
-          '/dbm.v1.DBManager/DescribeObject',
+          '/selfhold.cellar.v1.Cellar/DescribeObject',
           ($0.ObjectRef value) => value.writeToBuffer(),
           $0.ObjectInfo.fromBuffer);
   static final _$readTable =
       $grpc.ClientMethod<$0.ReadTableRequest, $0.ResultSet>(
-          '/dbm.v1.DBManager/ReadTable',
+          '/selfhold.cellar.v1.Cellar/ReadTable',
           ($0.ReadTableRequest value) => value.writeToBuffer(),
           $0.ResultSet.fromBuffer);
   static final _$applyEdits = $grpc.ClientMethod<$0.EditRequest, $0.EditReply>(
-      '/dbm.v1.DBManager/ApplyEdits',
+      '/selfhold.cellar.v1.Cellar/ApplyEdits',
       ($0.EditRequest value) => value.writeToBuffer(),
       $0.EditReply.fromBuffer);
   static final _$openConsole = $grpc.ClientMethod<$0.DbRef, $0.Console>(
-      '/dbm.v1.DBManager/OpenConsole',
+      '/selfhold.cellar.v1.Cellar/OpenConsole',
       ($0.DbRef value) => value.writeToBuffer(),
       $0.Console.fromBuffer);
   static final _$closeConsole = $grpc.ClientMethod<$0.ConsoleRef, $0.Empty>(
-      '/dbm.v1.DBManager/CloseConsole',
+      '/selfhold.cellar.v1.Cellar/CloseConsole',
       ($0.ConsoleRef value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
   static final _$execute =
       $grpc.ClientMethod<$0.ExecuteRequest, $0.ExecuteReply>(
-          '/dbm.v1.DBManager/Execute',
+          '/selfhold.cellar.v1.Cellar/Execute',
           ($0.ExecuteRequest value) => value.writeToBuffer(),
           $0.ExecuteReply.fromBuffer);
   static final _$cancel = $grpc.ClientMethod<$0.ConsoleRef, $0.Empty>(
-      '/dbm.v1.DBManager/Cancel',
+      '/selfhold.cellar.v1.Cellar/Cancel',
       ($0.ConsoleRef value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
   static final _$statements =
       $grpc.ClientMethod<$0.StatementsRequest, $0.StatementsReply>(
-          '/dbm.v1.DBManager/Statements',
+          '/selfhold.cellar.v1.Cellar/Statements',
           ($0.StatementsRequest value) => value.writeToBuffer(),
           $0.StatementsReply.fromBuffer);
   static final _$enableSync = $grpc.ClientMethod<$0.Empty, $0.SyncState>(
-      '/dbm.v1.DBManager/EnableSync',
+      '/selfhold.cellar.v1.Cellar/EnableSync',
       ($0.Empty value) => value.writeToBuffer(),
       $0.SyncState.fromBuffer);
   static final _$disableSync = $grpc.ClientMethod<$0.Empty, $0.SyncState>(
-      '/dbm.v1.DBManager/DisableSync',
+      '/selfhold.cellar.v1.Cellar/DisableSync',
       ($0.Empty value) => value.writeToBuffer(),
       $0.SyncState.fromBuffer);
   static final _$syncNow = $grpc.ClientMethod<$0.Empty, $0.SyncState>(
-      '/dbm.v1.DBManager/SyncNow',
+      '/selfhold.cellar.v1.Cellar/SyncNow',
       ($0.Empty value) => value.writeToBuffer(),
       $0.SyncState.fromBuffer);
-  static final _$moveServersToCloudSync =
+  static final _$moveServersToShard =
       $grpc.ClientMethod<$0.Empty, $0.SyncState>(
-          '/dbm.v1.DBManager/MoveServersToCloudSync',
+          '/selfhold.cellar.v1.Cellar/MoveServersToShard',
           ($0.Empty value) => value.writeToBuffer(),
           $0.SyncState.fromBuffer);
 }
 
-@$pb.GrpcServiceName('dbm.v1.DBManager')
-abstract class DBManagerServiceBase extends $grpc.Service {
-  $core.String get $name => 'dbm.v1.DBManager';
+@$pb.GrpcServiceName('selfhold.cellar.v1.Cellar')
+abstract class CellarServiceBase extends $grpc.Service {
+  $core.String get $name => 'selfhold.cellar.v1.Cellar';
 
-  DBManagerServiceBase() {
+  CellarServiceBase() {
     $addMethod($grpc.ServiceMethod<$0.Empty, $0.State>(
         'GetState',
         getState_Pre,
@@ -637,8 +636,8 @@ abstract class DBManagerServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
         ($0.SyncState value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.Empty, $0.SyncState>(
-        'MoveServersToCloudSync',
-        moveServersToCloudSync_Pre,
+        'MoveServersToShard',
+        moveServersToShard_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
@@ -879,11 +878,11 @@ abstract class DBManagerServiceBase extends $grpc.Service {
 
   $async.Future<$0.SyncState> syncNow($grpc.ServiceCall call, $0.Empty request);
 
-  $async.Future<$0.SyncState> moveServersToCloudSync_Pre(
+  $async.Future<$0.SyncState> moveServersToShard_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return moveServersToCloudSync($call, await $request);
+    return moveServersToShard($call, await $request);
   }
 
-  $async.Future<$0.SyncState> moveServersToCloudSync(
+  $async.Future<$0.SyncState> moveServersToShard(
       $grpc.ServiceCall call, $0.Empty request);
 }

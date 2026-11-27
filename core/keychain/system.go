@@ -9,7 +9,7 @@ import (
 	"github.com/zalando/go-keyring"
 )
 
-const service = "DBManager"
+const service = "dev.selfhold.cellar"
 
 // System returns the operating system's keychain.
 func System() Keychain { return system{} }

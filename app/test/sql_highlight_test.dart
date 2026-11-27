@@ -1,4 +1,4 @@
-import 'package:dbmanager/presentation/workspace/sql_highlight.dart';
+import 'package:cellar/presentation/workspace/sql_highlight.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

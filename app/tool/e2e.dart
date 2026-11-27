@@ -10,11 +10,11 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
 
-import 'package:dbmanager/app.dart';
-import 'package:dbmanager/core/settings/app_settings.dart';
-import 'package:dbmanager/data/rpc/endpoint.dart';
-import 'package:dbmanager/presentation/common/buttons.dart';
-import 'package:dbmanager/presentation/core/core_cubit.dart';
+import 'package:cellar/app.dart';
+import 'package:cellar/core/settings/app_settings.dart';
+import 'package:cellar/data/rpc/endpoint.dart';
+import 'package:cellar/presentation/common/buttons.dart';
+import 'package:cellar/presentation/core/core_cubit.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -29,7 +29,7 @@ Future<void> main() async {
   await AppSettings.load();
   _out.createSync(recursive: true);
   final core = CoreCubit(CoreLauncher.forPlatform())..connect();
-  runApp(DbManagerApp(core: core));
+  runApp(CellarApp(core: core));
   unawaited(_scenario().then((_) => exit(0), onError: (Object e, StackTrace st) async {
     stderr.writeln('E2E FAILED: $e\n$st');
     await _snap('failure');
@@ -50,12 +50,12 @@ Future<void> _scenario() async {
   await _waitText('New server', exact: true);
   await _snap('host-key');
   await _tap(await _waitText('Trust and connect'));
-  await _waitText('docker: dbm-e2e-pg', timeout: 40);
+  await _waitText('docker: cellar-e2e-pg', timeout: 40);
   await _pause(800);
   await _snap('discovered');
 
   // Connect the container found.
-  final row = await _waitText('docker: dbm-e2e-pg');
+  final row = await _waitText('docker: cellar-e2e-pg');
   await _tap(_nearest(row, 'Connect…'));
   await _waitText('New connection');
   await _type('Password', pgPassword);
@@ -70,7 +70,7 @@ Future<void> _scenario() async {
   // Tree: server → connection → shop → public → tables.
   await _tap(await _waitText('local-docker'));
   await _pause(400);
-  await _tap(await _waitText('dbm-e2e-pg'));
+  await _tap(await _waitText('cellar-e2e-pg'));
   await _tap(await _waitText('shop', exact: true, timeout: 20));
   await _tap(await _waitText('public', exact: true, timeout: 20));
   await _tap(await _waitText('tables', exact: true, timeout: 20));
@@ -135,8 +135,8 @@ Future<void> _scenario() async {
   await _pause(500);
   await _snap('ddl');
 
-  // Settings / CloudSync.
-  await _tap(_iconButton('Settings and CloudSync'));
+  // Settings / Shard.
+  await _tap(_iconButton('Settings and Shard'));
   await _pause(800);
   await _snap('settings');
 }

@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 enum Lang { en, ru }
 
 /// The current UI language. Changing it rebuilds the whole app (see
-/// [DbManagerApp]), so plain `tr()` calls in build methods are enough.
+/// [CellarApp]), so plain `tr()` calls in build methods are enough.
 final lang = ValueNotifier<Lang>(Lang.en);
 
 /// Picks the string for the current language.

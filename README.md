@@ -5,10 +5,7 @@ viewer and editor, and query consoles. PostgreSQL first. Databases are reached *
 you add a server, Cellar looks for the database services running on it and offers to
 connect.
 
-Cellar was formerly called **DB Manager**. Some identifiers still use the old name (the Go
-module `dbmanager`, `proto/dbm.proto`, the `DbmStart` entry points, the connector app id
-`dbmanager`, the `DBM_*` environment variables, the data directory `~/.config/dbmanager`),
-and they stay as they are: they are persisted on users' devices.
+Cellar was formerly called DB Manager.
 
 Cellar is part of [SelfHold](https://github.com/SelfHold), a set of independent
 self-hosted apps. It works on its own; optionally it syncs through
@@ -77,7 +74,7 @@ Windows is not a target.
 - **Host-key trust**: the first connection to a server shows its host key and asks you to
   trust it. A changed host key is refused, and only replaced after your explicit
   "Replace the key"; saving a server never changes its host keys.
-- **Nothing readable on disk**: the server and connection list (`dbmanager.json`), the
+- **Nothing readable on disk**: the server and connection list (`cellar.json`), the
   per-device file (`device.json`) and the sync cache are sealed with XChaCha20-Poly1305
   (the file name as associated data) under a key kept in the OS keychain, or, without a
   keychain, in `local.key` (mode 0600; on Android in app-private storage).
@@ -93,7 +90,7 @@ To report a vulnerability, see [SECURITY.md](SECURITY.md).
 
 ```
 app/          Flutter UI (renders only; talks gRPC to the core)
-proto/        dbm.proto: the core <-> app API; connector.proto: Shard's Connector API
+proto/        cellar.proto: the core <-> app API; connector.proto: Shard's Connector API
 core/         Go core: all logic and all secrets
   embed/        runs the core inside the app's process
   sshx/         SSH client pool, host keys, jump servers (sshtest: test SSH server)
@@ -101,7 +98,7 @@ core/         Go core: all logic and all secrets
   pg/           PostgreSQL: pools, metadata, data, consoles, statement splitter
   store/        the document (servers, connections), merge, sealing
   keychain/     OS keychain access
-  cloudsync/    Shard Connector client and the syncer (fake: in-memory Shard for tests)
+  shard/    Shard Connector client and the syncer (fake: in-memory Shard for tests)
   rpc/          the gRPC service
 desktopbind/  C archive linked into the Linux executable
 mobilebind/   gomobile binding for Android
@@ -129,11 +126,11 @@ Prerequisites:
 - for `make pg-test` and `app/tool/e2e.sh`: docker.
 
 ```bash
-make build-linux   # release bundle in builds/linux/ (executable: dbmanager)
+make build-linux   # release bundle in builds/linux/ (executable: cellar)
 make app-run       # run the app in debug mode
-make core-lib      # only the core's C archive (app/build/core/libdbmanager.a)
-make proto         # regenerate core/rpc/pb, core/cloudsync/pb, app/lib/data/rpc/gen
-make aar           # the core for Android (app/android/app/libs/dbmanager.aar)
+make core-lib      # only the core's C archive (app/build/core/libcellar.a)
+make proto         # regenerate core/rpc/pb, core/shard/pb, app/lib/data/rpc/gen
+make aar           # the core for Android (app/android/app/libs/cellar.aar)
 make build-apk     # Android APKs in builds/android/ (the app does not run yet, see Status)
 ```
 
@@ -154,7 +151,7 @@ make app-test    # flutter analyze + flutter test
 app/tool/e2e.sh  # end-to-end run of the real app
 ```
 
-Sync is tested against an in-memory Shard (`core/cloudsync/fake`: records, shared servers,
+Sync is tested against an in-memory Shard (`core/shard/fake`: records, shared servers,
 safe keys, pairing, Watch, and an older Shard without the new scopes).
 
 `app/tool/e2e.sh` starts a throwaway `sshd` on 127.0.0.1:2222 (keys only), a seeded
@@ -162,20 +159,19 @@ PostgreSQL in docker on 127.0.0.1:55433, and the app with an isolated config dir
 `app/tool/e2e.dart` then drives the app through a scenario (discover, connect, browse, edit,
 console, structure, settings) and writes a screenshot after each step. It needs
 `/usr/bin/sshd`, `ssh-keygen`, `python3`, docker, Flutter and an X11 display. It never
-touches your real config, keychain or Shard (`DBM_NO_KEYCHAIN=1`, `DBM_NO_CLOUDSYNC=1`).
+touches your real config, keychain or Shard (`CELLAR_NO_KEYCHAIN=1`, `CELLAR_NO_SHARD=1`).
 
 ## Sync through Shard (optional)
 
 Cellar works without Shard. Turn sync on in Settings and approve the pairing in Shard; Shard
 may be missing, stopped or locked at any moment, and the local file stays the working copy.
 
-- Your servers and connections are kept in one record (`dbmanager.json` of app id
-  `dbmanager`) and merge deterministically (union by id, newest change wins, deletions are
+- Your servers and connections are kept in one record (`cellar.json` of app id
+  `cellar`) and merge deterministically (union by id, newest change wins, deletions are
   kept as tombstones), so sync never asks you to resolve a conflict.
 - With Shard's `servers` scope, servers live in Shard's shared list, which Postern uses too;
-  servers kept by Cellar alone can be moved there (Settings → Move). The UI still
-  calls Shard by its old name, CloudSync. Host keys trusted in
-  one app are known to the others.
+  servers kept by Cellar alone can be moved there (Settings → Move). Host keys
+  trusted in one app are known to the others.
 - With the `ssh_keys` scope, you can pick an SSH key from Shard's password safe when
   connecting.
 - An older Shard without these scopes still syncs the record; servers then stay in Cellar's

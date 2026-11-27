@@ -18,7 +18,7 @@ import (
 	"time"
 	"unsafe"
 
-	"dbmanager/core/embed"
+	"github.com/SelfHold/cellar/core/embed"
 )
 
 var (
@@ -33,11 +33,11 @@ type reply struct {
 	Error    string `json:"error,omitempty"`
 }
 
-// DbmStart starts the core (again: returns the running one) and returns
-// JSON {"address","token"} or {"error"}; free it with DbmFree.
+// CellarStart starts the core (again: returns the running one) and returns
+// JSON {"address","token"} or {"error"}; free it with CellarFree.
 //
-//export DbmStart
-func DbmStart() *C.char {
+//export CellarStart
+func CellarStart() *C.char {
 	return cjson(start())
 }
 
@@ -53,11 +53,11 @@ func start() reply {
 		Dir:      dir,
 		Listen:   embed.DefaultListen(dir),
 		Endpoint: endpoint,
-		LogFile:  filepath.Join(dir, "dbmanager.log"),
+		LogFile:  filepath.Join(dir, "cellar.log"),
 		Log:      os.Stderr,
-		// Development: keep the local key in a file, leave CloudSync alone.
-		NoKeychain:  os.Getenv("DBM_NO_KEYCHAIN") == "1",
-		NoCloudSync: os.Getenv("DBM_NO_CLOUDSYNC") == "1",
+		// Development: keep the local key in a file, leave Shard alone.
+		NoKeychain: os.Getenv("CELLAR_NO_KEYCHAIN") == "1",
+		NoShard:    os.Getenv("CELLAR_NO_SHARD") == "1",
 	})
 	if errors.Is(err, embed.ErrRunning) {
 		if addr, token, ok := embed.ReadEndpoint(endpoint); ok {
@@ -71,11 +71,11 @@ func start() reply {
 	return reply{Address: c.Address, Token: c.Token}
 }
 
-// DbmStop closes sessions and stops the server, waiting at most 5 s (it
+// CellarStop closes sessions and stops the server, waiting at most 5 s (it
 // runs on the UI thread right before the process exits).
 //
-//export DbmStop
-func DbmStop() {
+//export CellarStop
+func CellarStop() {
 	mu.Lock()
 	defer mu.Unlock()
 	if core == nil {
@@ -91,10 +91,10 @@ func DbmStop() {
 	}
 }
 
-// DbmFree frees a string returned by DbmStart.
+// CellarFree frees a string returned by CellarStart.
 //
-//export DbmFree
-func DbmFree(p *C.char) {
+//export CellarFree
+func CellarFree(p *C.char) {
 	C.free(unsafe.Pointer(p))
 }
 

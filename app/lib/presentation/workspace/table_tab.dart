@@ -8,7 +8,7 @@ import '../../core/settings/app_settings.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/typography.dart';
 import '../../data/rpc/core_client.dart';
-import '../../data/rpc/gen/dbm.pbgrpc.dart' as pb;
+import '../../data/rpc/gen/cellar.pbgrpc.dart' as pb;
 import '../common/hm.dart';
 import '../core/core_cubit.dart';
 import '../explorer/explorer_controller.dart';
@@ -42,7 +42,7 @@ class _TableTabState extends State<TableTab> {
   final _deleted = <int>{};
   bool _saving = false;
 
-  pb.DBManagerClient get _api => context.read<CoreCubit>().api;
+  pb.CellarClient get _api => context.read<CoreCubit>().api;
   int get _limit => AppSettings.instance.pageSize;
   int get _skip => _rs?.hasCtid == true ? 1 : 0; // hidden ctid column
   bool get _editable => widget.path.editable && (_rs?.keyColumns.isNotEmpty ?? false);

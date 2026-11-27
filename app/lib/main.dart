@@ -19,7 +19,7 @@ Future<void> main() async {
     await windowManager.setPreventClose(true);
   }
   final core = CoreCubit(CoreLauncher.forPlatform())..connect();
-  runApp(DbManagerApp(core: core));
+  runApp(CellarApp(core: core));
 }
 
 /// Closing the window stops the core (sessions, SSH connections) first.

@@ -7,7 +7,7 @@ import '../../core/theme/colors.dart';
 import '../../core/theme/layout.dart';
 import '../../core/theme/typography.dart';
 import '../../data/rpc/core_client.dart';
-import '../../data/rpc/gen/dbm.pbgrpc.dart' as pb;
+import '../../data/rpc/gen/cellar.pbgrpc.dart' as pb;
 import '../common/hm.dart';
 import '../core/core_cubit.dart';
 import 'server_dialogs.dart';
@@ -148,7 +148,7 @@ class _ConnectionFormState extends State<_ConnectionForm> {
   pb.TestReply? _test;
   String? _error;
 
-  pb.DBManagerClient get _api => context.read<CoreCubit>().api;
+  pb.CellarClient get _api => context.read<CoreCubit>().api;
 
   @override
   void initState() {

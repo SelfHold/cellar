@@ -2,12 +2,12 @@
 // versions:
 // - protoc-gen-go-grpc v1.6.2
 // - protoc             v7.36.1
-// source: dbm.proto
+// source: cellar.proto
 
-// The API between the DB Manager core (inside the app's process: desktopbind
+// The API between the Cellar core (inside the app's process: desktopbind
 // on desktops, mobilebind on Android) and its Flutter app. The core owns the
 // SSH connections, database sessions, the server and connection lists and
-// CloudSync; the app only draws.
+// Shard; the app only draws.
 
 package pb
 
@@ -24,48 +24,48 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	DBManager_GetState_FullMethodName               = "/dbm.v1.DBManager/GetState"
-	DBManager_Events_FullMethodName                 = "/dbm.v1.DBManager/Events"
-	DBManager_ListServers_FullMethodName            = "/dbm.v1.DBManager/ListServers"
-	DBManager_SaveServer_FullMethodName             = "/dbm.v1.DBManager/SaveServer"
-	DBManager_DeleteServer_FullMethodName           = "/dbm.v1.DBManager/DeleteServer"
-	DBManager_ConnectServer_FullMethodName          = "/dbm.v1.DBManager/ConnectServer"
-	DBManager_TrustHostKey_FullMethodName           = "/dbm.v1.DBManager/TrustHostKey"
-	DBManager_DisconnectServer_FullMethodName       = "/dbm.v1.DBManager/DisconnectServer"
-	DBManager_Discover_FullMethodName               = "/dbm.v1.DBManager/Discover"
-	DBManager_ListKeys_FullMethodName               = "/dbm.v1.DBManager/ListKeys"
-	DBManager_SaveLocalKey_FullMethodName           = "/dbm.v1.DBManager/SaveLocalKey"
-	DBManager_DeleteLocalKey_FullMethodName         = "/dbm.v1.DBManager/DeleteLocalKey"
-	DBManager_ListConnections_FullMethodName        = "/dbm.v1.DBManager/ListConnections"
-	DBManager_SaveConnection_FullMethodName         = "/dbm.v1.DBManager/SaveConnection"
-	DBManager_DeleteConnection_FullMethodName       = "/dbm.v1.DBManager/DeleteConnection"
-	DBManager_TestConnection_FullMethodName         = "/dbm.v1.DBManager/TestConnection"
-	DBManager_ListDatabases_FullMethodName          = "/dbm.v1.DBManager/ListDatabases"
-	DBManager_ListSchemas_FullMethodName            = "/dbm.v1.DBManager/ListSchemas"
-	DBManager_ListObjects_FullMethodName            = "/dbm.v1.DBManager/ListObjects"
-	DBManager_DescribeObject_FullMethodName         = "/dbm.v1.DBManager/DescribeObject"
-	DBManager_ReadTable_FullMethodName              = "/dbm.v1.DBManager/ReadTable"
-	DBManager_ApplyEdits_FullMethodName             = "/dbm.v1.DBManager/ApplyEdits"
-	DBManager_OpenConsole_FullMethodName            = "/dbm.v1.DBManager/OpenConsole"
-	DBManager_CloseConsole_FullMethodName           = "/dbm.v1.DBManager/CloseConsole"
-	DBManager_Execute_FullMethodName                = "/dbm.v1.DBManager/Execute"
-	DBManager_Cancel_FullMethodName                 = "/dbm.v1.DBManager/Cancel"
-	DBManager_Statements_FullMethodName             = "/dbm.v1.DBManager/Statements"
-	DBManager_EnableSync_FullMethodName             = "/dbm.v1.DBManager/EnableSync"
-	DBManager_DisableSync_FullMethodName            = "/dbm.v1.DBManager/DisableSync"
-	DBManager_SyncNow_FullMethodName                = "/dbm.v1.DBManager/SyncNow"
-	DBManager_MoveServersToCloudSync_FullMethodName = "/dbm.v1.DBManager/MoveServersToCloudSync"
+	Cellar_GetState_FullMethodName           = "/selfhold.cellar.v1.Cellar/GetState"
+	Cellar_Events_FullMethodName             = "/selfhold.cellar.v1.Cellar/Events"
+	Cellar_ListServers_FullMethodName        = "/selfhold.cellar.v1.Cellar/ListServers"
+	Cellar_SaveServer_FullMethodName         = "/selfhold.cellar.v1.Cellar/SaveServer"
+	Cellar_DeleteServer_FullMethodName       = "/selfhold.cellar.v1.Cellar/DeleteServer"
+	Cellar_ConnectServer_FullMethodName      = "/selfhold.cellar.v1.Cellar/ConnectServer"
+	Cellar_TrustHostKey_FullMethodName       = "/selfhold.cellar.v1.Cellar/TrustHostKey"
+	Cellar_DisconnectServer_FullMethodName   = "/selfhold.cellar.v1.Cellar/DisconnectServer"
+	Cellar_Discover_FullMethodName           = "/selfhold.cellar.v1.Cellar/Discover"
+	Cellar_ListKeys_FullMethodName           = "/selfhold.cellar.v1.Cellar/ListKeys"
+	Cellar_SaveLocalKey_FullMethodName       = "/selfhold.cellar.v1.Cellar/SaveLocalKey"
+	Cellar_DeleteLocalKey_FullMethodName     = "/selfhold.cellar.v1.Cellar/DeleteLocalKey"
+	Cellar_ListConnections_FullMethodName    = "/selfhold.cellar.v1.Cellar/ListConnections"
+	Cellar_SaveConnection_FullMethodName     = "/selfhold.cellar.v1.Cellar/SaveConnection"
+	Cellar_DeleteConnection_FullMethodName   = "/selfhold.cellar.v1.Cellar/DeleteConnection"
+	Cellar_TestConnection_FullMethodName     = "/selfhold.cellar.v1.Cellar/TestConnection"
+	Cellar_ListDatabases_FullMethodName      = "/selfhold.cellar.v1.Cellar/ListDatabases"
+	Cellar_ListSchemas_FullMethodName        = "/selfhold.cellar.v1.Cellar/ListSchemas"
+	Cellar_ListObjects_FullMethodName        = "/selfhold.cellar.v1.Cellar/ListObjects"
+	Cellar_DescribeObject_FullMethodName     = "/selfhold.cellar.v1.Cellar/DescribeObject"
+	Cellar_ReadTable_FullMethodName          = "/selfhold.cellar.v1.Cellar/ReadTable"
+	Cellar_ApplyEdits_FullMethodName         = "/selfhold.cellar.v1.Cellar/ApplyEdits"
+	Cellar_OpenConsole_FullMethodName        = "/selfhold.cellar.v1.Cellar/OpenConsole"
+	Cellar_CloseConsole_FullMethodName       = "/selfhold.cellar.v1.Cellar/CloseConsole"
+	Cellar_Execute_FullMethodName            = "/selfhold.cellar.v1.Cellar/Execute"
+	Cellar_Cancel_FullMethodName             = "/selfhold.cellar.v1.Cellar/Cancel"
+	Cellar_Statements_FullMethodName         = "/selfhold.cellar.v1.Cellar/Statements"
+	Cellar_EnableSync_FullMethodName         = "/selfhold.cellar.v1.Cellar/EnableSync"
+	Cellar_DisableSync_FullMethodName        = "/selfhold.cellar.v1.Cellar/DisableSync"
+	Cellar_SyncNow_FullMethodName            = "/selfhold.cellar.v1.Cellar/SyncNow"
+	Cellar_MoveServersToShard_FullMethodName = "/selfhold.cellar.v1.Cellar/MoveServersToShard"
 )
 
-// DBManagerClient is the client API for DBManager service.
+// CellarClient is the client API for Cellar service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type DBManagerClient interface {
+type CellarClient interface {
 	GetState(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*State, error)
 	// Events streams changes (servers, connections, keys, sync, SSH state).
 	// The app keeps one open and reloads what an event names.
 	Events(ctx context.Context, in *Empty, opts ...grpc.CallOption) (grpc.ServerStreamingClient[Event], error)
-	// --- servers (shared through CloudSync when its "servers" scope is on) ---
+	// --- servers (shared through Shard when its "servers" scope is on) ---
 	ListServers(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ServerList, error)
 	// SaveServer creates (id = "") or replaces a server.
 	SaveServer(ctx context.Context, in *Server, opts ...grpc.CallOption) (*Server, error)
@@ -79,7 +79,7 @@ type DBManagerClient interface {
 	// Discover looks for database services running on the server (processes,
 	// listening ports, docker containers) and checks each candidate port.
 	Discover(ctx context.Context, in *Ref, opts ...grpc.CallOption) (*DiscoverReply, error)
-	// --- SSH keys: CloudSync's safe (scope "ssh_keys") + keys of this device --
+	// --- SSH keys: Shard's safe (scope "ssh_keys") + keys of this device --
 	ListKeys(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*KeyList, error)
 	// SaveLocalKey keeps a pasted / loaded private key on this device only.
 	SaveLocalKey(ctx context.Context, in *LocalKey, opts ...grpc.CallOption) (*Key, error)
@@ -116,38 +116,38 @@ type DBManagerClient interface {
 	// Statements splits a console's text into statements (UTF-16 offsets),
 	// for highlighting the one at the cursor.
 	Statements(ctx context.Context, in *StatementsRequest, opts ...grpc.CallOption) (*StatementsReply, error)
-	// --- CloudSync ----------------------------------------------------------
+	// --- Shard ----------------------------------------------------------
 	// EnableSync pairs (if needed) and returns the code to show; the result
 	// comes as a SYNC event.
 	EnableSync(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*SyncState, error)
 	DisableSync(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*SyncState, error)
 	SyncNow(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*SyncState, error)
-	// MoveServersToCloudSync copies this app's own servers into the shared
+	// MoveServersToShard copies this app's own servers into the shared
 	// list (once the "servers" scope is granted) and drops the own copy.
-	MoveServersToCloudSync(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*SyncState, error)
+	MoveServersToShard(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*SyncState, error)
 }
 
-type dBManagerClient struct {
+type cellarClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewDBManagerClient(cc grpc.ClientConnInterface) DBManagerClient {
-	return &dBManagerClient{cc}
+func NewCellarClient(cc grpc.ClientConnInterface) CellarClient {
+	return &cellarClient{cc}
 }
 
-func (c *dBManagerClient) GetState(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*State, error) {
+func (c *cellarClient) GetState(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*State, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(State)
-	err := c.cc.Invoke(ctx, DBManager_GetState_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_GetState_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) Events(ctx context.Context, in *Empty, opts ...grpc.CallOption) (grpc.ServerStreamingClient[Event], error) {
+func (c *cellarClient) Events(ctx context.Context, in *Empty, opts ...grpc.CallOption) (grpc.ServerStreamingClient[Event], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &DBManager_ServiceDesc.Streams[0], DBManager_Events_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &Cellar_ServiceDesc.Streams[0], Cellar_Events_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -162,307 +162,307 @@ func (c *dBManagerClient) Events(ctx context.Context, in *Empty, opts ...grpc.Ca
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type DBManager_EventsClient = grpc.ServerStreamingClient[Event]
+type Cellar_EventsClient = grpc.ServerStreamingClient[Event]
 
-func (c *dBManagerClient) ListServers(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ServerList, error) {
+func (c *cellarClient) ListServers(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ServerList, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ServerList)
-	err := c.cc.Invoke(ctx, DBManager_ListServers_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_ListServers_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) SaveServer(ctx context.Context, in *Server, opts ...grpc.CallOption) (*Server, error) {
+func (c *cellarClient) SaveServer(ctx context.Context, in *Server, opts ...grpc.CallOption) (*Server, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Server)
-	err := c.cc.Invoke(ctx, DBManager_SaveServer_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_SaveServer_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) DeleteServer(ctx context.Context, in *Ref, opts ...grpc.CallOption) (*Empty, error) {
+func (c *cellarClient) DeleteServer(ctx context.Context, in *Ref, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, DBManager_DeleteServer_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_DeleteServer_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) ConnectServer(ctx context.Context, in *ConnectRequest, opts ...grpc.CallOption) (*ConnectReply, error) {
+func (c *cellarClient) ConnectServer(ctx context.Context, in *ConnectRequest, opts ...grpc.CallOption) (*ConnectReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ConnectReply)
-	err := c.cc.Invoke(ctx, DBManager_ConnectServer_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_ConnectServer_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) TrustHostKey(ctx context.Context, in *TrustRequest, opts ...grpc.CallOption) (*Server, error) {
+func (c *cellarClient) TrustHostKey(ctx context.Context, in *TrustRequest, opts ...grpc.CallOption) (*Server, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Server)
-	err := c.cc.Invoke(ctx, DBManager_TrustHostKey_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_TrustHostKey_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) DisconnectServer(ctx context.Context, in *Ref, opts ...grpc.CallOption) (*Empty, error) {
+func (c *cellarClient) DisconnectServer(ctx context.Context, in *Ref, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, DBManager_DisconnectServer_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_DisconnectServer_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) Discover(ctx context.Context, in *Ref, opts ...grpc.CallOption) (*DiscoverReply, error) {
+func (c *cellarClient) Discover(ctx context.Context, in *Ref, opts ...grpc.CallOption) (*DiscoverReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(DiscoverReply)
-	err := c.cc.Invoke(ctx, DBManager_Discover_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_Discover_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) ListKeys(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*KeyList, error) {
+func (c *cellarClient) ListKeys(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*KeyList, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(KeyList)
-	err := c.cc.Invoke(ctx, DBManager_ListKeys_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_ListKeys_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) SaveLocalKey(ctx context.Context, in *LocalKey, opts ...grpc.CallOption) (*Key, error) {
+func (c *cellarClient) SaveLocalKey(ctx context.Context, in *LocalKey, opts ...grpc.CallOption) (*Key, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Key)
-	err := c.cc.Invoke(ctx, DBManager_SaveLocalKey_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_SaveLocalKey_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) DeleteLocalKey(ctx context.Context, in *Ref, opts ...grpc.CallOption) (*Empty, error) {
+func (c *cellarClient) DeleteLocalKey(ctx context.Context, in *Ref, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, DBManager_DeleteLocalKey_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_DeleteLocalKey_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) ListConnections(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ConnectionList, error) {
+func (c *cellarClient) ListConnections(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ConnectionList, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ConnectionList)
-	err := c.cc.Invoke(ctx, DBManager_ListConnections_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_ListConnections_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) SaveConnection(ctx context.Context, in *Connection, opts ...grpc.CallOption) (*Connection, error) {
+func (c *cellarClient) SaveConnection(ctx context.Context, in *Connection, opts ...grpc.CallOption) (*Connection, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Connection)
-	err := c.cc.Invoke(ctx, DBManager_SaveConnection_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_SaveConnection_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) DeleteConnection(ctx context.Context, in *Ref, opts ...grpc.CallOption) (*Empty, error) {
+func (c *cellarClient) DeleteConnection(ctx context.Context, in *Ref, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, DBManager_DeleteConnection_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_DeleteConnection_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) TestConnection(ctx context.Context, in *Connection, opts ...grpc.CallOption) (*TestReply, error) {
+func (c *cellarClient) TestConnection(ctx context.Context, in *Connection, opts ...grpc.CallOption) (*TestReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(TestReply)
-	err := c.cc.Invoke(ctx, DBManager_TestConnection_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_TestConnection_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) ListDatabases(ctx context.Context, in *Ref, opts ...grpc.CallOption) (*DatabaseList, error) {
+func (c *cellarClient) ListDatabases(ctx context.Context, in *Ref, opts ...grpc.CallOption) (*DatabaseList, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(DatabaseList)
-	err := c.cc.Invoke(ctx, DBManager_ListDatabases_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_ListDatabases_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) ListSchemas(ctx context.Context, in *DbRef, opts ...grpc.CallOption) (*SchemaList, error) {
+func (c *cellarClient) ListSchemas(ctx context.Context, in *DbRef, opts ...grpc.CallOption) (*SchemaList, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SchemaList)
-	err := c.cc.Invoke(ctx, DBManager_ListSchemas_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_ListSchemas_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) ListObjects(ctx context.Context, in *SchemaRef, opts ...grpc.CallOption) (*ObjectList, error) {
+func (c *cellarClient) ListObjects(ctx context.Context, in *SchemaRef, opts ...grpc.CallOption) (*ObjectList, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ObjectList)
-	err := c.cc.Invoke(ctx, DBManager_ListObjects_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_ListObjects_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) DescribeObject(ctx context.Context, in *ObjectRef, opts ...grpc.CallOption) (*ObjectInfo, error) {
+func (c *cellarClient) DescribeObject(ctx context.Context, in *ObjectRef, opts ...grpc.CallOption) (*ObjectInfo, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ObjectInfo)
-	err := c.cc.Invoke(ctx, DBManager_DescribeObject_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_DescribeObject_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) ReadTable(ctx context.Context, in *ReadTableRequest, opts ...grpc.CallOption) (*ResultSet, error) {
+func (c *cellarClient) ReadTable(ctx context.Context, in *ReadTableRequest, opts ...grpc.CallOption) (*ResultSet, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ResultSet)
-	err := c.cc.Invoke(ctx, DBManager_ReadTable_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_ReadTable_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) ApplyEdits(ctx context.Context, in *EditRequest, opts ...grpc.CallOption) (*EditReply, error) {
+func (c *cellarClient) ApplyEdits(ctx context.Context, in *EditRequest, opts ...grpc.CallOption) (*EditReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(EditReply)
-	err := c.cc.Invoke(ctx, DBManager_ApplyEdits_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_ApplyEdits_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) OpenConsole(ctx context.Context, in *DbRef, opts ...grpc.CallOption) (*Console, error) {
+func (c *cellarClient) OpenConsole(ctx context.Context, in *DbRef, opts ...grpc.CallOption) (*Console, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Console)
-	err := c.cc.Invoke(ctx, DBManager_OpenConsole_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_OpenConsole_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) CloseConsole(ctx context.Context, in *ConsoleRef, opts ...grpc.CallOption) (*Empty, error) {
+func (c *cellarClient) CloseConsole(ctx context.Context, in *ConsoleRef, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, DBManager_CloseConsole_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_CloseConsole_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) Execute(ctx context.Context, in *ExecuteRequest, opts ...grpc.CallOption) (*ExecuteReply, error) {
+func (c *cellarClient) Execute(ctx context.Context, in *ExecuteRequest, opts ...grpc.CallOption) (*ExecuteReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ExecuteReply)
-	err := c.cc.Invoke(ctx, DBManager_Execute_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_Execute_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) Cancel(ctx context.Context, in *ConsoleRef, opts ...grpc.CallOption) (*Empty, error) {
+func (c *cellarClient) Cancel(ctx context.Context, in *ConsoleRef, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, DBManager_Cancel_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_Cancel_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) Statements(ctx context.Context, in *StatementsRequest, opts ...grpc.CallOption) (*StatementsReply, error) {
+func (c *cellarClient) Statements(ctx context.Context, in *StatementsRequest, opts ...grpc.CallOption) (*StatementsReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(StatementsReply)
-	err := c.cc.Invoke(ctx, DBManager_Statements_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_Statements_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) EnableSync(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*SyncState, error) {
+func (c *cellarClient) EnableSync(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*SyncState, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SyncState)
-	err := c.cc.Invoke(ctx, DBManager_EnableSync_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_EnableSync_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) DisableSync(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*SyncState, error) {
+func (c *cellarClient) DisableSync(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*SyncState, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SyncState)
-	err := c.cc.Invoke(ctx, DBManager_DisableSync_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_DisableSync_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) SyncNow(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*SyncState, error) {
+func (c *cellarClient) SyncNow(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*SyncState, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SyncState)
-	err := c.cc.Invoke(ctx, DBManager_SyncNow_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_SyncNow_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dBManagerClient) MoveServersToCloudSync(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*SyncState, error) {
+func (c *cellarClient) MoveServersToShard(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*SyncState, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SyncState)
-	err := c.cc.Invoke(ctx, DBManager_MoveServersToCloudSync_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Cellar_MoveServersToShard_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// DBManagerServer is the server API for DBManager service.
-// All implementations must embed UnimplementedDBManagerServer
+// CellarServer is the server API for Cellar service.
+// All implementations must embed UnimplementedCellarServer
 // for forward compatibility.
-type DBManagerServer interface {
+type CellarServer interface {
 	GetState(context.Context, *Empty) (*State, error)
 	// Events streams changes (servers, connections, keys, sync, SSH state).
 	// The app keeps one open and reloads what an event names.
 	Events(*Empty, grpc.ServerStreamingServer[Event]) error
-	// --- servers (shared through CloudSync when its "servers" scope is on) ---
+	// --- servers (shared through Shard when its "servers" scope is on) ---
 	ListServers(context.Context, *Empty) (*ServerList, error)
 	// SaveServer creates (id = "") or replaces a server.
 	SaveServer(context.Context, *Server) (*Server, error)
@@ -476,7 +476,7 @@ type DBManagerServer interface {
 	// Discover looks for database services running on the server (processes,
 	// listening ports, docker containers) and checks each candidate port.
 	Discover(context.Context, *Ref) (*DiscoverReply, error)
-	// --- SSH keys: CloudSync's safe (scope "ssh_keys") + keys of this device --
+	// --- SSH keys: Shard's safe (scope "ssh_keys") + keys of this device --
 	ListKeys(context.Context, *Empty) (*KeyList, error)
 	// SaveLocalKey keeps a pasted / loaded private key on this device only.
 	SaveLocalKey(context.Context, *LocalKey) (*Key, error)
@@ -513,824 +513,824 @@ type DBManagerServer interface {
 	// Statements splits a console's text into statements (UTF-16 offsets),
 	// for highlighting the one at the cursor.
 	Statements(context.Context, *StatementsRequest) (*StatementsReply, error)
-	// --- CloudSync ----------------------------------------------------------
+	// --- Shard ----------------------------------------------------------
 	// EnableSync pairs (if needed) and returns the code to show; the result
 	// comes as a SYNC event.
 	EnableSync(context.Context, *Empty) (*SyncState, error)
 	DisableSync(context.Context, *Empty) (*SyncState, error)
 	SyncNow(context.Context, *Empty) (*SyncState, error)
-	// MoveServersToCloudSync copies this app's own servers into the shared
+	// MoveServersToShard copies this app's own servers into the shared
 	// list (once the "servers" scope is granted) and drops the own copy.
-	MoveServersToCloudSync(context.Context, *Empty) (*SyncState, error)
-	mustEmbedUnimplementedDBManagerServer()
+	MoveServersToShard(context.Context, *Empty) (*SyncState, error)
+	mustEmbedUnimplementedCellarServer()
 }
 
-// UnimplementedDBManagerServer must be embedded to have
+// UnimplementedCellarServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedDBManagerServer struct{}
+type UnimplementedCellarServer struct{}
 
-func (UnimplementedDBManagerServer) GetState(context.Context, *Empty) (*State, error) {
+func (UnimplementedCellarServer) GetState(context.Context, *Empty) (*State, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetState not implemented")
 }
-func (UnimplementedDBManagerServer) Events(*Empty, grpc.ServerStreamingServer[Event]) error {
+func (UnimplementedCellarServer) Events(*Empty, grpc.ServerStreamingServer[Event]) error {
 	return status.Error(codes.Unimplemented, "method Events not implemented")
 }
-func (UnimplementedDBManagerServer) ListServers(context.Context, *Empty) (*ServerList, error) {
+func (UnimplementedCellarServer) ListServers(context.Context, *Empty) (*ServerList, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListServers not implemented")
 }
-func (UnimplementedDBManagerServer) SaveServer(context.Context, *Server) (*Server, error) {
+func (UnimplementedCellarServer) SaveServer(context.Context, *Server) (*Server, error) {
 	return nil, status.Error(codes.Unimplemented, "method SaveServer not implemented")
 }
-func (UnimplementedDBManagerServer) DeleteServer(context.Context, *Ref) (*Empty, error) {
+func (UnimplementedCellarServer) DeleteServer(context.Context, *Ref) (*Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteServer not implemented")
 }
-func (UnimplementedDBManagerServer) ConnectServer(context.Context, *ConnectRequest) (*ConnectReply, error) {
+func (UnimplementedCellarServer) ConnectServer(context.Context, *ConnectRequest) (*ConnectReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method ConnectServer not implemented")
 }
-func (UnimplementedDBManagerServer) TrustHostKey(context.Context, *TrustRequest) (*Server, error) {
+func (UnimplementedCellarServer) TrustHostKey(context.Context, *TrustRequest) (*Server, error) {
 	return nil, status.Error(codes.Unimplemented, "method TrustHostKey not implemented")
 }
-func (UnimplementedDBManagerServer) DisconnectServer(context.Context, *Ref) (*Empty, error) {
+func (UnimplementedCellarServer) DisconnectServer(context.Context, *Ref) (*Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DisconnectServer not implemented")
 }
-func (UnimplementedDBManagerServer) Discover(context.Context, *Ref) (*DiscoverReply, error) {
+func (UnimplementedCellarServer) Discover(context.Context, *Ref) (*DiscoverReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method Discover not implemented")
 }
-func (UnimplementedDBManagerServer) ListKeys(context.Context, *Empty) (*KeyList, error) {
+func (UnimplementedCellarServer) ListKeys(context.Context, *Empty) (*KeyList, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListKeys not implemented")
 }
-func (UnimplementedDBManagerServer) SaveLocalKey(context.Context, *LocalKey) (*Key, error) {
+func (UnimplementedCellarServer) SaveLocalKey(context.Context, *LocalKey) (*Key, error) {
 	return nil, status.Error(codes.Unimplemented, "method SaveLocalKey not implemented")
 }
-func (UnimplementedDBManagerServer) DeleteLocalKey(context.Context, *Ref) (*Empty, error) {
+func (UnimplementedCellarServer) DeleteLocalKey(context.Context, *Ref) (*Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteLocalKey not implemented")
 }
-func (UnimplementedDBManagerServer) ListConnections(context.Context, *Empty) (*ConnectionList, error) {
+func (UnimplementedCellarServer) ListConnections(context.Context, *Empty) (*ConnectionList, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListConnections not implemented")
 }
-func (UnimplementedDBManagerServer) SaveConnection(context.Context, *Connection) (*Connection, error) {
+func (UnimplementedCellarServer) SaveConnection(context.Context, *Connection) (*Connection, error) {
 	return nil, status.Error(codes.Unimplemented, "method SaveConnection not implemented")
 }
-func (UnimplementedDBManagerServer) DeleteConnection(context.Context, *Ref) (*Empty, error) {
+func (UnimplementedCellarServer) DeleteConnection(context.Context, *Ref) (*Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteConnection not implemented")
 }
-func (UnimplementedDBManagerServer) TestConnection(context.Context, *Connection) (*TestReply, error) {
+func (UnimplementedCellarServer) TestConnection(context.Context, *Connection) (*TestReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method TestConnection not implemented")
 }
-func (UnimplementedDBManagerServer) ListDatabases(context.Context, *Ref) (*DatabaseList, error) {
+func (UnimplementedCellarServer) ListDatabases(context.Context, *Ref) (*DatabaseList, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListDatabases not implemented")
 }
-func (UnimplementedDBManagerServer) ListSchemas(context.Context, *DbRef) (*SchemaList, error) {
+func (UnimplementedCellarServer) ListSchemas(context.Context, *DbRef) (*SchemaList, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListSchemas not implemented")
 }
-func (UnimplementedDBManagerServer) ListObjects(context.Context, *SchemaRef) (*ObjectList, error) {
+func (UnimplementedCellarServer) ListObjects(context.Context, *SchemaRef) (*ObjectList, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListObjects not implemented")
 }
-func (UnimplementedDBManagerServer) DescribeObject(context.Context, *ObjectRef) (*ObjectInfo, error) {
+func (UnimplementedCellarServer) DescribeObject(context.Context, *ObjectRef) (*ObjectInfo, error) {
 	return nil, status.Error(codes.Unimplemented, "method DescribeObject not implemented")
 }
-func (UnimplementedDBManagerServer) ReadTable(context.Context, *ReadTableRequest) (*ResultSet, error) {
+func (UnimplementedCellarServer) ReadTable(context.Context, *ReadTableRequest) (*ResultSet, error) {
 	return nil, status.Error(codes.Unimplemented, "method ReadTable not implemented")
 }
-func (UnimplementedDBManagerServer) ApplyEdits(context.Context, *EditRequest) (*EditReply, error) {
+func (UnimplementedCellarServer) ApplyEdits(context.Context, *EditRequest) (*EditReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method ApplyEdits not implemented")
 }
-func (UnimplementedDBManagerServer) OpenConsole(context.Context, *DbRef) (*Console, error) {
+func (UnimplementedCellarServer) OpenConsole(context.Context, *DbRef) (*Console, error) {
 	return nil, status.Error(codes.Unimplemented, "method OpenConsole not implemented")
 }
-func (UnimplementedDBManagerServer) CloseConsole(context.Context, *ConsoleRef) (*Empty, error) {
+func (UnimplementedCellarServer) CloseConsole(context.Context, *ConsoleRef) (*Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method CloseConsole not implemented")
 }
-func (UnimplementedDBManagerServer) Execute(context.Context, *ExecuteRequest) (*ExecuteReply, error) {
+func (UnimplementedCellarServer) Execute(context.Context, *ExecuteRequest) (*ExecuteReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method Execute not implemented")
 }
-func (UnimplementedDBManagerServer) Cancel(context.Context, *ConsoleRef) (*Empty, error) {
+func (UnimplementedCellarServer) Cancel(context.Context, *ConsoleRef) (*Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Cancel not implemented")
 }
-func (UnimplementedDBManagerServer) Statements(context.Context, *StatementsRequest) (*StatementsReply, error) {
+func (UnimplementedCellarServer) Statements(context.Context, *StatementsRequest) (*StatementsReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method Statements not implemented")
 }
-func (UnimplementedDBManagerServer) EnableSync(context.Context, *Empty) (*SyncState, error) {
+func (UnimplementedCellarServer) EnableSync(context.Context, *Empty) (*SyncState, error) {
 	return nil, status.Error(codes.Unimplemented, "method EnableSync not implemented")
 }
-func (UnimplementedDBManagerServer) DisableSync(context.Context, *Empty) (*SyncState, error) {
+func (UnimplementedCellarServer) DisableSync(context.Context, *Empty) (*SyncState, error) {
 	return nil, status.Error(codes.Unimplemented, "method DisableSync not implemented")
 }
-func (UnimplementedDBManagerServer) SyncNow(context.Context, *Empty) (*SyncState, error) {
+func (UnimplementedCellarServer) SyncNow(context.Context, *Empty) (*SyncState, error) {
 	return nil, status.Error(codes.Unimplemented, "method SyncNow not implemented")
 }
-func (UnimplementedDBManagerServer) MoveServersToCloudSync(context.Context, *Empty) (*SyncState, error) {
-	return nil, status.Error(codes.Unimplemented, "method MoveServersToCloudSync not implemented")
+func (UnimplementedCellarServer) MoveServersToShard(context.Context, *Empty) (*SyncState, error) {
+	return nil, status.Error(codes.Unimplemented, "method MoveServersToShard not implemented")
 }
-func (UnimplementedDBManagerServer) mustEmbedUnimplementedDBManagerServer() {}
-func (UnimplementedDBManagerServer) testEmbeddedByValue()                   {}
+func (UnimplementedCellarServer) mustEmbedUnimplementedCellarServer() {}
+func (UnimplementedCellarServer) testEmbeddedByValue()                {}
 
-// UnsafeDBManagerServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to DBManagerServer will
+// UnsafeCellarServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to CellarServer will
 // result in compilation errors.
-type UnsafeDBManagerServer interface {
-	mustEmbedUnimplementedDBManagerServer()
+type UnsafeCellarServer interface {
+	mustEmbedUnimplementedCellarServer()
 }
 
-func RegisterDBManagerServer(s grpc.ServiceRegistrar, srv DBManagerServer) {
-	// If the following call panics, it indicates UnimplementedDBManagerServer was
+func RegisterCellarServer(s grpc.ServiceRegistrar, srv CellarServer) {
+	// If the following call panics, it indicates UnimplementedCellarServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&DBManager_ServiceDesc, srv)
+	s.RegisterService(&Cellar_ServiceDesc, srv)
 }
 
-func _DBManager_GetState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_GetState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).GetState(ctx, in)
+		return srv.(CellarServer).GetState(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_GetState_FullMethodName,
+		FullMethod: Cellar_GetState_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).GetState(ctx, req.(*Empty))
+		return srv.(CellarServer).GetState(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_Events_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _Cellar_Events_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(Empty)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(DBManagerServer).Events(m, &grpc.GenericServerStream[Empty, Event]{ServerStream: stream})
+	return srv.(CellarServer).Events(m, &grpc.GenericServerStream[Empty, Event]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type DBManager_EventsServer = grpc.ServerStreamingServer[Event]
+type Cellar_EventsServer = grpc.ServerStreamingServer[Event]
 
-func _DBManager_ListServers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_ListServers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).ListServers(ctx, in)
+		return srv.(CellarServer).ListServers(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_ListServers_FullMethodName,
+		FullMethod: Cellar_ListServers_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).ListServers(ctx, req.(*Empty))
+		return srv.(CellarServer).ListServers(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_SaveServer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_SaveServer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Server)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).SaveServer(ctx, in)
+		return srv.(CellarServer).SaveServer(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_SaveServer_FullMethodName,
+		FullMethod: Cellar_SaveServer_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).SaveServer(ctx, req.(*Server))
+		return srv.(CellarServer).SaveServer(ctx, req.(*Server))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_DeleteServer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_DeleteServer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Ref)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).DeleteServer(ctx, in)
+		return srv.(CellarServer).DeleteServer(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_DeleteServer_FullMethodName,
+		FullMethod: Cellar_DeleteServer_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).DeleteServer(ctx, req.(*Ref))
+		return srv.(CellarServer).DeleteServer(ctx, req.(*Ref))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_ConnectServer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_ConnectServer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ConnectRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).ConnectServer(ctx, in)
+		return srv.(CellarServer).ConnectServer(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_ConnectServer_FullMethodName,
+		FullMethod: Cellar_ConnectServer_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).ConnectServer(ctx, req.(*ConnectRequest))
+		return srv.(CellarServer).ConnectServer(ctx, req.(*ConnectRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_TrustHostKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_TrustHostKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(TrustRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).TrustHostKey(ctx, in)
+		return srv.(CellarServer).TrustHostKey(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_TrustHostKey_FullMethodName,
+		FullMethod: Cellar_TrustHostKey_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).TrustHostKey(ctx, req.(*TrustRequest))
+		return srv.(CellarServer).TrustHostKey(ctx, req.(*TrustRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_DisconnectServer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_DisconnectServer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Ref)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).DisconnectServer(ctx, in)
+		return srv.(CellarServer).DisconnectServer(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_DisconnectServer_FullMethodName,
+		FullMethod: Cellar_DisconnectServer_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).DisconnectServer(ctx, req.(*Ref))
+		return srv.(CellarServer).DisconnectServer(ctx, req.(*Ref))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_Discover_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_Discover_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Ref)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).Discover(ctx, in)
+		return srv.(CellarServer).Discover(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_Discover_FullMethodName,
+		FullMethod: Cellar_Discover_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).Discover(ctx, req.(*Ref))
+		return srv.(CellarServer).Discover(ctx, req.(*Ref))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_ListKeys_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_ListKeys_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).ListKeys(ctx, in)
+		return srv.(CellarServer).ListKeys(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_ListKeys_FullMethodName,
+		FullMethod: Cellar_ListKeys_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).ListKeys(ctx, req.(*Empty))
+		return srv.(CellarServer).ListKeys(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_SaveLocalKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_SaveLocalKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LocalKey)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).SaveLocalKey(ctx, in)
+		return srv.(CellarServer).SaveLocalKey(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_SaveLocalKey_FullMethodName,
+		FullMethod: Cellar_SaveLocalKey_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).SaveLocalKey(ctx, req.(*LocalKey))
+		return srv.(CellarServer).SaveLocalKey(ctx, req.(*LocalKey))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_DeleteLocalKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_DeleteLocalKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Ref)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).DeleteLocalKey(ctx, in)
+		return srv.(CellarServer).DeleteLocalKey(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_DeleteLocalKey_FullMethodName,
+		FullMethod: Cellar_DeleteLocalKey_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).DeleteLocalKey(ctx, req.(*Ref))
+		return srv.(CellarServer).DeleteLocalKey(ctx, req.(*Ref))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_ListConnections_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_ListConnections_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).ListConnections(ctx, in)
+		return srv.(CellarServer).ListConnections(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_ListConnections_FullMethodName,
+		FullMethod: Cellar_ListConnections_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).ListConnections(ctx, req.(*Empty))
+		return srv.(CellarServer).ListConnections(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_SaveConnection_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_SaveConnection_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Connection)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).SaveConnection(ctx, in)
+		return srv.(CellarServer).SaveConnection(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_SaveConnection_FullMethodName,
+		FullMethod: Cellar_SaveConnection_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).SaveConnection(ctx, req.(*Connection))
+		return srv.(CellarServer).SaveConnection(ctx, req.(*Connection))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_DeleteConnection_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_DeleteConnection_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Ref)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).DeleteConnection(ctx, in)
+		return srv.(CellarServer).DeleteConnection(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_DeleteConnection_FullMethodName,
+		FullMethod: Cellar_DeleteConnection_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).DeleteConnection(ctx, req.(*Ref))
+		return srv.(CellarServer).DeleteConnection(ctx, req.(*Ref))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_TestConnection_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_TestConnection_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Connection)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).TestConnection(ctx, in)
+		return srv.(CellarServer).TestConnection(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_TestConnection_FullMethodName,
+		FullMethod: Cellar_TestConnection_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).TestConnection(ctx, req.(*Connection))
+		return srv.(CellarServer).TestConnection(ctx, req.(*Connection))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_ListDatabases_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_ListDatabases_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Ref)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).ListDatabases(ctx, in)
+		return srv.(CellarServer).ListDatabases(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_ListDatabases_FullMethodName,
+		FullMethod: Cellar_ListDatabases_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).ListDatabases(ctx, req.(*Ref))
+		return srv.(CellarServer).ListDatabases(ctx, req.(*Ref))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_ListSchemas_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_ListSchemas_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DbRef)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).ListSchemas(ctx, in)
+		return srv.(CellarServer).ListSchemas(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_ListSchemas_FullMethodName,
+		FullMethod: Cellar_ListSchemas_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).ListSchemas(ctx, req.(*DbRef))
+		return srv.(CellarServer).ListSchemas(ctx, req.(*DbRef))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_ListObjects_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_ListObjects_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SchemaRef)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).ListObjects(ctx, in)
+		return srv.(CellarServer).ListObjects(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_ListObjects_FullMethodName,
+		FullMethod: Cellar_ListObjects_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).ListObjects(ctx, req.(*SchemaRef))
+		return srv.(CellarServer).ListObjects(ctx, req.(*SchemaRef))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_DescribeObject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_DescribeObject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ObjectRef)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).DescribeObject(ctx, in)
+		return srv.(CellarServer).DescribeObject(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_DescribeObject_FullMethodName,
+		FullMethod: Cellar_DescribeObject_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).DescribeObject(ctx, req.(*ObjectRef))
+		return srv.(CellarServer).DescribeObject(ctx, req.(*ObjectRef))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_ReadTable_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_ReadTable_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ReadTableRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).ReadTable(ctx, in)
+		return srv.(CellarServer).ReadTable(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_ReadTable_FullMethodName,
+		FullMethod: Cellar_ReadTable_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).ReadTable(ctx, req.(*ReadTableRequest))
+		return srv.(CellarServer).ReadTable(ctx, req.(*ReadTableRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_ApplyEdits_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_ApplyEdits_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(EditRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).ApplyEdits(ctx, in)
+		return srv.(CellarServer).ApplyEdits(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_ApplyEdits_FullMethodName,
+		FullMethod: Cellar_ApplyEdits_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).ApplyEdits(ctx, req.(*EditRequest))
+		return srv.(CellarServer).ApplyEdits(ctx, req.(*EditRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_OpenConsole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_OpenConsole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DbRef)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).OpenConsole(ctx, in)
+		return srv.(CellarServer).OpenConsole(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_OpenConsole_FullMethodName,
+		FullMethod: Cellar_OpenConsole_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).OpenConsole(ctx, req.(*DbRef))
+		return srv.(CellarServer).OpenConsole(ctx, req.(*DbRef))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_CloseConsole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_CloseConsole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ConsoleRef)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).CloseConsole(ctx, in)
+		return srv.(CellarServer).CloseConsole(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_CloseConsole_FullMethodName,
+		FullMethod: Cellar_CloseConsole_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).CloseConsole(ctx, req.(*ConsoleRef))
+		return srv.(CellarServer).CloseConsole(ctx, req.(*ConsoleRef))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_Execute_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_Execute_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ExecuteRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).Execute(ctx, in)
+		return srv.(CellarServer).Execute(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_Execute_FullMethodName,
+		FullMethod: Cellar_Execute_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).Execute(ctx, req.(*ExecuteRequest))
+		return srv.(CellarServer).Execute(ctx, req.(*ExecuteRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_Cancel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_Cancel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ConsoleRef)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).Cancel(ctx, in)
+		return srv.(CellarServer).Cancel(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_Cancel_FullMethodName,
+		FullMethod: Cellar_Cancel_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).Cancel(ctx, req.(*ConsoleRef))
+		return srv.(CellarServer).Cancel(ctx, req.(*ConsoleRef))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_Statements_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_Statements_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(StatementsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).Statements(ctx, in)
+		return srv.(CellarServer).Statements(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_Statements_FullMethodName,
+		FullMethod: Cellar_Statements_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).Statements(ctx, req.(*StatementsRequest))
+		return srv.(CellarServer).Statements(ctx, req.(*StatementsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_EnableSync_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_EnableSync_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).EnableSync(ctx, in)
+		return srv.(CellarServer).EnableSync(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_EnableSync_FullMethodName,
+		FullMethod: Cellar_EnableSync_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).EnableSync(ctx, req.(*Empty))
+		return srv.(CellarServer).EnableSync(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_DisableSync_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_DisableSync_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).DisableSync(ctx, in)
+		return srv.(CellarServer).DisableSync(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_DisableSync_FullMethodName,
+		FullMethod: Cellar_DisableSync_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).DisableSync(ctx, req.(*Empty))
+		return srv.(CellarServer).DisableSync(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_SyncNow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_SyncNow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).SyncNow(ctx, in)
+		return srv.(CellarServer).SyncNow(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_SyncNow_FullMethodName,
+		FullMethod: Cellar_SyncNow_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).SyncNow(ctx, req.(*Empty))
+		return srv.(CellarServer).SyncNow(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DBManager_MoveServersToCloudSync_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Cellar_MoveServersToShard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DBManagerServer).MoveServersToCloudSync(ctx, in)
+		return srv.(CellarServer).MoveServersToShard(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DBManager_MoveServersToCloudSync_FullMethodName,
+		FullMethod: Cellar_MoveServersToShard_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBManagerServer).MoveServersToCloudSync(ctx, req.(*Empty))
+		return srv.(CellarServer).MoveServersToShard(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// DBManager_ServiceDesc is the grpc.ServiceDesc for DBManager service.
+// Cellar_ServiceDesc is the grpc.ServiceDesc for Cellar service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var DBManager_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "dbm.v1.DBManager",
-	HandlerType: (*DBManagerServer)(nil),
+var Cellar_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "selfhold.cellar.v1.Cellar",
+	HandlerType: (*CellarServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetState",
-			Handler:    _DBManager_GetState_Handler,
+			Handler:    _Cellar_GetState_Handler,
 		},
 		{
 			MethodName: "ListServers",
-			Handler:    _DBManager_ListServers_Handler,
+			Handler:    _Cellar_ListServers_Handler,
 		},
 		{
 			MethodName: "SaveServer",
-			Handler:    _DBManager_SaveServer_Handler,
+			Handler:    _Cellar_SaveServer_Handler,
 		},
 		{
 			MethodName: "DeleteServer",
-			Handler:    _DBManager_DeleteServer_Handler,
+			Handler:    _Cellar_DeleteServer_Handler,
 		},
 		{
 			MethodName: "ConnectServer",
-			Handler:    _DBManager_ConnectServer_Handler,
+			Handler:    _Cellar_ConnectServer_Handler,
 		},
 		{
 			MethodName: "TrustHostKey",
-			Handler:    _DBManager_TrustHostKey_Handler,
+			Handler:    _Cellar_TrustHostKey_Handler,
 		},
 		{
 			MethodName: "DisconnectServer",
-			Handler:    _DBManager_DisconnectServer_Handler,
+			Handler:    _Cellar_DisconnectServer_Handler,
 		},
 		{
 			MethodName: "Discover",
-			Handler:    _DBManager_Discover_Handler,
+			Handler:    _Cellar_Discover_Handler,
 		},
 		{
 			MethodName: "ListKeys",
-			Handler:    _DBManager_ListKeys_Handler,
+			Handler:    _Cellar_ListKeys_Handler,
 		},
 		{
 			MethodName: "SaveLocalKey",
-			Handler:    _DBManager_SaveLocalKey_Handler,
+			Handler:    _Cellar_SaveLocalKey_Handler,
 		},
 		{
 			MethodName: "DeleteLocalKey",
-			Handler:    _DBManager_DeleteLocalKey_Handler,
+			Handler:    _Cellar_DeleteLocalKey_Handler,
 		},
 		{
 			MethodName: "ListConnections",
-			Handler:    _DBManager_ListConnections_Handler,
+			Handler:    _Cellar_ListConnections_Handler,
 		},
 		{
 			MethodName: "SaveConnection",
-			Handler:    _DBManager_SaveConnection_Handler,
+			Handler:    _Cellar_SaveConnection_Handler,
 		},
 		{
 			MethodName: "DeleteConnection",
-			Handler:    _DBManager_DeleteConnection_Handler,
+			Handler:    _Cellar_DeleteConnection_Handler,
 		},
 		{
 			MethodName: "TestConnection",
-			Handler:    _DBManager_TestConnection_Handler,
+			Handler:    _Cellar_TestConnection_Handler,
 		},
 		{
 			MethodName: "ListDatabases",
-			Handler:    _DBManager_ListDatabases_Handler,
+			Handler:    _Cellar_ListDatabases_Handler,
 		},
 		{
 			MethodName: "ListSchemas",
-			Handler:    _DBManager_ListSchemas_Handler,
+			Handler:    _Cellar_ListSchemas_Handler,
 		},
 		{
 			MethodName: "ListObjects",
-			Handler:    _DBManager_ListObjects_Handler,
+			Handler:    _Cellar_ListObjects_Handler,
 		},
 		{
 			MethodName: "DescribeObject",
-			Handler:    _DBManager_DescribeObject_Handler,
+			Handler:    _Cellar_DescribeObject_Handler,
 		},
 		{
 			MethodName: "ReadTable",
-			Handler:    _DBManager_ReadTable_Handler,
+			Handler:    _Cellar_ReadTable_Handler,
 		},
 		{
 			MethodName: "ApplyEdits",
-			Handler:    _DBManager_ApplyEdits_Handler,
+			Handler:    _Cellar_ApplyEdits_Handler,
 		},
 		{
 			MethodName: "OpenConsole",
-			Handler:    _DBManager_OpenConsole_Handler,
+			Handler:    _Cellar_OpenConsole_Handler,
 		},
 		{
 			MethodName: "CloseConsole",
-			Handler:    _DBManager_CloseConsole_Handler,
+			Handler:    _Cellar_CloseConsole_Handler,
 		},
 		{
 			MethodName: "Execute",
-			Handler:    _DBManager_Execute_Handler,
+			Handler:    _Cellar_Execute_Handler,
 		},
 		{
 			MethodName: "Cancel",
-			Handler:    _DBManager_Cancel_Handler,
+			Handler:    _Cellar_Cancel_Handler,
 		},
 		{
 			MethodName: "Statements",
-			Handler:    _DBManager_Statements_Handler,
+			Handler:    _Cellar_Statements_Handler,
 		},
 		{
 			MethodName: "EnableSync",
-			Handler:    _DBManager_EnableSync_Handler,
+			Handler:    _Cellar_EnableSync_Handler,
 		},
 		{
 			MethodName: "DisableSync",
-			Handler:    _DBManager_DisableSync_Handler,
+			Handler:    _Cellar_DisableSync_Handler,
 		},
 		{
 			MethodName: "SyncNow",
-			Handler:    _DBManager_SyncNow_Handler,
+			Handler:    _Cellar_SyncNow_Handler,
 		},
 		{
-			MethodName: "MoveServersToCloudSync",
-			Handler:    _DBManager_MoveServersToCloudSync_Handler,
+			MethodName: "MoveServersToShard",
+			Handler:    _Cellar_MoveServersToShard_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "Events",
-			Handler:       _DBManager_Events_Handler,
+			Handler:       _Cellar_Events_Handler,
 			ServerStreams: true,
 		},
 	},
-	Metadata: "dbm.proto",
+	Metadata: "cellar.proto",
 }

@@ -1,7 +1,7 @@
 import 'package:grpc/grpc.dart';
 
 import 'endpoint.dart';
-import 'gen/dbm.pbgrpc.dart';
+import 'gen/cellar.pbgrpc.dart';
 import '../../core/i18n.dart';
 
 /// The gRPC client of the core, with the bearer token on every call.
@@ -9,7 +9,7 @@ class CoreClient {
   CoreClient._(this._channel, this.api);
 
   final ClientChannel _channel;
-  final DBManagerClient api;
+  final CellarClient api;
 
   static Future<CoreClient> connect(CoreLauncher launcher) async {
     final e = await launcher.endpoint();
@@ -19,7 +19,7 @@ class CoreClient {
       options: const ChannelOptions(credentials: ChannelCredentials.insecure(), idleTimeout: Duration(minutes: 30)),
     );
     final opts = CallOptions(metadata: {'authorization': 'Bearer ${e.token}'});
-    return CoreClient._(ch, DBManagerClient(ch, options: opts));
+    return CoreClient._(ch, CellarClient(ch, options: opts));
   }
 
   Future<void> close() => _channel.shutdown();

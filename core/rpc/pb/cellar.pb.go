@@ -2,12 +2,12 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        v7.36.1
-// source: dbm.proto
+// source: cellar.proto
 
-// The API between the DB Manager core (inside the app's process: desktopbind
+// The API between the Cellar core (inside the app's process: desktopbind
 // on desktops, mobilebind on Android) and its Flutter app. The core owns the
 // SSH connections, database sessions, the server and connection lists and
-// CloudSync; the app only draws.
+// Shard; the app only draws.
 
 package pb
 
@@ -31,10 +31,10 @@ type SyncState_Phase int32
 const (
 	SyncState_PHASE_UNSPECIFIED SyncState_Phase = 0
 	SyncState_OFF               SyncState_Phase = 1 // switched off: standalone
-	SyncState_NOT_RUNNING       SyncState_Phase = 2 // switched on, CloudSync not found
+	SyncState_NOT_RUNNING       SyncState_Phase = 2 // switched on, Shard not found
 	SyncState_NO_VAULT          SyncState_Phase = 3
 	SyncState_LOCKED            SyncState_Phase = 4
-	SyncState_PAIRING           SyncState_Phase = 5 // waiting for the user in CloudSync (code)
+	SyncState_PAIRING           SyncState_Phase = 5 // waiting for the user in Shard (code)
 	SyncState_OFFLINE           SyncState_Phase = 6 // reads work, writes wait
 	SyncState_SYNCED            SyncState_Phase = 7
 	SyncState_ERROR             SyncState_Phase = 8
@@ -77,11 +77,11 @@ func (x SyncState_Phase) String() string {
 }
 
 func (SyncState_Phase) Descriptor() protoreflect.EnumDescriptor {
-	return file_dbm_proto_enumTypes[0].Descriptor()
+	return file_cellar_proto_enumTypes[0].Descriptor()
 }
 
 func (SyncState_Phase) Type() protoreflect.EnumType {
-	return &file_dbm_proto_enumTypes[0]
+	return &file_cellar_proto_enumTypes[0]
 }
 
 func (x SyncState_Phase) Number() protoreflect.EnumNumber {
@@ -90,7 +90,7 @@ func (x SyncState_Phase) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use SyncState_Phase.Descriptor instead.
 func (SyncState_Phase) EnumDescriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{3, 0}
+	return file_cellar_proto_rawDescGZIP(), []int{3, 0}
 }
 
 type Event_Kind int32
@@ -135,11 +135,11 @@ func (x Event_Kind) String() string {
 }
 
 func (Event_Kind) Descriptor() protoreflect.EnumDescriptor {
-	return file_dbm_proto_enumTypes[1].Descriptor()
+	return file_cellar_proto_enumTypes[1].Descriptor()
 }
 
 func (Event_Kind) Type() protoreflect.EnumType {
-	return &file_dbm_proto_enumTypes[1]
+	return &file_cellar_proto_enumTypes[1]
 }
 
 func (x Event_Kind) Number() protoreflect.EnumNumber {
@@ -148,7 +148,7 @@ func (x Event_Kind) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use Event_Kind.Descriptor instead.
 func (Event_Kind) EnumDescriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{4, 0}
+	return file_cellar_proto_rawDescGZIP(), []int{4, 0}
 }
 
 type Server_Auth int32
@@ -187,11 +187,11 @@ func (x Server_Auth) String() string {
 }
 
 func (Server_Auth) Descriptor() protoreflect.EnumDescriptor {
-	return file_dbm_proto_enumTypes[2].Descriptor()
+	return file_cellar_proto_enumTypes[2].Descriptor()
 }
 
 func (Server_Auth) Type() protoreflect.EnumType {
-	return &file_dbm_proto_enumTypes[2]
+	return &file_cellar_proto_enumTypes[2]
 }
 
 func (x Server_Auth) Number() protoreflect.EnumNumber {
@@ -200,7 +200,7 @@ func (x Server_Auth) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use Server_Auth.Descriptor instead.
 func (Server_Auth) EnumDescriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{5, 0}
+	return file_cellar_proto_rawDescGZIP(), []int{5, 0}
 }
 
 type HostKey_Status int32
@@ -239,11 +239,11 @@ func (x HostKey_Status) String() string {
 }
 
 func (HostKey_Status) Descriptor() protoreflect.EnumDescriptor {
-	return file_dbm_proto_enumTypes[3].Descriptor()
+	return file_cellar_proto_enumTypes[3].Descriptor()
 }
 
 func (HostKey_Status) Type() protoreflect.EnumType {
-	return &file_dbm_proto_enumTypes[3]
+	return &file_cellar_proto_enumTypes[3]
 }
 
 func (x HostKey_Status) Number() protoreflect.EnumNumber {
@@ -252,7 +252,7 @@ func (x HostKey_Status) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use HostKey_Status.Descriptor instead.
 func (HostKey_Status) EnumDescriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{8, 0}
+	return file_cellar_proto_rawDescGZIP(), []int{8, 0}
 }
 
 type DiscoveredService_Kind int32
@@ -285,11 +285,11 @@ func (x DiscoveredService_Kind) String() string {
 }
 
 func (DiscoveredService_Kind) Descriptor() protoreflect.EnumDescriptor {
-	return file_dbm_proto_enumTypes[4].Descriptor()
+	return file_cellar_proto_enumTypes[4].Descriptor()
 }
 
 func (DiscoveredService_Kind) Type() protoreflect.EnumType {
-	return &file_dbm_proto_enumTypes[4]
+	return &file_cellar_proto_enumTypes[4]
 }
 
 func (x DiscoveredService_Kind) Number() protoreflect.EnumNumber {
@@ -298,7 +298,7 @@ func (x DiscoveredService_Kind) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use DiscoveredService_Kind.Descriptor instead.
 func (DiscoveredService_Kind) EnumDescriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{11, 0}
+	return file_cellar_proto_rawDescGZIP(), []int{11, 0}
 }
 
 type Connection_Kind int32
@@ -331,11 +331,11 @@ func (x Connection_Kind) String() string {
 }
 
 func (Connection_Kind) Descriptor() protoreflect.EnumDescriptor {
-	return file_dbm_proto_enumTypes[5].Descriptor()
+	return file_cellar_proto_enumTypes[5].Descriptor()
 }
 
 func (Connection_Kind) Type() protoreflect.EnumType {
-	return &file_dbm_proto_enumTypes[5]
+	return &file_cellar_proto_enumTypes[5]
 }
 
 func (x Connection_Kind) Number() protoreflect.EnumNumber {
@@ -344,7 +344,7 @@ func (x Connection_Kind) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use Connection_Kind.Descriptor instead.
 func (Connection_Kind) EnumDescriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{16, 0}
+	return file_cellar_proto_rawDescGZIP(), []int{16, 0}
 }
 
 type Connection_SslMode int32
@@ -383,11 +383,11 @@ func (x Connection_SslMode) String() string {
 }
 
 func (Connection_SslMode) Descriptor() protoreflect.EnumDescriptor {
-	return file_dbm_proto_enumTypes[6].Descriptor()
+	return file_cellar_proto_enumTypes[6].Descriptor()
 }
 
 func (Connection_SslMode) Type() protoreflect.EnumType {
-	return &file_dbm_proto_enumTypes[6]
+	return &file_cellar_proto_enumTypes[6]
 }
 
 func (x Connection_SslMode) Number() protoreflect.EnumNumber {
@@ -396,7 +396,7 @@ func (x Connection_SslMode) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use Connection_SslMode.Descriptor instead.
 func (Connection_SslMode) EnumDescriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{16, 1}
+	return file_cellar_proto_rawDescGZIP(), []int{16, 1}
 }
 
 type DbObject_Kind int32
@@ -450,11 +450,11 @@ func (x DbObject_Kind) String() string {
 }
 
 func (DbObject_Kind) Descriptor() protoreflect.EnumDescriptor {
-	return file_dbm_proto_enumTypes[7].Descriptor()
+	return file_cellar_proto_enumTypes[7].Descriptor()
 }
 
 func (DbObject_Kind) Type() protoreflect.EnumType {
-	return &file_dbm_proto_enumTypes[7]
+	return &file_cellar_proto_enumTypes[7]
 }
 
 func (x DbObject_Kind) Number() protoreflect.EnumNumber {
@@ -463,7 +463,7 @@ func (x DbObject_Kind) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use DbObject_Kind.Descriptor instead.
 func (DbObject_Kind) EnumDescriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{25, 0}
+	return file_cellar_proto_rawDescGZIP(), []int{25, 0}
 }
 
 type RowEdit_Op int32
@@ -502,11 +502,11 @@ func (x RowEdit_Op) String() string {
 }
 
 func (RowEdit_Op) Descriptor() protoreflect.EnumDescriptor {
-	return file_dbm_proto_enumTypes[8].Descriptor()
+	return file_cellar_proto_enumTypes[8].Descriptor()
 }
 
 func (RowEdit_Op) Type() protoreflect.EnumType {
-	return &file_dbm_proto_enumTypes[8]
+	return &file_cellar_proto_enumTypes[8]
 }
 
 func (x RowEdit_Op) Number() protoreflect.EnumNumber {
@@ -515,7 +515,7 @@ func (x RowEdit_Op) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use RowEdit_Op.Descriptor instead.
 func (RowEdit_Op) EnumDescriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{39, 0}
+	return file_cellar_proto_rawDescGZIP(), []int{39, 0}
 }
 
 type Empty struct {
@@ -526,7 +526,7 @@ type Empty struct {
 
 func (x *Empty) Reset() {
 	*x = Empty{}
-	mi := &file_dbm_proto_msgTypes[0]
+	mi := &file_cellar_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -538,7 +538,7 @@ func (x *Empty) String() string {
 func (*Empty) ProtoMessage() {}
 
 func (x *Empty) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[0]
+	mi := &file_cellar_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -551,7 +551,7 @@ func (x *Empty) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Empty.ProtoReflect.Descriptor instead.
 func (*Empty) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{0}
+	return file_cellar_proto_rawDescGZIP(), []int{0}
 }
 
 type Ref struct {
@@ -563,7 +563,7 @@ type Ref struct {
 
 func (x *Ref) Reset() {
 	*x = Ref{}
-	mi := &file_dbm_proto_msgTypes[1]
+	mi := &file_cellar_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -575,7 +575,7 @@ func (x *Ref) String() string {
 func (*Ref) ProtoMessage() {}
 
 func (x *Ref) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[1]
+	mi := &file_cellar_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -588,7 +588,7 @@ func (x *Ref) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Ref.ProtoReflect.Descriptor instead.
 func (*Ref) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{1}
+	return file_cellar_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *Ref) GetId() string {
@@ -613,7 +613,7 @@ type State struct {
 
 func (x *State) Reset() {
 	*x = State{}
-	mi := &file_dbm_proto_msgTypes[2]
+	mi := &file_cellar_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -625,7 +625,7 @@ func (x *State) String() string {
 func (*State) ProtoMessage() {}
 
 func (x *State) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[2]
+	mi := &file_cellar_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -638,7 +638,7 @@ func (x *State) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use State.ProtoReflect.Descriptor instead.
 func (*State) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{2}
+	return file_cellar_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *State) GetCoreVersion() string {
@@ -678,9 +678,9 @@ func (x *State) GetKeychain() bool {
 
 type SyncState struct {
 	state       protoimpl.MessageState `protogen:"open.v1"`
-	Phase       SyncState_Phase        `protobuf:"varint,1,opt,name=phase,proto3,enum=dbm.v1.SyncState_Phase" json:"phase,omitempty"`
+	Phase       SyncState_Phase        `protobuf:"varint,1,opt,name=phase,proto3,enum=selfhold.cellar.v1.SyncState_Phase" json:"phase,omitempty"`
 	Enabled     bool                   `protobuf:"varint,2,opt,name=enabled,proto3" json:"enabled,omitempty"`
-	Available   bool                   `protobuf:"varint,3,opt,name=available,proto3" json:"available,omitempty"`                       // CloudSync answers on this device
+	Available   bool                   `protobuf:"varint,3,opt,name=available,proto3" json:"available,omitempty"`                       // Shard answers on this device
 	PairingCode string                 `protobuf:"bytes,4,opt,name=pairing_code,json=pairingCode,proto3" json:"pairing_code,omitempty"` // "123 456" while PAIRING
 	Error       string                 `protobuf:"bytes,5,opt,name=error,proto3" json:"error,omitempty"`
 	Pending     bool                   `protobuf:"varint,6,opt,name=pending,proto3" json:"pending,omitempty"` // local changes not uploaded yet
@@ -690,7 +690,7 @@ type SyncState struct {
 	SharedServers bool `protobuf:"varint,9,opt,name=shared_servers,json=sharedServers,proto3" json:"shared_servers,omitempty"`
 	SafeKeys      bool `protobuf:"varint,10,opt,name=safe_keys,json=safeKeys,proto3" json:"safe_keys,omitempty"`
 	// This app still keeps servers of its own while the shared list is
-	// available: offer MoveServersToCloudSync.
+	// available: offer MoveServersToShard.
 	OwnServers    int32 `protobuf:"varint,11,opt,name=own_servers,json=ownServers,proto3" json:"own_servers,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -698,7 +698,7 @@ type SyncState struct {
 
 func (x *SyncState) Reset() {
 	*x = SyncState{}
-	mi := &file_dbm_proto_msgTypes[3]
+	mi := &file_cellar_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -710,7 +710,7 @@ func (x *SyncState) String() string {
 func (*SyncState) ProtoMessage() {}
 
 func (x *SyncState) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[3]
+	mi := &file_cellar_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -723,7 +723,7 @@ func (x *SyncState) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SyncState.ProtoReflect.Descriptor instead.
 func (*SyncState) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{3}
+	return file_cellar_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *SyncState) GetPhase() SyncState_Phase {
@@ -805,7 +805,7 @@ func (x *SyncState) GetOwnServers() int32 {
 
 type Event struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Kind          Event_Kind             `protobuf:"varint,1,opt,name=kind,proto3,enum=dbm.v1.Event_Kind" json:"kind,omitempty"`
+	Kind          Event_Kind             `protobuf:"varint,1,opt,name=kind,proto3,enum=selfhold.cellar.v1.Event_Kind" json:"kind,omitempty"`
 	Id            string                 `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`
 	Message       string                 `protobuf:"bytes,3,opt,name=message,proto3" json:"message,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -814,7 +814,7 @@ type Event struct {
 
 func (x *Event) Reset() {
 	*x = Event{}
-	mi := &file_dbm_proto_msgTypes[4]
+	mi := &file_cellar_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -826,7 +826,7 @@ func (x *Event) String() string {
 func (*Event) ProtoMessage() {}
 
 func (x *Event) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[4]
+	mi := &file_cellar_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -839,7 +839,7 @@ func (x *Event) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Event.ProtoReflect.Descriptor instead.
 func (*Event) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{4}
+	return file_cellar_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *Event) GetKind() Event_Kind {
@@ -871,14 +871,14 @@ type Server struct {
 	Host         string                 `protobuf:"bytes,4,opt,name=host,proto3" json:"host,omitempty"`
 	Port         uint32                 `protobuf:"varint,5,opt,name=port,proto3" json:"port,omitempty"` // 0 = 22
 	User         string                 `protobuf:"bytes,6,opt,name=user,proto3" json:"user,omitempty"`
-	Auth         Server_Auth            `protobuf:"varint,7,opt,name=auth,proto3,enum=dbm.v1.Server_Auth" json:"auth,omitempty"`
+	Auth         Server_Auth            `protobuf:"varint,7,opt,name=auth,proto3,enum=selfhold.cellar.v1.Server_Auth" json:"auth,omitempty"`
 	Password     string                 `protobuf:"bytes,8,opt,name=password,proto3" json:"password,omitempty"`
 	KeyId        string                 `protobuf:"bytes,9,opt,name=key_id,json=keyId,proto3" json:"key_id,omitempty"` // Key.id ("safe:<id>" or "local:<id>")
 	HostKeys     []string               `protobuf:"bytes,10,rep,name=host_keys,json=hostKeys,proto3" json:"host_keys,omitempty"`
 	JumpServerId string                 `protobuf:"bytes,11,opt,name=jump_server_id,json=jumpServerId,proto3" json:"jump_server_id,omitempty"`
 	Notes        string                 `protobuf:"bytes,12,opt,name=notes,proto3" json:"notes,omitempty"`
 	UpdatedMs    int64                  `protobuf:"varint,13,opt,name=updated_ms,json=updatedMs,proto3" json:"updated_ms,omitempty"`
-	// Where it lives: the shared CloudSync list, or this app's own list.
+	// Where it lives: the shared Shard list, or this app's own list.
 	Shared bool `protobuf:"varint,14,opt,name=shared,proto3" json:"shared,omitempty"`
 	// Live: the SSH connection is open.
 	Connected     bool `protobuf:"varint,15,opt,name=connected,proto3" json:"connected,omitempty"`
@@ -888,7 +888,7 @@ type Server struct {
 
 func (x *Server) Reset() {
 	*x = Server{}
-	mi := &file_dbm_proto_msgTypes[5]
+	mi := &file_cellar_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -900,7 +900,7 @@ func (x *Server) String() string {
 func (*Server) ProtoMessage() {}
 
 func (x *Server) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[5]
+	mi := &file_cellar_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -913,7 +913,7 @@ func (x *Server) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Server.ProtoReflect.Descriptor instead.
 func (*Server) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{5}
+	return file_cellar_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *Server) GetId() string {
@@ -1030,7 +1030,7 @@ type ServerList struct {
 
 func (x *ServerList) Reset() {
 	*x = ServerList{}
-	mi := &file_dbm_proto_msgTypes[6]
+	mi := &file_cellar_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1042,7 +1042,7 @@ func (x *ServerList) String() string {
 func (*ServerList) ProtoMessage() {}
 
 func (x *ServerList) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[6]
+	mi := &file_cellar_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1055,7 +1055,7 @@ func (x *ServerList) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServerList.ProtoReflect.Descriptor instead.
 func (*ServerList) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{6}
+	return file_cellar_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ServerList) GetServers() []*Server {
@@ -1077,7 +1077,7 @@ type ConnectRequest struct {
 
 func (x *ConnectRequest) Reset() {
 	*x = ConnectRequest{}
-	mi := &file_dbm_proto_msgTypes[7]
+	mi := &file_cellar_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1089,7 +1089,7 @@ func (x *ConnectRequest) String() string {
 func (*ConnectRequest) ProtoMessage() {}
 
 func (x *ConnectRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[7]
+	mi := &file_cellar_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1102,7 +1102,7 @@ func (x *ConnectRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConnectRequest.ProtoReflect.Descriptor instead.
 func (*ConnectRequest) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{7}
+	return file_cellar_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ConnectRequest) GetId() string {
@@ -1121,7 +1121,7 @@ func (x *ConnectRequest) GetPassphrase() string {
 
 type HostKey struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Status        HostKey_Status         `protobuf:"varint,1,opt,name=status,proto3,enum=dbm.v1.HostKey_Status" json:"status,omitempty"`
+	Status        HostKey_Status         `protobuf:"varint,1,opt,name=status,proto3,enum=selfhold.cellar.v1.HostKey_Status" json:"status,omitempty"`
 	Key           string                 `protobuf:"bytes,2,opt,name=key,proto3" json:"key,omitempty"`                 // authorized_keys format
 	Fingerprint   string                 `protobuf:"bytes,3,opt,name=fingerprint,proto3" json:"fingerprint,omitempty"` // SHA256:...
 	Type          string                 `protobuf:"bytes,4,opt,name=type,proto3" json:"type,omitempty"`
@@ -1132,7 +1132,7 @@ type HostKey struct {
 
 func (x *HostKey) Reset() {
 	*x = HostKey{}
-	mi := &file_dbm_proto_msgTypes[8]
+	mi := &file_cellar_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1144,7 +1144,7 @@ func (x *HostKey) String() string {
 func (*HostKey) ProtoMessage() {}
 
 func (x *HostKey) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[8]
+	mi := &file_cellar_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1157,7 +1157,7 @@ func (x *HostKey) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HostKey.ProtoReflect.Descriptor instead.
 func (*HostKey) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{8}
+	return file_cellar_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *HostKey) GetStatus() HostKey_Status {
@@ -1207,7 +1207,7 @@ type ConnectReply struct {
 
 func (x *ConnectReply) Reset() {
 	*x = ConnectReply{}
-	mi := &file_dbm_proto_msgTypes[9]
+	mi := &file_cellar_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1219,7 +1219,7 @@ func (x *ConnectReply) String() string {
 func (*ConnectReply) ProtoMessage() {}
 
 func (x *ConnectReply) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[9]
+	mi := &file_cellar_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1232,7 +1232,7 @@ func (x *ConnectReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConnectReply.ProtoReflect.Descriptor instead.
 func (*ConnectReply) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{9}
+	return file_cellar_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ConnectReply) GetConnected() bool {
@@ -1275,7 +1275,7 @@ type TrustRequest struct {
 
 func (x *TrustRequest) Reset() {
 	*x = TrustRequest{}
-	mi := &file_dbm_proto_msgTypes[10]
+	mi := &file_cellar_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1287,7 +1287,7 @@ func (x *TrustRequest) String() string {
 func (*TrustRequest) ProtoMessage() {}
 
 func (x *TrustRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[10]
+	mi := &file_cellar_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1300,7 +1300,7 @@ func (x *TrustRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TrustRequest.ProtoReflect.Descriptor instead.
 func (*TrustRequest) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{10}
+	return file_cellar_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *TrustRequest) GetId() string {
@@ -1326,7 +1326,7 @@ func (x *TrustRequest) GetReplace() bool {
 
 type DiscoveredService struct {
 	state        protoimpl.MessageState `protogen:"open.v1"`
-	Kind         DiscoveredService_Kind `protobuf:"varint,1,opt,name=kind,proto3,enum=dbm.v1.DiscoveredService_Kind" json:"kind,omitempty"`
+	Kind         DiscoveredService_Kind `protobuf:"varint,1,opt,name=kind,proto3,enum=selfhold.cellar.v1.DiscoveredService_Kind" json:"kind,omitempty"`
 	Host         string                 `protobuf:"bytes,2,opt,name=host,proto3" json:"host,omitempty"` // as reached from the server: 127.0.0.1, a container IP
 	Port         uint32                 `protobuf:"varint,3,opt,name=port,proto3" json:"port,omitempty"`
 	Source       string                 `protobuf:"bytes,4,opt,name=source,proto3" json:"source,omitempty"`                                 // "process", "docker", "port"
@@ -1344,7 +1344,7 @@ type DiscoveredService struct {
 
 func (x *DiscoveredService) Reset() {
 	*x = DiscoveredService{}
-	mi := &file_dbm_proto_msgTypes[11]
+	mi := &file_cellar_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1356,7 +1356,7 @@ func (x *DiscoveredService) String() string {
 func (*DiscoveredService) ProtoMessage() {}
 
 func (x *DiscoveredService) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[11]
+	mi := &file_cellar_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1369,7 +1369,7 @@ func (x *DiscoveredService) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DiscoveredService.ProtoReflect.Descriptor instead.
 func (*DiscoveredService) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{11}
+	return file_cellar_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *DiscoveredService) GetKind() DiscoveredService_Kind {
@@ -1452,7 +1452,7 @@ type DiscoverReply struct {
 
 func (x *DiscoverReply) Reset() {
 	*x = DiscoverReply{}
-	mi := &file_dbm_proto_msgTypes[12]
+	mi := &file_cellar_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1464,7 +1464,7 @@ func (x *DiscoverReply) String() string {
 func (*DiscoverReply) ProtoMessage() {}
 
 func (x *DiscoverReply) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[12]
+	mi := &file_cellar_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1477,7 +1477,7 @@ func (x *DiscoverReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DiscoverReply.ProtoReflect.Descriptor instead.
 func (*DiscoverReply) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{12}
+	return file_cellar_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *DiscoverReply) GetServices() []*DiscoveredService {
@@ -1512,7 +1512,7 @@ type Key struct {
 
 func (x *Key) Reset() {
 	*x = Key{}
-	mi := &file_dbm_proto_msgTypes[13]
+	mi := &file_cellar_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1524,7 +1524,7 @@ func (x *Key) String() string {
 func (*Key) ProtoMessage() {}
 
 func (x *Key) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[13]
+	mi := &file_cellar_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1537,7 +1537,7 @@ func (x *Key) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Key.ProtoReflect.Descriptor instead.
 func (*Key) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{13}
+	return file_cellar_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *Key) GetId() string {
@@ -1621,7 +1621,7 @@ type KeyList struct {
 
 func (x *KeyList) Reset() {
 	*x = KeyList{}
-	mi := &file_dbm_proto_msgTypes[14]
+	mi := &file_cellar_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1633,7 +1633,7 @@ func (x *KeyList) String() string {
 func (*KeyList) ProtoMessage() {}
 
 func (x *KeyList) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[14]
+	mi := &file_cellar_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1646,7 +1646,7 @@ func (x *KeyList) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use KeyList.ProtoReflect.Descriptor instead.
 func (*KeyList) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{14}
+	return file_cellar_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *KeyList) GetKeys() []*Key {
@@ -1674,7 +1674,7 @@ type LocalKey struct {
 
 func (x *LocalKey) Reset() {
 	*x = LocalKey{}
-	mi := &file_dbm_proto_msgTypes[15]
+	mi := &file_cellar_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1686,7 +1686,7 @@ func (x *LocalKey) String() string {
 func (*LocalKey) ProtoMessage() {}
 
 func (x *LocalKey) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[15]
+	mi := &file_cellar_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1699,7 +1699,7 @@ func (x *LocalKey) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LocalKey.ProtoReflect.Descriptor instead.
 func (*LocalKey) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{15}
+	return file_cellar_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *LocalKey) GetTitle() string {
@@ -1728,13 +1728,13 @@ type Connection struct {
 	Id        string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Name      string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	ServerId  string                 `protobuf:"bytes,3,opt,name=server_id,json=serverId,proto3" json:"server_id,omitempty"` // "" = direct from this device
-	Kind      Connection_Kind        `protobuf:"varint,4,opt,name=kind,proto3,enum=dbm.v1.Connection_Kind" json:"kind,omitempty"`
+	Kind      Connection_Kind        `protobuf:"varint,4,opt,name=kind,proto3,enum=selfhold.cellar.v1.Connection_Kind" json:"kind,omitempty"`
 	Host      string                 `protobuf:"bytes,5,opt,name=host,proto3" json:"host,omitempty"`  // as reached from the server (or from here)
 	Port      uint32                 `protobuf:"varint,6,opt,name=port,proto3" json:"port,omitempty"` // 0 = 5432
 	User      string                 `protobuf:"bytes,7,opt,name=user,proto3" json:"user,omitempty"`
 	Password  string                 `protobuf:"bytes,8,opt,name=password,proto3" json:"password,omitempty"`
 	Database  string                 `protobuf:"bytes,9,opt,name=database,proto3" json:"database,omitempty"` // the first database; "" = user's
-	SslMode   Connection_SslMode     `protobuf:"varint,10,opt,name=ssl_mode,json=sslMode,proto3,enum=dbm.v1.Connection_SslMode" json:"ssl_mode,omitempty"`
+	SslMode   Connection_SslMode     `protobuf:"varint,10,opt,name=ssl_mode,json=sslMode,proto3,enum=selfhold.cellar.v1.Connection_SslMode" json:"ssl_mode,omitempty"`
 	Source    string                 `protobuf:"bytes,11,opt,name=source,proto3" json:"source,omitempty"` // how it was found (DiscoveredService.source/title)
 	Color     string                 `protobuf:"bytes,12,opt,name=color,proto3" json:"color,omitempty"`   // a tag colour name, "" = none
 	UpdatedMs int64                  `protobuf:"varint,13,opt,name=updated_ms,json=updatedMs,proto3" json:"updated_ms,omitempty"`
@@ -1747,7 +1747,7 @@ type Connection struct {
 
 func (x *Connection) Reset() {
 	*x = Connection{}
-	mi := &file_dbm_proto_msgTypes[16]
+	mi := &file_cellar_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1759,7 +1759,7 @@ func (x *Connection) String() string {
 func (*Connection) ProtoMessage() {}
 
 func (x *Connection) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[16]
+	mi := &file_cellar_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1772,7 +1772,7 @@ func (x *Connection) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Connection.ProtoReflect.Descriptor instead.
 func (*Connection) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{16}
+	return file_cellar_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *Connection) GetId() string {
@@ -1889,7 +1889,7 @@ type ConnectionList struct {
 
 func (x *ConnectionList) Reset() {
 	*x = ConnectionList{}
-	mi := &file_dbm_proto_msgTypes[17]
+	mi := &file_cellar_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1901,7 +1901,7 @@ func (x *ConnectionList) String() string {
 func (*ConnectionList) ProtoMessage() {}
 
 func (x *ConnectionList) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[17]
+	mi := &file_cellar_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1914,7 +1914,7 @@ func (x *ConnectionList) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConnectionList.ProtoReflect.Descriptor instead.
 func (*ConnectionList) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{17}
+	return file_cellar_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *ConnectionList) GetConnections() []*Connection {
@@ -1936,7 +1936,7 @@ type TestReply struct {
 
 func (x *TestReply) Reset() {
 	*x = TestReply{}
-	mi := &file_dbm_proto_msgTypes[18]
+	mi := &file_cellar_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1948,7 +1948,7 @@ func (x *TestReply) String() string {
 func (*TestReply) ProtoMessage() {}
 
 func (x *TestReply) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[18]
+	mi := &file_cellar_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1961,7 +1961,7 @@ func (x *TestReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TestReply.ProtoReflect.Descriptor instead.
 func (*TestReply) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{18}
+	return file_cellar_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *TestReply) GetOk() bool {
@@ -2005,7 +2005,7 @@ type Database struct {
 
 func (x *Database) Reset() {
 	*x = Database{}
-	mi := &file_dbm_proto_msgTypes[19]
+	mi := &file_cellar_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2017,7 +2017,7 @@ func (x *Database) String() string {
 func (*Database) ProtoMessage() {}
 
 func (x *Database) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[19]
+	mi := &file_cellar_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2030,7 +2030,7 @@ func (x *Database) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Database.ProtoReflect.Descriptor instead.
 func (*Database) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{19}
+	return file_cellar_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *Database) GetName() string {
@@ -2078,7 +2078,7 @@ type DatabaseList struct {
 
 func (x *DatabaseList) Reset() {
 	*x = DatabaseList{}
-	mi := &file_dbm_proto_msgTypes[20]
+	mi := &file_cellar_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2090,7 +2090,7 @@ func (x *DatabaseList) String() string {
 func (*DatabaseList) ProtoMessage() {}
 
 func (x *DatabaseList) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[20]
+	mi := &file_cellar_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2103,7 +2103,7 @@ func (x *DatabaseList) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DatabaseList.ProtoReflect.Descriptor instead.
 func (*DatabaseList) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{20}
+	return file_cellar_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *DatabaseList) GetDatabases() []*Database {
@@ -2130,7 +2130,7 @@ type DbRef struct {
 
 func (x *DbRef) Reset() {
 	*x = DbRef{}
-	mi := &file_dbm_proto_msgTypes[21]
+	mi := &file_cellar_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2142,7 +2142,7 @@ func (x *DbRef) String() string {
 func (*DbRef) ProtoMessage() {}
 
 func (x *DbRef) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[21]
+	mi := &file_cellar_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2155,7 +2155,7 @@ func (x *DbRef) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DbRef.ProtoReflect.Descriptor instead.
 func (*DbRef) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{21}
+	return file_cellar_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *DbRef) GetConnectionId() string {
@@ -2183,7 +2183,7 @@ type Schema struct {
 
 func (x *Schema) Reset() {
 	*x = Schema{}
-	mi := &file_dbm_proto_msgTypes[22]
+	mi := &file_cellar_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2195,7 +2195,7 @@ func (x *Schema) String() string {
 func (*Schema) ProtoMessage() {}
 
 func (x *Schema) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[22]
+	mi := &file_cellar_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2208,7 +2208,7 @@ func (x *Schema) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Schema.ProtoReflect.Descriptor instead.
 func (*Schema) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{22}
+	return file_cellar_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *Schema) GetName() string {
@@ -2241,7 +2241,7 @@ type SchemaList struct {
 
 func (x *SchemaList) Reset() {
 	*x = SchemaList{}
-	mi := &file_dbm_proto_msgTypes[23]
+	mi := &file_cellar_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2253,7 +2253,7 @@ func (x *SchemaList) String() string {
 func (*SchemaList) ProtoMessage() {}
 
 func (x *SchemaList) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[23]
+	mi := &file_cellar_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2266,7 +2266,7 @@ func (x *SchemaList) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SchemaList.ProtoReflect.Descriptor instead.
 func (*SchemaList) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{23}
+	return file_cellar_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *SchemaList) GetSchemas() []*Schema {
@@ -2287,7 +2287,7 @@ type SchemaRef struct {
 
 func (x *SchemaRef) Reset() {
 	*x = SchemaRef{}
-	mi := &file_dbm_proto_msgTypes[24]
+	mi := &file_cellar_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2299,7 +2299,7 @@ func (x *SchemaRef) String() string {
 func (*SchemaRef) ProtoMessage() {}
 
 func (x *SchemaRef) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[24]
+	mi := &file_cellar_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2312,7 +2312,7 @@ func (x *SchemaRef) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SchemaRef.ProtoReflect.Descriptor instead.
 func (*SchemaRef) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{24}
+	return file_cellar_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *SchemaRef) GetConnectionId() string {
@@ -2338,7 +2338,7 @@ func (x *SchemaRef) GetSchema() string {
 
 type DbObject struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Kind          DbObject_Kind          `protobuf:"varint,1,opt,name=kind,proto3,enum=dbm.v1.DbObject_Kind" json:"kind,omitempty"`
+	Kind          DbObject_Kind          `protobuf:"varint,1,opt,name=kind,proto3,enum=selfhold.cellar.v1.DbObject_Kind" json:"kind,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	Comment       string                 `protobuf:"bytes,3,opt,name=comment,proto3" json:"comment,omitempty"`
 	RowsEstimate  int64                  `protobuf:"varint,4,opt,name=rows_estimate,json=rowsEstimate,proto3" json:"rows_estimate,omitempty"` // tables: pg_class.reltuples (-1 unknown)
@@ -2349,7 +2349,7 @@ type DbObject struct {
 
 func (x *DbObject) Reset() {
 	*x = DbObject{}
-	mi := &file_dbm_proto_msgTypes[25]
+	mi := &file_cellar_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2361,7 +2361,7 @@ func (x *DbObject) String() string {
 func (*DbObject) ProtoMessage() {}
 
 func (x *DbObject) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[25]
+	mi := &file_cellar_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2374,7 +2374,7 @@ func (x *DbObject) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DbObject.ProtoReflect.Descriptor instead.
 func (*DbObject) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{25}
+	return file_cellar_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *DbObject) GetKind() DbObject_Kind {
@@ -2421,7 +2421,7 @@ type ObjectList struct {
 
 func (x *ObjectList) Reset() {
 	*x = ObjectList{}
-	mi := &file_dbm_proto_msgTypes[26]
+	mi := &file_cellar_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2433,7 +2433,7 @@ func (x *ObjectList) String() string {
 func (*ObjectList) ProtoMessage() {}
 
 func (x *ObjectList) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[26]
+	mi := &file_cellar_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2446,7 +2446,7 @@ func (x *ObjectList) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ObjectList.ProtoReflect.Descriptor instead.
 func (*ObjectList) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{26}
+	return file_cellar_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *ObjectList) GetObjects() []*DbObject {
@@ -2462,7 +2462,7 @@ type ObjectRef struct {
 	Database      string                 `protobuf:"bytes,2,opt,name=database,proto3" json:"database,omitempty"`
 	Schema        string                 `protobuf:"bytes,3,opt,name=schema,proto3" json:"schema,omitempty"`
 	Name          string                 `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
-	Kind          DbObject_Kind          `protobuf:"varint,5,opt,name=kind,proto3,enum=dbm.v1.DbObject_Kind" json:"kind,omitempty"`
+	Kind          DbObject_Kind          `protobuf:"varint,5,opt,name=kind,proto3,enum=selfhold.cellar.v1.DbObject_Kind" json:"kind,omitempty"`
 	Signature     string                 `protobuf:"bytes,6,opt,name=signature,proto3" json:"signature,omitempty"` // functions
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -2470,7 +2470,7 @@ type ObjectRef struct {
 
 func (x *ObjectRef) Reset() {
 	*x = ObjectRef{}
-	mi := &file_dbm_proto_msgTypes[27]
+	mi := &file_cellar_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2482,7 +2482,7 @@ func (x *ObjectRef) String() string {
 func (*ObjectRef) ProtoMessage() {}
 
 func (x *ObjectRef) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[27]
+	mi := &file_cellar_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2495,7 +2495,7 @@ func (x *ObjectRef) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ObjectRef.ProtoReflect.Descriptor instead.
 func (*ObjectRef) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{27}
+	return file_cellar_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *ObjectRef) GetConnectionId() string {
@@ -2558,7 +2558,7 @@ type Column struct {
 
 func (x *Column) Reset() {
 	*x = Column{}
-	mi := &file_dbm_proto_msgTypes[28]
+	mi := &file_cellar_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2570,7 +2570,7 @@ func (x *Column) String() string {
 func (*Column) ProtoMessage() {}
 
 func (x *Column) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[28]
+	mi := &file_cellar_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2583,7 +2583,7 @@ func (x *Column) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Column.ProtoReflect.Descriptor instead.
 func (*Column) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{28}
+	return file_cellar_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *Column) GetName() string {
@@ -2668,7 +2668,7 @@ type Index struct {
 
 func (x *Index) Reset() {
 	*x = Index{}
-	mi := &file_dbm_proto_msgTypes[29]
+	mi := &file_cellar_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2680,7 +2680,7 @@ func (x *Index) String() string {
 func (*Index) ProtoMessage() {}
 
 func (x *Index) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[29]
+	mi := &file_cellar_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2693,7 +2693,7 @@ func (x *Index) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Index.ProtoReflect.Descriptor instead.
 func (*Index) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{29}
+	return file_cellar_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *Index) GetName() string {
@@ -2735,7 +2735,7 @@ type Constraint struct {
 
 func (x *Constraint) Reset() {
 	*x = Constraint{}
-	mi := &file_dbm_proto_msgTypes[30]
+	mi := &file_cellar_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2747,7 +2747,7 @@ func (x *Constraint) String() string {
 func (*Constraint) ProtoMessage() {}
 
 func (x *Constraint) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[30]
+	mi := &file_cellar_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2760,7 +2760,7 @@ func (x *Constraint) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Constraint.ProtoReflect.Descriptor instead.
 func (*Constraint) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{30}
+	return file_cellar_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *Constraint) GetName() string {
@@ -2800,7 +2800,7 @@ type ObjectInfo struct {
 
 func (x *ObjectInfo) Reset() {
 	*x = ObjectInfo{}
-	mi := &file_dbm_proto_msgTypes[31]
+	mi := &file_cellar_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2812,7 +2812,7 @@ func (x *ObjectInfo) String() string {
 func (*ObjectInfo) ProtoMessage() {}
 
 func (x *ObjectInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[31]
+	mi := &file_cellar_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2825,7 +2825,7 @@ func (x *ObjectInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ObjectInfo.ProtoReflect.Descriptor instead.
 func (*ObjectInfo) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{31}
+	return file_cellar_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *ObjectInfo) GetObject() *DbObject {
@@ -2897,7 +2897,7 @@ type ResultColumn struct {
 
 func (x *ResultColumn) Reset() {
 	*x = ResultColumn{}
-	mi := &file_dbm_proto_msgTypes[32]
+	mi := &file_cellar_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2909,7 +2909,7 @@ func (x *ResultColumn) String() string {
 func (*ResultColumn) ProtoMessage() {}
 
 func (x *ResultColumn) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[32]
+	mi := &file_cellar_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2922,7 +2922,7 @@ func (x *ResultColumn) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResultColumn.ProtoReflect.Descriptor instead.
 func (*ResultColumn) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{32}
+	return file_cellar_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *ResultColumn) GetName() string {
@@ -2963,7 +2963,7 @@ type Cell struct {
 
 func (x *Cell) Reset() {
 	*x = Cell{}
-	mi := &file_dbm_proto_msgTypes[33]
+	mi := &file_cellar_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2975,7 +2975,7 @@ func (x *Cell) String() string {
 func (*Cell) ProtoMessage() {}
 
 func (x *Cell) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[33]
+	mi := &file_cellar_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2988,7 +2988,7 @@ func (x *Cell) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Cell.ProtoReflect.Descriptor instead.
 func (*Cell) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{33}
+	return file_cellar_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *Cell) GetText() string {
@@ -3014,7 +3014,7 @@ type Row struct {
 
 func (x *Row) Reset() {
 	*x = Row{}
-	mi := &file_dbm_proto_msgTypes[34]
+	mi := &file_cellar_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3026,7 +3026,7 @@ func (x *Row) String() string {
 func (*Row) ProtoMessage() {}
 
 func (x *Row) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[34]
+	mi := &file_cellar_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3039,7 +3039,7 @@ func (x *Row) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Row.ProtoReflect.Descriptor instead.
 func (*Row) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{34}
+	return file_cellar_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *Row) GetCells() []*Cell {
@@ -3078,7 +3078,7 @@ type ResultSet struct {
 
 func (x *ResultSet) Reset() {
 	*x = ResultSet{}
-	mi := &file_dbm_proto_msgTypes[35]
+	mi := &file_cellar_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3090,7 +3090,7 @@ func (x *ResultSet) String() string {
 func (*ResultSet) ProtoMessage() {}
 
 func (x *ResultSet) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[35]
+	mi := &file_cellar_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3103,7 +3103,7 @@ func (x *ResultSet) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResultSet.ProtoReflect.Descriptor instead.
 func (*ResultSet) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{35}
+	return file_cellar_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *ResultSet) GetColumns() []*ResultColumn {
@@ -3228,7 +3228,7 @@ type Sort struct {
 
 func (x *Sort) Reset() {
 	*x = Sort{}
-	mi := &file_dbm_proto_msgTypes[36]
+	mi := &file_cellar_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3240,7 +3240,7 @@ func (x *Sort) String() string {
 func (*Sort) ProtoMessage() {}
 
 func (x *Sort) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[36]
+	mi := &file_cellar_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3253,7 +3253,7 @@ func (x *Sort) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Sort.ProtoReflect.Descriptor instead.
 func (*Sort) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{36}
+	return file_cellar_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *Sort) GetColumn() string {
@@ -3287,7 +3287,7 @@ type ReadTableRequest struct {
 
 func (x *ReadTableRequest) Reset() {
 	*x = ReadTableRequest{}
-	mi := &file_dbm_proto_msgTypes[37]
+	mi := &file_cellar_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3299,7 +3299,7 @@ func (x *ReadTableRequest) String() string {
 func (*ReadTableRequest) ProtoMessage() {}
 
 func (x *ReadTableRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[37]
+	mi := &file_cellar_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3312,7 +3312,7 @@ func (x *ReadTableRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReadTableRequest.ProtoReflect.Descriptor instead.
 func (*ReadTableRequest) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{37}
+	return file_cellar_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *ReadTableRequest) GetConnectionId() string {
@@ -3383,7 +3383,7 @@ type EditValue struct {
 
 func (x *EditValue) Reset() {
 	*x = EditValue{}
-	mi := &file_dbm_proto_msgTypes[38]
+	mi := &file_cellar_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3395,7 +3395,7 @@ func (x *EditValue) String() string {
 func (*EditValue) ProtoMessage() {}
 
 func (x *EditValue) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[38]
+	mi := &file_cellar_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3408,7 +3408,7 @@ func (x *EditValue) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EditValue.ProtoReflect.Descriptor instead.
 func (*EditValue) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{38}
+	return file_cellar_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *EditValue) GetColumn() string {
@@ -3434,7 +3434,7 @@ func (x *EditValue) GetUseDefault() bool {
 
 type RowEdit struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	Op    RowEdit_Op             `protobuf:"varint,1,opt,name=op,proto3,enum=dbm.v1.RowEdit_Op" json:"op,omitempty"`
+	Op    RowEdit_Op             `protobuf:"varint,1,opt,name=op,proto3,enum=selfhold.cellar.v1.RowEdit_Op" json:"op,omitempty"`
 	// UPDATE / DELETE: the row's key (ResultSet.key_columns, or "ctid").
 	Key           []*EditValue `protobuf:"bytes,2,rep,name=key,proto3" json:"key,omitempty"`
 	Values        []*EditValue `protobuf:"bytes,3,rep,name=values,proto3" json:"values,omitempty"` // INSERT / UPDATE
@@ -3444,7 +3444,7 @@ type RowEdit struct {
 
 func (x *RowEdit) Reset() {
 	*x = RowEdit{}
-	mi := &file_dbm_proto_msgTypes[39]
+	mi := &file_cellar_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3456,7 +3456,7 @@ func (x *RowEdit) String() string {
 func (*RowEdit) ProtoMessage() {}
 
 func (x *RowEdit) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[39]
+	mi := &file_cellar_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3469,7 +3469,7 @@ func (x *RowEdit) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RowEdit.ProtoReflect.Descriptor instead.
 func (*RowEdit) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{39}
+	return file_cellar_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *RowEdit) GetOp() RowEdit_Op {
@@ -3506,7 +3506,7 @@ type EditRequest struct {
 
 func (x *EditRequest) Reset() {
 	*x = EditRequest{}
-	mi := &file_dbm_proto_msgTypes[40]
+	mi := &file_cellar_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3518,7 +3518,7 @@ func (x *EditRequest) String() string {
 func (*EditRequest) ProtoMessage() {}
 
 func (x *EditRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[40]
+	mi := &file_cellar_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3531,7 +3531,7 @@ func (x *EditRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EditRequest.ProtoReflect.Descriptor instead.
 func (*EditRequest) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{40}
+	return file_cellar_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *EditRequest) GetConnectionId() string {
@@ -3580,7 +3580,7 @@ type EditReply struct {
 
 func (x *EditReply) Reset() {
 	*x = EditReply{}
-	mi := &file_dbm_proto_msgTypes[41]
+	mi := &file_cellar_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3592,7 +3592,7 @@ func (x *EditReply) String() string {
 func (*EditReply) ProtoMessage() {}
 
 func (x *EditReply) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[41]
+	mi := &file_cellar_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3605,7 +3605,7 @@ func (x *EditReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EditReply.ProtoReflect.Descriptor instead.
 func (*EditReply) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{41}
+	return file_cellar_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *EditReply) GetRowsAffected() int64 {
@@ -3635,7 +3635,7 @@ type Console struct {
 
 func (x *Console) Reset() {
 	*x = Console{}
-	mi := &file_dbm_proto_msgTypes[42]
+	mi := &file_cellar_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3647,7 +3647,7 @@ func (x *Console) String() string {
 func (*Console) ProtoMessage() {}
 
 func (x *Console) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[42]
+	mi := &file_cellar_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3660,7 +3660,7 @@ func (x *Console) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Console.ProtoReflect.Descriptor instead.
 func (*Console) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{42}
+	return file_cellar_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *Console) GetId() string {
@@ -3707,7 +3707,7 @@ type ConsoleRef struct {
 
 func (x *ConsoleRef) Reset() {
 	*x = ConsoleRef{}
-	mi := &file_dbm_proto_msgTypes[43]
+	mi := &file_cellar_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3719,7 +3719,7 @@ func (x *ConsoleRef) String() string {
 func (*ConsoleRef) ProtoMessage() {}
 
 func (x *ConsoleRef) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[43]
+	mi := &file_cellar_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3732,7 +3732,7 @@ func (x *ConsoleRef) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConsoleRef.ProtoReflect.Descriptor instead.
 func (*ConsoleRef) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{43}
+	return file_cellar_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *ConsoleRef) GetId() string {
@@ -3759,7 +3759,7 @@ type ExecuteRequest struct {
 
 func (x *ExecuteRequest) Reset() {
 	*x = ExecuteRequest{}
-	mi := &file_dbm_proto_msgTypes[44]
+	mi := &file_cellar_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3771,7 +3771,7 @@ func (x *ExecuteRequest) String() string {
 func (*ExecuteRequest) ProtoMessage() {}
 
 func (x *ExecuteRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[44]
+	mi := &file_cellar_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3784,7 +3784,7 @@ func (x *ExecuteRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ExecuteRequest.ProtoReflect.Descriptor instead.
 func (*ExecuteRequest) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{44}
+	return file_cellar_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *ExecuteRequest) GetConsoleId() string {
@@ -3831,7 +3831,7 @@ type StatementsRequest struct {
 
 func (x *StatementsRequest) Reset() {
 	*x = StatementsRequest{}
-	mi := &file_dbm_proto_msgTypes[45]
+	mi := &file_cellar_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3843,7 +3843,7 @@ func (x *StatementsRequest) String() string {
 func (*StatementsRequest) ProtoMessage() {}
 
 func (x *StatementsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[45]
+	mi := &file_cellar_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3856,7 +3856,7 @@ func (x *StatementsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatementsRequest.ProtoReflect.Descriptor instead.
 func (*StatementsRequest) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{45}
+	return file_cellar_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *StatementsRequest) GetSql() string {
@@ -3876,7 +3876,7 @@ type StatementRange struct {
 
 func (x *StatementRange) Reset() {
 	*x = StatementRange{}
-	mi := &file_dbm_proto_msgTypes[46]
+	mi := &file_cellar_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3888,7 +3888,7 @@ func (x *StatementRange) String() string {
 func (*StatementRange) ProtoMessage() {}
 
 func (x *StatementRange) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[46]
+	mi := &file_cellar_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3901,7 +3901,7 @@ func (x *StatementRange) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatementRange.ProtoReflect.Descriptor instead.
 func (*StatementRange) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{46}
+	return file_cellar_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *StatementRange) GetStart() int32 {
@@ -3927,7 +3927,7 @@ type StatementsReply struct {
 
 func (x *StatementsReply) Reset() {
 	*x = StatementsReply{}
-	mi := &file_dbm_proto_msgTypes[47]
+	mi := &file_cellar_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3939,7 +3939,7 @@ func (x *StatementsReply) String() string {
 func (*StatementsReply) ProtoMessage() {}
 
 func (x *StatementsReply) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[47]
+	mi := &file_cellar_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3952,7 +3952,7 @@ func (x *StatementsReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatementsReply.ProtoReflect.Descriptor instead.
 func (*StatementsReply) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{47}
+	return file_cellar_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *StatementsReply) GetStatements() []*StatementRange {
@@ -3975,7 +3975,7 @@ type ExecuteReply struct {
 
 func (x *ExecuteReply) Reset() {
 	*x = ExecuteReply{}
-	mi := &file_dbm_proto_msgTypes[48]
+	mi := &file_cellar_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3987,7 +3987,7 @@ func (x *ExecuteReply) String() string {
 func (*ExecuteReply) ProtoMessage() {}
 
 func (x *ExecuteReply) ProtoReflect() protoreflect.Message {
-	mi := &file_dbm_proto_msgTypes[48]
+	mi := &file_cellar_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4000,7 +4000,7 @@ func (x *ExecuteReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ExecuteReply.ProtoReflect.Descriptor instead.
 func (*ExecuteReply) Descriptor() ([]byte, []int) {
-	return file_dbm_proto_rawDescGZIP(), []int{48}
+	return file_cellar_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *ExecuteReply) GetResults() []*ResultSet {
@@ -4024,23 +4024,23 @@ func (x *ExecuteReply) GetDurationMs() int64 {
 	return 0
 }
 
-var File_dbm_proto protoreflect.FileDescriptor
+var File_cellar_proto protoreflect.FileDescriptor
 
-const file_dbm_proto_rawDesc = "" +
+const file_cellar_proto_rawDesc = "" +
 	"\n" +
-	"\tdbm.proto\x12\x06dbm.v1\"\a\n" +
+	"\fcellar.proto\x12\x12selfhold.cellar.v1\"\a\n" +
 	"\x05Empty\"\x15\n" +
 	"\x03Ref\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"\xa8\x01\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"\xb4\x01\n" +
 	"\x05State\x12!\n" +
 	"\fcore_version\x18\x01 \x01(\tR\vcoreVersion\x12\x1d\n" +
 	"\n" +
 	"core_build\x18\x02 \x01(\tR\tcoreBuild\x12\x1a\n" +
-	"\bplatform\x18\x03 \x01(\tR\bplatform\x12%\n" +
-	"\x04sync\x18\x04 \x01(\v2\x11.dbm.v1.SyncStateR\x04sync\x12\x1a\n" +
-	"\bkeychain\x18\x05 \x01(\bR\bkeychain\"\xf3\x03\n" +
-	"\tSyncState\x12-\n" +
-	"\x05phase\x18\x01 \x01(\x0e2\x17.dbm.v1.SyncState.PhaseR\x05phase\x12\x18\n" +
+	"\bplatform\x18\x03 \x01(\tR\bplatform\x121\n" +
+	"\x04sync\x18\x04 \x01(\v2\x1d.selfhold.cellar.v1.SyncStateR\x04sync\x12\x1a\n" +
+	"\bkeychain\x18\x05 \x01(\bR\bkeychain\"\xff\x03\n" +
+	"\tSyncState\x129\n" +
+	"\x05phase\x18\x01 \x01(\x0e2#.selfhold.cellar.v1.SyncState.PhaseR\x05phase\x12\x18\n" +
 	"\aenabled\x18\x02 \x01(\bR\aenabled\x12\x1c\n" +
 	"\tavailable\x18\x03 \x01(\bR\tavailable\x12!\n" +
 	"\fpairing_code\x18\x04 \x01(\tR\vpairingCode\x12\x14\n" +
@@ -4066,9 +4066,9 @@ const file_dbm_proto_rawDesc = "" +
 	"\aOFFLINE\x10\x06\x12\n" +
 	"\n" +
 	"\x06SYNCED\x10\a\x12\t\n" +
-	"\x05ERROR\x10\b\"\xb2\x01\n" +
-	"\x05Event\x12&\n" +
-	"\x04kind\x18\x01 \x01(\x0e2\x12.dbm.v1.Event.KindR\x04kind\x12\x0e\n" +
+	"\x05ERROR\x10\b\"\xbe\x01\n" +
+	"\x05Event\x122\n" +
+	"\x04kind\x18\x01 \x01(\x0e2\x1e.selfhold.cellar.v1.Event.KindR\x04kind\x12\x0e\n" +
 	"\x02id\x18\x02 \x01(\tR\x02id\x12\x18\n" +
 	"\amessage\x18\x03 \x01(\tR\amessage\"W\n" +
 	"\x04Kind\x12\x14\n" +
@@ -4077,15 +4077,15 @@ const file_dbm_proto_rawDesc = "" +
 	"\vCONNECTIONS\x10\x02\x12\b\n" +
 	"\x04KEYS\x10\x03\x12\b\n" +
 	"\x04SYNC\x10\x04\x12\a\n" +
-	"\x03SSH\x10\x05\"\xc8\x03\n" +
+	"\x03SSH\x10\x05\"\xd4\x03\n" +
 	"\x06Server\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x14\n" +
 	"\x05group\x18\x03 \x01(\tR\x05group\x12\x12\n" +
 	"\x04host\x18\x04 \x01(\tR\x04host\x12\x12\n" +
 	"\x04port\x18\x05 \x01(\rR\x04port\x12\x12\n" +
-	"\x04user\x18\x06 \x01(\tR\x04user\x12'\n" +
-	"\x04auth\x18\a \x01(\x0e2\x13.dbm.v1.Server.AuthR\x04auth\x12\x1a\n" +
+	"\x04user\x18\x06 \x01(\tR\x04user\x123\n" +
+	"\x04auth\x18\a \x01(\x0e2\x1f.selfhold.cellar.v1.Server.AuthR\x04auth\x12\x1a\n" +
 	"\bpassword\x18\b \x01(\tR\bpassword\x12\x15\n" +
 	"\x06key_id\x18\t \x01(\tR\x05keyId\x12\x1b\n" +
 	"\thost_keys\x18\n" +
@@ -4100,17 +4100,17 @@ const file_dbm_proto_rawDesc = "" +
 	"\x10AUTH_UNSPECIFIED\x10\x00\x12\f\n" +
 	"\bPASSWORD\x10\x01\x12\a\n" +
 	"\x03KEY\x10\x02\x12\t\n" +
-	"\x05AGENT\x10\x03\"6\n" +
+	"\x05AGENT\x10\x03\"B\n" +
 	"\n" +
-	"ServerList\x12(\n" +
-	"\aservers\x18\x01 \x03(\v2\x0e.dbm.v1.ServerR\aservers\"@\n" +
+	"ServerList\x124\n" +
+	"\aservers\x18\x01 \x03(\v2\x1a.selfhold.cellar.v1.ServerR\aservers\"@\n" +
 	"\x0eConnectRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1e\n" +
 	"\n" +
 	"passphrase\x18\x02 \x01(\tR\n" +
-	"passphrase\"\xe5\x01\n" +
-	"\aHostKey\x12.\n" +
-	"\x06status\x18\x01 \x01(\x0e2\x16.dbm.v1.HostKey.StatusR\x06status\x12\x10\n" +
+	"passphrase\"\xf1\x01\n" +
+	"\aHostKey\x12:\n" +
+	"\x06status\x18\x01 \x01(\x0e2\".selfhold.cellar.v1.HostKey.StatusR\x06status\x12\x10\n" +
 	"\x03key\x18\x02 \x01(\tR\x03key\x12 \n" +
 	"\vfingerprint\x18\x03 \x01(\tR\vfingerprint\x12\x12\n" +
 	"\x04type\x18\x04 \x01(\tR\x04type\x12\x1b\n" +
@@ -4119,18 +4119,18 @@ const file_dbm_proto_rawDesc = "" +
 	"\x12STATUS_UNSPECIFIED\x10\x00\x12\t\n" +
 	"\x05KNOWN\x10\x01\x12\v\n" +
 	"\aUNKNOWN\x10\x02\x12\v\n" +
-	"\aCHANGED\x10\x03\"\xa6\x01\n" +
+	"\aCHANGED\x10\x03\"\xb2\x01\n" +
 	"\fConnectReply\x12\x1c\n" +
-	"\tconnected\x18\x01 \x01(\bR\tconnected\x12*\n" +
-	"\bhost_key\x18\x02 \x01(\v2\x0f.dbm.v1.HostKeyR\ahostKey\x12'\n" +
+	"\tconnected\x18\x01 \x01(\bR\tconnected\x126\n" +
+	"\bhost_key\x18\x02 \x01(\v2\x1b.selfhold.cellar.v1.HostKeyR\ahostKey\x12'\n" +
 	"\x0fneed_passphrase\x18\x03 \x01(\bR\x0eneedPassphrase\x12#\n" +
 	"\rserver_banner\x18\x04 \x01(\tR\fserverBanner\"J\n" +
 	"\fTrustRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x10\n" +
 	"\x03key\x18\x02 \x01(\tR\x03key\x12\x18\n" +
-	"\areplace\x18\x03 \x01(\bR\areplace\"\xe6\x02\n" +
-	"\x11DiscoveredService\x122\n" +
-	"\x04kind\x18\x01 \x01(\x0e2\x1e.dbm.v1.DiscoveredService.KindR\x04kind\x12\x12\n" +
+	"\areplace\x18\x03 \x01(\bR\areplace\"\xf2\x02\n" +
+	"\x11DiscoveredService\x12>\n" +
+	"\x04kind\x18\x01 \x01(\x0e2*.selfhold.cellar.v1.DiscoveredService.KindR\x04kind\x12\x12\n" +
 	"\x04host\x18\x02 \x01(\tR\x04host\x12\x12\n" +
 	"\x04port\x18\x03 \x01(\rR\x04port\x12\x16\n" +
 	"\x06source\x18\x04 \x01(\tR\x06source\x12\x14\n" +
@@ -4143,9 +4143,9 @@ const file_dbm_proto_rawDesc = "" +
 	" \x01(\tR\fdatabaseHint\"*\n" +
 	"\x04Kind\x12\x14\n" +
 	"\x10KIND_UNSPECIFIED\x10\x00\x12\f\n" +
-	"\bPOSTGRES\x10\x01\"b\n" +
-	"\rDiscoverReply\x125\n" +
-	"\bservices\x18\x01 \x03(\v2\x19.dbm.v1.DiscoveredServiceR\bservices\x12\x1a\n" +
+	"\bPOSTGRES\x10\x01\"n\n" +
+	"\rDiscoverReply\x12A\n" +
+	"\bservices\x18\x01 \x03(\v2%.selfhold.cellar.v1.DiscoveredServiceR\bservices\x12\x1a\n" +
 	"\bwarnings\x18\x02 \x03(\tR\bwarnings\"\x92\x02\n" +
 	"\x03Key\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
@@ -4159,9 +4159,9 @@ const file_dbm_proto_rawDesc = "" +
 	"\x0ehas_passphrase\x18\b \x01(\bR\rhasPassphrase\x12\x14\n" +
 	"\x05local\x18\t \x01(\bR\x05local\x12\x14\n" +
 	"\x05group\x18\n" +
-	" \x01(\tR\x05group\"G\n" +
-	"\aKeyList\x12\x1f\n" +
-	"\x04keys\x18\x01 \x03(\v2\v.dbm.v1.KeyR\x04keys\x12\x1b\n" +
+	" \x01(\tR\x05group\"S\n" +
+	"\aKeyList\x12+\n" +
+	"\x04keys\x18\x01 \x03(\v2\x17.selfhold.cellar.v1.KeyR\x04keys\x12\x1b\n" +
 	"\tsafe_note\x18\x02 \x01(\tR\bsafeNote\"a\n" +
 	"\bLocalKey\x12\x14\n" +
 	"\x05title\x18\x01 \x01(\tR\x05title\x12\x1f\n" +
@@ -4169,20 +4169,20 @@ const file_dbm_proto_rawDesc = "" +
 	"privateKey\x12\x1e\n" +
 	"\n" +
 	"passphrase\x18\x03 \x01(\tR\n" +
-	"passphrase\"\xa4\x04\n" +
+	"passphrase\"\xbc\x04\n" +
 	"\n" +
 	"Connection\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1b\n" +
-	"\tserver_id\x18\x03 \x01(\tR\bserverId\x12+\n" +
-	"\x04kind\x18\x04 \x01(\x0e2\x17.dbm.v1.Connection.KindR\x04kind\x12\x12\n" +
+	"\tserver_id\x18\x03 \x01(\tR\bserverId\x127\n" +
+	"\x04kind\x18\x04 \x01(\x0e2#.selfhold.cellar.v1.Connection.KindR\x04kind\x12\x12\n" +
 	"\x04host\x18\x05 \x01(\tR\x04host\x12\x12\n" +
 	"\x04port\x18\x06 \x01(\rR\x04port\x12\x12\n" +
 	"\x04user\x18\a \x01(\tR\x04user\x12\x1a\n" +
 	"\bpassword\x18\b \x01(\tR\bpassword\x12\x1a\n" +
-	"\bdatabase\x18\t \x01(\tR\bdatabase\x125\n" +
+	"\bdatabase\x18\t \x01(\tR\bdatabase\x12A\n" +
 	"\bssl_mode\x18\n" +
-	" \x01(\x0e2\x1a.dbm.v1.Connection.SslModeR\asslMode\x12\x16\n" +
+	" \x01(\x0e2&.selfhold.cellar.v1.Connection.SslModeR\asslMode\x12\x16\n" +
 	"\x06source\x18\v \x01(\tR\x06source\x12\x14\n" +
 	"\x05color\x18\f \x01(\tR\x05color\x12\x1d\n" +
 	"\n" +
@@ -4197,9 +4197,9 @@ const file_dbm_proto_rawDesc = "" +
 	"\aDISABLE\x10\x01\x12\n" +
 	"\n" +
 	"\x06PREFER\x10\x02\x12\v\n" +
-	"\aREQUIRE\x10\x03\"F\n" +
-	"\x0eConnectionList\x124\n" +
-	"\vconnections\x18\x01 \x03(\v2\x12.dbm.v1.ConnectionR\vconnections\"w\n" +
+	"\aREQUIRE\x10\x03\"R\n" +
+	"\x0eConnectionList\x12@\n" +
+	"\vconnections\x18\x01 \x03(\v2\x1e.selfhold.cellar.v1.ConnectionR\vconnections\"w\n" +
 	"\tTestReply\x12\x0e\n" +
 	"\x02ok\x18\x01 \x01(\bR\x02ok\x12%\n" +
 	"\x0eserver_version\x18\x02 \x01(\tR\rserverVersion\x12\x14\n" +
@@ -4214,9 +4214,9 @@ const file_dbm_proto_rawDesc = "" +
 	"\vis_template\x18\x04 \x01(\bR\n" +
 	"isTemplate\x12\x1f\n" +
 	"\vcan_connect\x18\x05 \x01(\bR\n" +
-	"canConnect\"e\n" +
-	"\fDatabaseList\x12.\n" +
-	"\tdatabases\x18\x01 \x03(\v2\x10.dbm.v1.DatabaseR\tdatabases\x12%\n" +
+	"canConnect\"q\n" +
+	"\fDatabaseList\x12:\n" +
+	"\tdatabases\x18\x01 \x03(\v2\x1c.selfhold.cellar.v1.DatabaseR\tdatabases\x12%\n" +
 	"\x0eserver_version\x18\x02 \x01(\tR\rserverVersion\"H\n" +
 	"\x05DbRef\x12#\n" +
 	"\rconnection_id\x18\x01 \x01(\tR\fconnectionId\x12\x1a\n" +
@@ -4224,16 +4224,16 @@ const file_dbm_proto_rawDesc = "" +
 	"\x06Schema\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x14\n" +
 	"\x05owner\x18\x02 \x01(\tR\x05owner\x12\x16\n" +
-	"\x06system\x18\x03 \x01(\bR\x06system\"6\n" +
+	"\x06system\x18\x03 \x01(\bR\x06system\"B\n" +
 	"\n" +
-	"SchemaList\x12(\n" +
-	"\aschemas\x18\x01 \x03(\v2\x0e.dbm.v1.SchemaR\aschemas\"d\n" +
+	"SchemaList\x124\n" +
+	"\aschemas\x18\x01 \x03(\v2\x1a.selfhold.cellar.v1.SchemaR\aschemas\"d\n" +
 	"\tSchemaRef\x12#\n" +
 	"\rconnection_id\x18\x01 \x01(\tR\fconnectionId\x12\x1a\n" +
 	"\bdatabase\x18\x02 \x01(\tR\bdatabase\x12\x16\n" +
-	"\x06schema\x18\x03 \x01(\tR\x06schema\"\xc6\x02\n" +
-	"\bDbObject\x12)\n" +
-	"\x04kind\x18\x01 \x01(\x0e2\x15.dbm.v1.DbObject.KindR\x04kind\x12\x12\n" +
+	"\x06schema\x18\x03 \x01(\tR\x06schema\"\xd2\x02\n" +
+	"\bDbObject\x125\n" +
+	"\x04kind\x18\x01 \x01(\x0e2!.selfhold.cellar.v1.DbObject.KindR\x04kind\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x18\n" +
 	"\acomment\x18\x03 \x01(\tR\acomment\x12#\n" +
 	"\rrows_estimate\x18\x04 \x01(\x03R\frowsEstimate\x12\x1c\n" +
@@ -4247,16 +4247,16 @@ const file_dbm_proto_rawDesc = "" +
 	"\bFUNCTION\x10\x05\x12\x11\n" +
 	"\rFOREIGN_TABLE\x10\x06\x12\x15\n" +
 	"\x11PARTITIONED_TABLE\x10\a\x12\r\n" +
-	"\tPROCEDURE\x10\b\"8\n" +
+	"\tPROCEDURE\x10\b\"D\n" +
 	"\n" +
-	"ObjectList\x12*\n" +
-	"\aobjects\x18\x01 \x03(\v2\x10.dbm.v1.DbObjectR\aobjects\"\xc1\x01\n" +
+	"ObjectList\x126\n" +
+	"\aobjects\x18\x01 \x03(\v2\x1c.selfhold.cellar.v1.DbObjectR\aobjects\"\xcd\x01\n" +
 	"\tObjectRef\x12#\n" +
 	"\rconnection_id\x18\x01 \x01(\tR\fconnectionId\x12\x1a\n" +
 	"\bdatabase\x18\x02 \x01(\tR\bdatabase\x12\x16\n" +
 	"\x06schema\x18\x03 \x01(\tR\x06schema\x12\x12\n" +
-	"\x04name\x18\x04 \x01(\tR\x04name\x12)\n" +
-	"\x04kind\x18\x05 \x01(\x0e2\x15.dbm.v1.DbObject.KindR\x04kind\x12\x1c\n" +
+	"\x04name\x18\x04 \x01(\tR\x04name\x125\n" +
+	"\x04kind\x18\x05 \x01(\x0e2!.selfhold.cellar.v1.DbObject.KindR\x04kind\x12\x1c\n" +
 	"\tsignature\x18\x06 \x01(\tR\tsignature\"\x92\x02\n" +
 	"\x06Column\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
@@ -4284,13 +4284,13 @@ const file_dbm_proto_rawDesc = "" +
 	"\x04type\x18\x02 \x01(\tR\x04type\x12\x1e\n" +
 	"\n" +
 	"definition\x18\x03 \x01(\tR\n" +
-	"definition\"\xa7\x02\n" +
+	"definition\"\xd7\x02\n" +
 	"\n" +
-	"ObjectInfo\x12(\n" +
-	"\x06object\x18\x01 \x01(\v2\x10.dbm.v1.DbObjectR\x06object\x12(\n" +
-	"\acolumns\x18\x02 \x03(\v2\x0e.dbm.v1.ColumnR\acolumns\x12'\n" +
-	"\aindexes\x18\x03 \x03(\v2\r.dbm.v1.IndexR\aindexes\x124\n" +
-	"\vconstraints\x18\x04 \x03(\v2\x12.dbm.v1.ConstraintR\vconstraints\x12\x10\n" +
+	"ObjectInfo\x124\n" +
+	"\x06object\x18\x01 \x01(\v2\x1c.selfhold.cellar.v1.DbObjectR\x06object\x124\n" +
+	"\acolumns\x18\x02 \x03(\v2\x1a.selfhold.cellar.v1.ColumnR\acolumns\x123\n" +
+	"\aindexes\x18\x03 \x03(\v2\x19.selfhold.cellar.v1.IndexR\aindexes\x12@\n" +
+	"\vconstraints\x18\x04 \x03(\v2\x1e.selfhold.cellar.v1.ConstraintR\vconstraints\x12\x10\n" +
 	"\x03ddl\x18\x05 \x01(\tR\x03ddl\x12\x1f\n" +
 	"\vprimary_key\x18\x06 \x03(\tR\n" +
 	"primaryKey\x12\x14\n" +
@@ -4304,12 +4304,12 @@ const file_dbm_proto_rawDesc = "" +
 	"\ftable_column\x18\x04 \x01(\tR\vtableColumn\".\n" +
 	"\x04Cell\x12\x12\n" +
 	"\x04text\x18\x01 \x01(\tR\x04text\x12\x12\n" +
-	"\x04null\x18\x02 \x01(\bR\x04null\")\n" +
-	"\x03Row\x12\"\n" +
-	"\x05cells\x18\x01 \x03(\v2\f.dbm.v1.CellR\x05cells\"\xa6\x04\n" +
-	"\tResultSet\x12.\n" +
-	"\acolumns\x18\x01 \x03(\v2\x14.dbm.v1.ResultColumnR\acolumns\x12\x1f\n" +
-	"\x04rows\x18\x02 \x03(\v2\v.dbm.v1.RowR\x04rows\x12\x1c\n" +
+	"\x04null\x18\x02 \x01(\bR\x04null\"5\n" +
+	"\x03Row\x12.\n" +
+	"\x05cells\x18\x01 \x03(\v2\x18.selfhold.cellar.v1.CellR\x05cells\"\xbe\x04\n" +
+	"\tResultSet\x12:\n" +
+	"\acolumns\x18\x01 \x03(\v2 .selfhold.cellar.v1.ResultColumnR\acolumns\x12+\n" +
+	"\x04rows\x18\x02 \x03(\v2\x17.selfhold.cellar.v1.RowR\x04rows\x12\x1c\n" +
 	"\ttruncated\x18\x03 \x01(\bR\ttruncated\x12\x1f\n" +
 	"\vcommand_tag\x18\x04 \x01(\tR\n" +
 	"commandTag\x12#\n" +
@@ -4330,25 +4330,25 @@ const file_dbm_proto_rawDesc = "" +
 	"\ferror_offset\x18\x10 \x01(\x05R\verrorOffset\"2\n" +
 	"\x04Sort\x12\x16\n" +
 	"\x06column\x18\x01 \x01(\tR\x06column\x12\x12\n" +
-	"\x04desc\x18\x02 \x01(\bR\x04desc\"\xe9\x01\n" +
+	"\x04desc\x18\x02 \x01(\bR\x04desc\"\xf5\x01\n" +
 	"\x10ReadTableRequest\x12#\n" +
 	"\rconnection_id\x18\x01 \x01(\tR\fconnectionId\x12\x1a\n" +
 	"\bdatabase\x18\x02 \x01(\tR\bdatabase\x12\x16\n" +
 	"\x06schema\x18\x03 \x01(\tR\x06schema\x12\x14\n" +
 	"\x05table\x18\x04 \x01(\tR\x05table\x12\x16\n" +
 	"\x06offset\x18\x05 \x01(\x03R\x06offset\x12\x14\n" +
-	"\x05limit\x18\x06 \x01(\x05R\x05limit\x12 \n" +
-	"\x04sort\x18\a \x03(\v2\f.dbm.v1.SortR\x04sort\x12\x16\n" +
-	"\x06filter\x18\b \x01(\tR\x06filter\"h\n" +
+	"\x05limit\x18\x06 \x01(\x05R\x05limit\x12,\n" +
+	"\x04sort\x18\a \x03(\v2\x18.selfhold.cellar.v1.SortR\x04sort\x12\x16\n" +
+	"\x06filter\x18\b \x01(\tR\x06filter\"t\n" +
 	"\tEditValue\x12\x16\n" +
-	"\x06column\x18\x01 \x01(\tR\x06column\x12\"\n" +
-	"\x05value\x18\x02 \x01(\v2\f.dbm.v1.CellR\x05value\x12\x1f\n" +
+	"\x06column\x18\x01 \x01(\tR\x06column\x12.\n" +
+	"\x05value\x18\x02 \x01(\v2\x18.selfhold.cellar.v1.CellR\x05value\x12\x1f\n" +
 	"\vuse_default\x18\x03 \x01(\bR\n" +
-	"useDefault\"\xbb\x01\n" +
-	"\aRowEdit\x12\"\n" +
-	"\x02op\x18\x01 \x01(\x0e2\x12.dbm.v1.RowEdit.OpR\x02op\x12#\n" +
-	"\x03key\x18\x02 \x03(\v2\x11.dbm.v1.EditValueR\x03key\x12)\n" +
-	"\x06values\x18\x03 \x03(\v2\x11.dbm.v1.EditValueR\x06values\"<\n" +
+	"useDefault\"\xdf\x01\n" +
+	"\aRowEdit\x12.\n" +
+	"\x02op\x18\x01 \x01(\x0e2\x1e.selfhold.cellar.v1.RowEdit.OpR\x02op\x12/\n" +
+	"\x03key\x18\x02 \x03(\v2\x1d.selfhold.cellar.v1.EditValueR\x03key\x125\n" +
+	"\x06values\x18\x03 \x03(\v2\x1d.selfhold.cellar.v1.EditValueR\x06values\"<\n" +
 	"\x02Op\x12\x12\n" +
 	"\x0eOP_UNSPECIFIED\x10\x00\x12\n" +
 	"\n" +
@@ -4356,13 +4356,13 @@ const file_dbm_proto_rawDesc = "" +
 	"\n" +
 	"\x06UPDATE\x10\x02\x12\n" +
 	"\n" +
-	"\x06DELETE\x10\x03\"\xa3\x01\n" +
+	"\x06DELETE\x10\x03\"\xaf\x01\n" +
 	"\vEditRequest\x12#\n" +
 	"\rconnection_id\x18\x01 \x01(\tR\fconnectionId\x12\x1a\n" +
 	"\bdatabase\x18\x02 \x01(\tR\bdatabase\x12\x16\n" +
 	"\x06schema\x18\x03 \x01(\tR\x06schema\x12\x14\n" +
-	"\x05table\x18\x04 \x01(\tR\x05table\x12%\n" +
-	"\x05edits\x18\x05 \x03(\v2\x0f.dbm.v1.RowEditR\x05edits\"P\n" +
+	"\x05table\x18\x04 \x01(\tR\x05table\x121\n" +
+	"\x05edits\x18\x05 \x03(\v2\x1b.selfhold.cellar.v1.RowEditR\x05edits\"P\n" +
 	"\tEditReply\x12#\n" +
 	"\rrows_affected\x18\x01 \x01(\x03R\frowsAffected\x12\x1e\n" +
 	"\n" +
@@ -4389,223 +4389,223 @@ const file_dbm_proto_rawDesc = "" +
 	"\x03sql\x18\x01 \x01(\tR\x03sql\"8\n" +
 	"\x0eStatementRange\x12\x14\n" +
 	"\x05start\x18\x01 \x01(\x05R\x05start\x12\x10\n" +
-	"\x03end\x18\x02 \x01(\x05R\x03end\"I\n" +
-	"\x0fStatementsReply\x126\n" +
+	"\x03end\x18\x02 \x01(\x05R\x03end\"U\n" +
+	"\x0fStatementsReply\x12B\n" +
 	"\n" +
-	"statements\x18\x01 \x03(\v2\x16.dbm.v1.StatementRangeR\n" +
-	"statements\"y\n" +
-	"\fExecuteReply\x12+\n" +
-	"\aresults\x18\x01 \x03(\v2\x11.dbm.v1.ResultSetR\aresults\x12\x1b\n" +
+	"statements\x18\x01 \x03(\v2\".selfhold.cellar.v1.StatementRangeR\n" +
+	"statements\"\x85\x01\n" +
+	"\fExecuteReply\x127\n" +
+	"\aresults\x18\x01 \x03(\v2\x1d.selfhold.cellar.v1.ResultSetR\aresults\x12\x1b\n" +
 	"\ttx_status\x18\x02 \x01(\tR\btxStatus\x12\x1f\n" +
 	"\vduration_ms\x18\x03 \x01(\x03R\n" +
-	"durationMs2\xbf\f\n" +
-	"\tDBManager\x12(\n" +
-	"\bGetState\x12\r.dbm.v1.Empty\x1a\r.dbm.v1.State\x12(\n" +
-	"\x06Events\x12\r.dbm.v1.Empty\x1a\r.dbm.v1.Event0\x01\x120\n" +
-	"\vListServers\x12\r.dbm.v1.Empty\x1a\x12.dbm.v1.ServerList\x12,\n" +
+	"durationMs2\xa0\x12\n" +
+	"\x06Cellar\x12@\n" +
+	"\bGetState\x12\x19.selfhold.cellar.v1.Empty\x1a\x19.selfhold.cellar.v1.State\x12@\n" +
+	"\x06Events\x12\x19.selfhold.cellar.v1.Empty\x1a\x19.selfhold.cellar.v1.Event0\x01\x12H\n" +
+	"\vListServers\x12\x19.selfhold.cellar.v1.Empty\x1a\x1e.selfhold.cellar.v1.ServerList\x12D\n" +
 	"\n" +
-	"SaveServer\x12\x0e.dbm.v1.Server\x1a\x0e.dbm.v1.Server\x12*\n" +
-	"\fDeleteServer\x12\v.dbm.v1.Ref\x1a\r.dbm.v1.Empty\x12=\n" +
-	"\rConnectServer\x12\x16.dbm.v1.ConnectRequest\x1a\x14.dbm.v1.ConnectReply\x124\n" +
-	"\fTrustHostKey\x12\x14.dbm.v1.TrustRequest\x1a\x0e.dbm.v1.Server\x12.\n" +
-	"\x10DisconnectServer\x12\v.dbm.v1.Ref\x1a\r.dbm.v1.Empty\x12.\n" +
-	"\bDiscover\x12\v.dbm.v1.Ref\x1a\x15.dbm.v1.DiscoverReply\x12*\n" +
-	"\bListKeys\x12\r.dbm.v1.Empty\x1a\x0f.dbm.v1.KeyList\x12-\n" +
-	"\fSaveLocalKey\x12\x10.dbm.v1.LocalKey\x1a\v.dbm.v1.Key\x12,\n" +
-	"\x0eDeleteLocalKey\x12\v.dbm.v1.Ref\x1a\r.dbm.v1.Empty\x128\n" +
-	"\x0fListConnections\x12\r.dbm.v1.Empty\x1a\x16.dbm.v1.ConnectionList\x128\n" +
-	"\x0eSaveConnection\x12\x12.dbm.v1.Connection\x1a\x12.dbm.v1.Connection\x12.\n" +
-	"\x10DeleteConnection\x12\v.dbm.v1.Ref\x1a\r.dbm.v1.Empty\x127\n" +
-	"\x0eTestConnection\x12\x12.dbm.v1.Connection\x1a\x11.dbm.v1.TestReply\x122\n" +
-	"\rListDatabases\x12\v.dbm.v1.Ref\x1a\x14.dbm.v1.DatabaseList\x120\n" +
-	"\vListSchemas\x12\r.dbm.v1.DbRef\x1a\x12.dbm.v1.SchemaList\x124\n" +
-	"\vListObjects\x12\x11.dbm.v1.SchemaRef\x1a\x12.dbm.v1.ObjectList\x127\n" +
-	"\x0eDescribeObject\x12\x11.dbm.v1.ObjectRef\x1a\x12.dbm.v1.ObjectInfo\x128\n" +
-	"\tReadTable\x12\x18.dbm.v1.ReadTableRequest\x1a\x11.dbm.v1.ResultSet\x124\n" +
+	"SaveServer\x12\x1a.selfhold.cellar.v1.Server\x1a\x1a.selfhold.cellar.v1.Server\x12B\n" +
+	"\fDeleteServer\x12\x17.selfhold.cellar.v1.Ref\x1a\x19.selfhold.cellar.v1.Empty\x12U\n" +
+	"\rConnectServer\x12\".selfhold.cellar.v1.ConnectRequest\x1a .selfhold.cellar.v1.ConnectReply\x12L\n" +
+	"\fTrustHostKey\x12 .selfhold.cellar.v1.TrustRequest\x1a\x1a.selfhold.cellar.v1.Server\x12F\n" +
+	"\x10DisconnectServer\x12\x17.selfhold.cellar.v1.Ref\x1a\x19.selfhold.cellar.v1.Empty\x12F\n" +
+	"\bDiscover\x12\x17.selfhold.cellar.v1.Ref\x1a!.selfhold.cellar.v1.DiscoverReply\x12B\n" +
+	"\bListKeys\x12\x19.selfhold.cellar.v1.Empty\x1a\x1b.selfhold.cellar.v1.KeyList\x12E\n" +
+	"\fSaveLocalKey\x12\x1c.selfhold.cellar.v1.LocalKey\x1a\x17.selfhold.cellar.v1.Key\x12D\n" +
+	"\x0eDeleteLocalKey\x12\x17.selfhold.cellar.v1.Ref\x1a\x19.selfhold.cellar.v1.Empty\x12P\n" +
+	"\x0fListConnections\x12\x19.selfhold.cellar.v1.Empty\x1a\".selfhold.cellar.v1.ConnectionList\x12P\n" +
+	"\x0eSaveConnection\x12\x1e.selfhold.cellar.v1.Connection\x1a\x1e.selfhold.cellar.v1.Connection\x12F\n" +
+	"\x10DeleteConnection\x12\x17.selfhold.cellar.v1.Ref\x1a\x19.selfhold.cellar.v1.Empty\x12O\n" +
+	"\x0eTestConnection\x12\x1e.selfhold.cellar.v1.Connection\x1a\x1d.selfhold.cellar.v1.TestReply\x12J\n" +
+	"\rListDatabases\x12\x17.selfhold.cellar.v1.Ref\x1a .selfhold.cellar.v1.DatabaseList\x12H\n" +
+	"\vListSchemas\x12\x19.selfhold.cellar.v1.DbRef\x1a\x1e.selfhold.cellar.v1.SchemaList\x12L\n" +
+	"\vListObjects\x12\x1d.selfhold.cellar.v1.SchemaRef\x1a\x1e.selfhold.cellar.v1.ObjectList\x12O\n" +
+	"\x0eDescribeObject\x12\x1d.selfhold.cellar.v1.ObjectRef\x1a\x1e.selfhold.cellar.v1.ObjectInfo\x12P\n" +
+	"\tReadTable\x12$.selfhold.cellar.v1.ReadTableRequest\x1a\x1d.selfhold.cellar.v1.ResultSet\x12L\n" +
 	"\n" +
-	"ApplyEdits\x12\x13.dbm.v1.EditRequest\x1a\x11.dbm.v1.EditReply\x12-\n" +
-	"\vOpenConsole\x12\r.dbm.v1.DbRef\x1a\x0f.dbm.v1.Console\x121\n" +
-	"\fCloseConsole\x12\x12.dbm.v1.ConsoleRef\x1a\r.dbm.v1.Empty\x127\n" +
-	"\aExecute\x12\x16.dbm.v1.ExecuteRequest\x1a\x14.dbm.v1.ExecuteReply\x12+\n" +
-	"\x06Cancel\x12\x12.dbm.v1.ConsoleRef\x1a\r.dbm.v1.Empty\x12@\n" +
+	"ApplyEdits\x12\x1f.selfhold.cellar.v1.EditRequest\x1a\x1d.selfhold.cellar.v1.EditReply\x12E\n" +
+	"\vOpenConsole\x12\x19.selfhold.cellar.v1.DbRef\x1a\x1b.selfhold.cellar.v1.Console\x12I\n" +
+	"\fCloseConsole\x12\x1e.selfhold.cellar.v1.ConsoleRef\x1a\x19.selfhold.cellar.v1.Empty\x12O\n" +
+	"\aExecute\x12\".selfhold.cellar.v1.ExecuteRequest\x1a .selfhold.cellar.v1.ExecuteReply\x12C\n" +
+	"\x06Cancel\x12\x1e.selfhold.cellar.v1.ConsoleRef\x1a\x19.selfhold.cellar.v1.Empty\x12X\n" +
 	"\n" +
-	"Statements\x12\x19.dbm.v1.StatementsRequest\x1a\x17.dbm.v1.StatementsReply\x12.\n" +
+	"Statements\x12%.selfhold.cellar.v1.StatementsRequest\x1a#.selfhold.cellar.v1.StatementsReply\x12F\n" +
 	"\n" +
-	"EnableSync\x12\r.dbm.v1.Empty\x1a\x11.dbm.v1.SyncState\x12/\n" +
-	"\vDisableSync\x12\r.dbm.v1.Empty\x1a\x11.dbm.v1.SyncState\x12+\n" +
-	"\aSyncNow\x12\r.dbm.v1.Empty\x1a\x11.dbm.v1.SyncState\x12:\n" +
-	"\x16MoveServersToCloudSync\x12\r.dbm.v1.Empty\x1a\x11.dbm.v1.SyncStateB\x17Z\x15dbmanager/core/rpc/pbb\x06proto3"
+	"EnableSync\x12\x19.selfhold.cellar.v1.Empty\x1a\x1d.selfhold.cellar.v1.SyncState\x12G\n" +
+	"\vDisableSync\x12\x19.selfhold.cellar.v1.Empty\x1a\x1d.selfhold.cellar.v1.SyncState\x12C\n" +
+	"\aSyncNow\x12\x19.selfhold.cellar.v1.Empty\x1a\x1d.selfhold.cellar.v1.SyncState\x12N\n" +
+	"\x12MoveServersToShard\x12\x19.selfhold.cellar.v1.Empty\x1a\x1d.selfhold.cellar.v1.SyncStateB(Z&github.com/SelfHold/cellar/core/rpc/pbb\x06proto3"
 
 var (
-	file_dbm_proto_rawDescOnce sync.Once
-	file_dbm_proto_rawDescData []byte
+	file_cellar_proto_rawDescOnce sync.Once
+	file_cellar_proto_rawDescData []byte
 )
 
-func file_dbm_proto_rawDescGZIP() []byte {
-	file_dbm_proto_rawDescOnce.Do(func() {
-		file_dbm_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_dbm_proto_rawDesc), len(file_dbm_proto_rawDesc)))
+func file_cellar_proto_rawDescGZIP() []byte {
+	file_cellar_proto_rawDescOnce.Do(func() {
+		file_cellar_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_cellar_proto_rawDesc), len(file_cellar_proto_rawDesc)))
 	})
-	return file_dbm_proto_rawDescData
+	return file_cellar_proto_rawDescData
 }
 
-var file_dbm_proto_enumTypes = make([]protoimpl.EnumInfo, 9)
-var file_dbm_proto_msgTypes = make([]protoimpl.MessageInfo, 49)
-var file_dbm_proto_goTypes = []any{
-	(SyncState_Phase)(0),        // 0: dbm.v1.SyncState.Phase
-	(Event_Kind)(0),             // 1: dbm.v1.Event.Kind
-	(Server_Auth)(0),            // 2: dbm.v1.Server.Auth
-	(HostKey_Status)(0),         // 3: dbm.v1.HostKey.Status
-	(DiscoveredService_Kind)(0), // 4: dbm.v1.DiscoveredService.Kind
-	(Connection_Kind)(0),        // 5: dbm.v1.Connection.Kind
-	(Connection_SslMode)(0),     // 6: dbm.v1.Connection.SslMode
-	(DbObject_Kind)(0),          // 7: dbm.v1.DbObject.Kind
-	(RowEdit_Op)(0),             // 8: dbm.v1.RowEdit.Op
-	(*Empty)(nil),               // 9: dbm.v1.Empty
-	(*Ref)(nil),                 // 10: dbm.v1.Ref
-	(*State)(nil),               // 11: dbm.v1.State
-	(*SyncState)(nil),           // 12: dbm.v1.SyncState
-	(*Event)(nil),               // 13: dbm.v1.Event
-	(*Server)(nil),              // 14: dbm.v1.Server
-	(*ServerList)(nil),          // 15: dbm.v1.ServerList
-	(*ConnectRequest)(nil),      // 16: dbm.v1.ConnectRequest
-	(*HostKey)(nil),             // 17: dbm.v1.HostKey
-	(*ConnectReply)(nil),        // 18: dbm.v1.ConnectReply
-	(*TrustRequest)(nil),        // 19: dbm.v1.TrustRequest
-	(*DiscoveredService)(nil),   // 20: dbm.v1.DiscoveredService
-	(*DiscoverReply)(nil),       // 21: dbm.v1.DiscoverReply
-	(*Key)(nil),                 // 22: dbm.v1.Key
-	(*KeyList)(nil),             // 23: dbm.v1.KeyList
-	(*LocalKey)(nil),            // 24: dbm.v1.LocalKey
-	(*Connection)(nil),          // 25: dbm.v1.Connection
-	(*ConnectionList)(nil),      // 26: dbm.v1.ConnectionList
-	(*TestReply)(nil),           // 27: dbm.v1.TestReply
-	(*Database)(nil),            // 28: dbm.v1.Database
-	(*DatabaseList)(nil),        // 29: dbm.v1.DatabaseList
-	(*DbRef)(nil),               // 30: dbm.v1.DbRef
-	(*Schema)(nil),              // 31: dbm.v1.Schema
-	(*SchemaList)(nil),          // 32: dbm.v1.SchemaList
-	(*SchemaRef)(nil),           // 33: dbm.v1.SchemaRef
-	(*DbObject)(nil),            // 34: dbm.v1.DbObject
-	(*ObjectList)(nil),          // 35: dbm.v1.ObjectList
-	(*ObjectRef)(nil),           // 36: dbm.v1.ObjectRef
-	(*Column)(nil),              // 37: dbm.v1.Column
-	(*Index)(nil),               // 38: dbm.v1.Index
-	(*Constraint)(nil),          // 39: dbm.v1.Constraint
-	(*ObjectInfo)(nil),          // 40: dbm.v1.ObjectInfo
-	(*ResultColumn)(nil),        // 41: dbm.v1.ResultColumn
-	(*Cell)(nil),                // 42: dbm.v1.Cell
-	(*Row)(nil),                 // 43: dbm.v1.Row
-	(*ResultSet)(nil),           // 44: dbm.v1.ResultSet
-	(*Sort)(nil),                // 45: dbm.v1.Sort
-	(*ReadTableRequest)(nil),    // 46: dbm.v1.ReadTableRequest
-	(*EditValue)(nil),           // 47: dbm.v1.EditValue
-	(*RowEdit)(nil),             // 48: dbm.v1.RowEdit
-	(*EditRequest)(nil),         // 49: dbm.v1.EditRequest
-	(*EditReply)(nil),           // 50: dbm.v1.EditReply
-	(*Console)(nil),             // 51: dbm.v1.Console
-	(*ConsoleRef)(nil),          // 52: dbm.v1.ConsoleRef
-	(*ExecuteRequest)(nil),      // 53: dbm.v1.ExecuteRequest
-	(*StatementsRequest)(nil),   // 54: dbm.v1.StatementsRequest
-	(*StatementRange)(nil),      // 55: dbm.v1.StatementRange
-	(*StatementsReply)(nil),     // 56: dbm.v1.StatementsReply
-	(*ExecuteReply)(nil),        // 57: dbm.v1.ExecuteReply
+var file_cellar_proto_enumTypes = make([]protoimpl.EnumInfo, 9)
+var file_cellar_proto_msgTypes = make([]protoimpl.MessageInfo, 49)
+var file_cellar_proto_goTypes = []any{
+	(SyncState_Phase)(0),        // 0: selfhold.cellar.v1.SyncState.Phase
+	(Event_Kind)(0),             // 1: selfhold.cellar.v1.Event.Kind
+	(Server_Auth)(0),            // 2: selfhold.cellar.v1.Server.Auth
+	(HostKey_Status)(0),         // 3: selfhold.cellar.v1.HostKey.Status
+	(DiscoveredService_Kind)(0), // 4: selfhold.cellar.v1.DiscoveredService.Kind
+	(Connection_Kind)(0),        // 5: selfhold.cellar.v1.Connection.Kind
+	(Connection_SslMode)(0),     // 6: selfhold.cellar.v1.Connection.SslMode
+	(DbObject_Kind)(0),          // 7: selfhold.cellar.v1.DbObject.Kind
+	(RowEdit_Op)(0),             // 8: selfhold.cellar.v1.RowEdit.Op
+	(*Empty)(nil),               // 9: selfhold.cellar.v1.Empty
+	(*Ref)(nil),                 // 10: selfhold.cellar.v1.Ref
+	(*State)(nil),               // 11: selfhold.cellar.v1.State
+	(*SyncState)(nil),           // 12: selfhold.cellar.v1.SyncState
+	(*Event)(nil),               // 13: selfhold.cellar.v1.Event
+	(*Server)(nil),              // 14: selfhold.cellar.v1.Server
+	(*ServerList)(nil),          // 15: selfhold.cellar.v1.ServerList
+	(*ConnectRequest)(nil),      // 16: selfhold.cellar.v1.ConnectRequest
+	(*HostKey)(nil),             // 17: selfhold.cellar.v1.HostKey
+	(*ConnectReply)(nil),        // 18: selfhold.cellar.v1.ConnectReply
+	(*TrustRequest)(nil),        // 19: selfhold.cellar.v1.TrustRequest
+	(*DiscoveredService)(nil),   // 20: selfhold.cellar.v1.DiscoveredService
+	(*DiscoverReply)(nil),       // 21: selfhold.cellar.v1.DiscoverReply
+	(*Key)(nil),                 // 22: selfhold.cellar.v1.Key
+	(*KeyList)(nil),             // 23: selfhold.cellar.v1.KeyList
+	(*LocalKey)(nil),            // 24: selfhold.cellar.v1.LocalKey
+	(*Connection)(nil),          // 25: selfhold.cellar.v1.Connection
+	(*ConnectionList)(nil),      // 26: selfhold.cellar.v1.ConnectionList
+	(*TestReply)(nil),           // 27: selfhold.cellar.v1.TestReply
+	(*Database)(nil),            // 28: selfhold.cellar.v1.Database
+	(*DatabaseList)(nil),        // 29: selfhold.cellar.v1.DatabaseList
+	(*DbRef)(nil),               // 30: selfhold.cellar.v1.DbRef
+	(*Schema)(nil),              // 31: selfhold.cellar.v1.Schema
+	(*SchemaList)(nil),          // 32: selfhold.cellar.v1.SchemaList
+	(*SchemaRef)(nil),           // 33: selfhold.cellar.v1.SchemaRef
+	(*DbObject)(nil),            // 34: selfhold.cellar.v1.DbObject
+	(*ObjectList)(nil),          // 35: selfhold.cellar.v1.ObjectList
+	(*ObjectRef)(nil),           // 36: selfhold.cellar.v1.ObjectRef
+	(*Column)(nil),              // 37: selfhold.cellar.v1.Column
+	(*Index)(nil),               // 38: selfhold.cellar.v1.Index
+	(*Constraint)(nil),          // 39: selfhold.cellar.v1.Constraint
+	(*ObjectInfo)(nil),          // 40: selfhold.cellar.v1.ObjectInfo
+	(*ResultColumn)(nil),        // 41: selfhold.cellar.v1.ResultColumn
+	(*Cell)(nil),                // 42: selfhold.cellar.v1.Cell
+	(*Row)(nil),                 // 43: selfhold.cellar.v1.Row
+	(*ResultSet)(nil),           // 44: selfhold.cellar.v1.ResultSet
+	(*Sort)(nil),                // 45: selfhold.cellar.v1.Sort
+	(*ReadTableRequest)(nil),    // 46: selfhold.cellar.v1.ReadTableRequest
+	(*EditValue)(nil),           // 47: selfhold.cellar.v1.EditValue
+	(*RowEdit)(nil),             // 48: selfhold.cellar.v1.RowEdit
+	(*EditRequest)(nil),         // 49: selfhold.cellar.v1.EditRequest
+	(*EditReply)(nil),           // 50: selfhold.cellar.v1.EditReply
+	(*Console)(nil),             // 51: selfhold.cellar.v1.Console
+	(*ConsoleRef)(nil),          // 52: selfhold.cellar.v1.ConsoleRef
+	(*ExecuteRequest)(nil),      // 53: selfhold.cellar.v1.ExecuteRequest
+	(*StatementsRequest)(nil),   // 54: selfhold.cellar.v1.StatementsRequest
+	(*StatementRange)(nil),      // 55: selfhold.cellar.v1.StatementRange
+	(*StatementsReply)(nil),     // 56: selfhold.cellar.v1.StatementsReply
+	(*ExecuteReply)(nil),        // 57: selfhold.cellar.v1.ExecuteReply
 }
-var file_dbm_proto_depIdxs = []int32{
-	12, // 0: dbm.v1.State.sync:type_name -> dbm.v1.SyncState
-	0,  // 1: dbm.v1.SyncState.phase:type_name -> dbm.v1.SyncState.Phase
-	1,  // 2: dbm.v1.Event.kind:type_name -> dbm.v1.Event.Kind
-	2,  // 3: dbm.v1.Server.auth:type_name -> dbm.v1.Server.Auth
-	14, // 4: dbm.v1.ServerList.servers:type_name -> dbm.v1.Server
-	3,  // 5: dbm.v1.HostKey.status:type_name -> dbm.v1.HostKey.Status
-	17, // 6: dbm.v1.ConnectReply.host_key:type_name -> dbm.v1.HostKey
-	4,  // 7: dbm.v1.DiscoveredService.kind:type_name -> dbm.v1.DiscoveredService.Kind
-	20, // 8: dbm.v1.DiscoverReply.services:type_name -> dbm.v1.DiscoveredService
-	22, // 9: dbm.v1.KeyList.keys:type_name -> dbm.v1.Key
-	5,  // 10: dbm.v1.Connection.kind:type_name -> dbm.v1.Connection.Kind
-	6,  // 11: dbm.v1.Connection.ssl_mode:type_name -> dbm.v1.Connection.SslMode
-	25, // 12: dbm.v1.ConnectionList.connections:type_name -> dbm.v1.Connection
-	28, // 13: dbm.v1.DatabaseList.databases:type_name -> dbm.v1.Database
-	31, // 14: dbm.v1.SchemaList.schemas:type_name -> dbm.v1.Schema
-	7,  // 15: dbm.v1.DbObject.kind:type_name -> dbm.v1.DbObject.Kind
-	34, // 16: dbm.v1.ObjectList.objects:type_name -> dbm.v1.DbObject
-	7,  // 17: dbm.v1.ObjectRef.kind:type_name -> dbm.v1.DbObject.Kind
-	34, // 18: dbm.v1.ObjectInfo.object:type_name -> dbm.v1.DbObject
-	37, // 19: dbm.v1.ObjectInfo.columns:type_name -> dbm.v1.Column
-	38, // 20: dbm.v1.ObjectInfo.indexes:type_name -> dbm.v1.Index
-	39, // 21: dbm.v1.ObjectInfo.constraints:type_name -> dbm.v1.Constraint
-	42, // 22: dbm.v1.Row.cells:type_name -> dbm.v1.Cell
-	41, // 23: dbm.v1.ResultSet.columns:type_name -> dbm.v1.ResultColumn
-	43, // 24: dbm.v1.ResultSet.rows:type_name -> dbm.v1.Row
-	45, // 25: dbm.v1.ReadTableRequest.sort:type_name -> dbm.v1.Sort
-	42, // 26: dbm.v1.EditValue.value:type_name -> dbm.v1.Cell
-	8,  // 27: dbm.v1.RowEdit.op:type_name -> dbm.v1.RowEdit.Op
-	47, // 28: dbm.v1.RowEdit.key:type_name -> dbm.v1.EditValue
-	47, // 29: dbm.v1.RowEdit.values:type_name -> dbm.v1.EditValue
-	48, // 30: dbm.v1.EditRequest.edits:type_name -> dbm.v1.RowEdit
-	55, // 31: dbm.v1.StatementsReply.statements:type_name -> dbm.v1.StatementRange
-	44, // 32: dbm.v1.ExecuteReply.results:type_name -> dbm.v1.ResultSet
-	9,  // 33: dbm.v1.DBManager.GetState:input_type -> dbm.v1.Empty
-	9,  // 34: dbm.v1.DBManager.Events:input_type -> dbm.v1.Empty
-	9,  // 35: dbm.v1.DBManager.ListServers:input_type -> dbm.v1.Empty
-	14, // 36: dbm.v1.DBManager.SaveServer:input_type -> dbm.v1.Server
-	10, // 37: dbm.v1.DBManager.DeleteServer:input_type -> dbm.v1.Ref
-	16, // 38: dbm.v1.DBManager.ConnectServer:input_type -> dbm.v1.ConnectRequest
-	19, // 39: dbm.v1.DBManager.TrustHostKey:input_type -> dbm.v1.TrustRequest
-	10, // 40: dbm.v1.DBManager.DisconnectServer:input_type -> dbm.v1.Ref
-	10, // 41: dbm.v1.DBManager.Discover:input_type -> dbm.v1.Ref
-	9,  // 42: dbm.v1.DBManager.ListKeys:input_type -> dbm.v1.Empty
-	24, // 43: dbm.v1.DBManager.SaveLocalKey:input_type -> dbm.v1.LocalKey
-	10, // 44: dbm.v1.DBManager.DeleteLocalKey:input_type -> dbm.v1.Ref
-	9,  // 45: dbm.v1.DBManager.ListConnections:input_type -> dbm.v1.Empty
-	25, // 46: dbm.v1.DBManager.SaveConnection:input_type -> dbm.v1.Connection
-	10, // 47: dbm.v1.DBManager.DeleteConnection:input_type -> dbm.v1.Ref
-	25, // 48: dbm.v1.DBManager.TestConnection:input_type -> dbm.v1.Connection
-	10, // 49: dbm.v1.DBManager.ListDatabases:input_type -> dbm.v1.Ref
-	30, // 50: dbm.v1.DBManager.ListSchemas:input_type -> dbm.v1.DbRef
-	33, // 51: dbm.v1.DBManager.ListObjects:input_type -> dbm.v1.SchemaRef
-	36, // 52: dbm.v1.DBManager.DescribeObject:input_type -> dbm.v1.ObjectRef
-	46, // 53: dbm.v1.DBManager.ReadTable:input_type -> dbm.v1.ReadTableRequest
-	49, // 54: dbm.v1.DBManager.ApplyEdits:input_type -> dbm.v1.EditRequest
-	30, // 55: dbm.v1.DBManager.OpenConsole:input_type -> dbm.v1.DbRef
-	52, // 56: dbm.v1.DBManager.CloseConsole:input_type -> dbm.v1.ConsoleRef
-	53, // 57: dbm.v1.DBManager.Execute:input_type -> dbm.v1.ExecuteRequest
-	52, // 58: dbm.v1.DBManager.Cancel:input_type -> dbm.v1.ConsoleRef
-	54, // 59: dbm.v1.DBManager.Statements:input_type -> dbm.v1.StatementsRequest
-	9,  // 60: dbm.v1.DBManager.EnableSync:input_type -> dbm.v1.Empty
-	9,  // 61: dbm.v1.DBManager.DisableSync:input_type -> dbm.v1.Empty
-	9,  // 62: dbm.v1.DBManager.SyncNow:input_type -> dbm.v1.Empty
-	9,  // 63: dbm.v1.DBManager.MoveServersToCloudSync:input_type -> dbm.v1.Empty
-	11, // 64: dbm.v1.DBManager.GetState:output_type -> dbm.v1.State
-	13, // 65: dbm.v1.DBManager.Events:output_type -> dbm.v1.Event
-	15, // 66: dbm.v1.DBManager.ListServers:output_type -> dbm.v1.ServerList
-	14, // 67: dbm.v1.DBManager.SaveServer:output_type -> dbm.v1.Server
-	9,  // 68: dbm.v1.DBManager.DeleteServer:output_type -> dbm.v1.Empty
-	18, // 69: dbm.v1.DBManager.ConnectServer:output_type -> dbm.v1.ConnectReply
-	14, // 70: dbm.v1.DBManager.TrustHostKey:output_type -> dbm.v1.Server
-	9,  // 71: dbm.v1.DBManager.DisconnectServer:output_type -> dbm.v1.Empty
-	21, // 72: dbm.v1.DBManager.Discover:output_type -> dbm.v1.DiscoverReply
-	23, // 73: dbm.v1.DBManager.ListKeys:output_type -> dbm.v1.KeyList
-	22, // 74: dbm.v1.DBManager.SaveLocalKey:output_type -> dbm.v1.Key
-	9,  // 75: dbm.v1.DBManager.DeleteLocalKey:output_type -> dbm.v1.Empty
-	26, // 76: dbm.v1.DBManager.ListConnections:output_type -> dbm.v1.ConnectionList
-	25, // 77: dbm.v1.DBManager.SaveConnection:output_type -> dbm.v1.Connection
-	9,  // 78: dbm.v1.DBManager.DeleteConnection:output_type -> dbm.v1.Empty
-	27, // 79: dbm.v1.DBManager.TestConnection:output_type -> dbm.v1.TestReply
-	29, // 80: dbm.v1.DBManager.ListDatabases:output_type -> dbm.v1.DatabaseList
-	32, // 81: dbm.v1.DBManager.ListSchemas:output_type -> dbm.v1.SchemaList
-	35, // 82: dbm.v1.DBManager.ListObjects:output_type -> dbm.v1.ObjectList
-	40, // 83: dbm.v1.DBManager.DescribeObject:output_type -> dbm.v1.ObjectInfo
-	44, // 84: dbm.v1.DBManager.ReadTable:output_type -> dbm.v1.ResultSet
-	50, // 85: dbm.v1.DBManager.ApplyEdits:output_type -> dbm.v1.EditReply
-	51, // 86: dbm.v1.DBManager.OpenConsole:output_type -> dbm.v1.Console
-	9,  // 87: dbm.v1.DBManager.CloseConsole:output_type -> dbm.v1.Empty
-	57, // 88: dbm.v1.DBManager.Execute:output_type -> dbm.v1.ExecuteReply
-	9,  // 89: dbm.v1.DBManager.Cancel:output_type -> dbm.v1.Empty
-	56, // 90: dbm.v1.DBManager.Statements:output_type -> dbm.v1.StatementsReply
-	12, // 91: dbm.v1.DBManager.EnableSync:output_type -> dbm.v1.SyncState
-	12, // 92: dbm.v1.DBManager.DisableSync:output_type -> dbm.v1.SyncState
-	12, // 93: dbm.v1.DBManager.SyncNow:output_type -> dbm.v1.SyncState
-	12, // 94: dbm.v1.DBManager.MoveServersToCloudSync:output_type -> dbm.v1.SyncState
+var file_cellar_proto_depIdxs = []int32{
+	12, // 0: selfhold.cellar.v1.State.sync:type_name -> selfhold.cellar.v1.SyncState
+	0,  // 1: selfhold.cellar.v1.SyncState.phase:type_name -> selfhold.cellar.v1.SyncState.Phase
+	1,  // 2: selfhold.cellar.v1.Event.kind:type_name -> selfhold.cellar.v1.Event.Kind
+	2,  // 3: selfhold.cellar.v1.Server.auth:type_name -> selfhold.cellar.v1.Server.Auth
+	14, // 4: selfhold.cellar.v1.ServerList.servers:type_name -> selfhold.cellar.v1.Server
+	3,  // 5: selfhold.cellar.v1.HostKey.status:type_name -> selfhold.cellar.v1.HostKey.Status
+	17, // 6: selfhold.cellar.v1.ConnectReply.host_key:type_name -> selfhold.cellar.v1.HostKey
+	4,  // 7: selfhold.cellar.v1.DiscoveredService.kind:type_name -> selfhold.cellar.v1.DiscoveredService.Kind
+	20, // 8: selfhold.cellar.v1.DiscoverReply.services:type_name -> selfhold.cellar.v1.DiscoveredService
+	22, // 9: selfhold.cellar.v1.KeyList.keys:type_name -> selfhold.cellar.v1.Key
+	5,  // 10: selfhold.cellar.v1.Connection.kind:type_name -> selfhold.cellar.v1.Connection.Kind
+	6,  // 11: selfhold.cellar.v1.Connection.ssl_mode:type_name -> selfhold.cellar.v1.Connection.SslMode
+	25, // 12: selfhold.cellar.v1.ConnectionList.connections:type_name -> selfhold.cellar.v1.Connection
+	28, // 13: selfhold.cellar.v1.DatabaseList.databases:type_name -> selfhold.cellar.v1.Database
+	31, // 14: selfhold.cellar.v1.SchemaList.schemas:type_name -> selfhold.cellar.v1.Schema
+	7,  // 15: selfhold.cellar.v1.DbObject.kind:type_name -> selfhold.cellar.v1.DbObject.Kind
+	34, // 16: selfhold.cellar.v1.ObjectList.objects:type_name -> selfhold.cellar.v1.DbObject
+	7,  // 17: selfhold.cellar.v1.ObjectRef.kind:type_name -> selfhold.cellar.v1.DbObject.Kind
+	34, // 18: selfhold.cellar.v1.ObjectInfo.object:type_name -> selfhold.cellar.v1.DbObject
+	37, // 19: selfhold.cellar.v1.ObjectInfo.columns:type_name -> selfhold.cellar.v1.Column
+	38, // 20: selfhold.cellar.v1.ObjectInfo.indexes:type_name -> selfhold.cellar.v1.Index
+	39, // 21: selfhold.cellar.v1.ObjectInfo.constraints:type_name -> selfhold.cellar.v1.Constraint
+	42, // 22: selfhold.cellar.v1.Row.cells:type_name -> selfhold.cellar.v1.Cell
+	41, // 23: selfhold.cellar.v1.ResultSet.columns:type_name -> selfhold.cellar.v1.ResultColumn
+	43, // 24: selfhold.cellar.v1.ResultSet.rows:type_name -> selfhold.cellar.v1.Row
+	45, // 25: selfhold.cellar.v1.ReadTableRequest.sort:type_name -> selfhold.cellar.v1.Sort
+	42, // 26: selfhold.cellar.v1.EditValue.value:type_name -> selfhold.cellar.v1.Cell
+	8,  // 27: selfhold.cellar.v1.RowEdit.op:type_name -> selfhold.cellar.v1.RowEdit.Op
+	47, // 28: selfhold.cellar.v1.RowEdit.key:type_name -> selfhold.cellar.v1.EditValue
+	47, // 29: selfhold.cellar.v1.RowEdit.values:type_name -> selfhold.cellar.v1.EditValue
+	48, // 30: selfhold.cellar.v1.EditRequest.edits:type_name -> selfhold.cellar.v1.RowEdit
+	55, // 31: selfhold.cellar.v1.StatementsReply.statements:type_name -> selfhold.cellar.v1.StatementRange
+	44, // 32: selfhold.cellar.v1.ExecuteReply.results:type_name -> selfhold.cellar.v1.ResultSet
+	9,  // 33: selfhold.cellar.v1.Cellar.GetState:input_type -> selfhold.cellar.v1.Empty
+	9,  // 34: selfhold.cellar.v1.Cellar.Events:input_type -> selfhold.cellar.v1.Empty
+	9,  // 35: selfhold.cellar.v1.Cellar.ListServers:input_type -> selfhold.cellar.v1.Empty
+	14, // 36: selfhold.cellar.v1.Cellar.SaveServer:input_type -> selfhold.cellar.v1.Server
+	10, // 37: selfhold.cellar.v1.Cellar.DeleteServer:input_type -> selfhold.cellar.v1.Ref
+	16, // 38: selfhold.cellar.v1.Cellar.ConnectServer:input_type -> selfhold.cellar.v1.ConnectRequest
+	19, // 39: selfhold.cellar.v1.Cellar.TrustHostKey:input_type -> selfhold.cellar.v1.TrustRequest
+	10, // 40: selfhold.cellar.v1.Cellar.DisconnectServer:input_type -> selfhold.cellar.v1.Ref
+	10, // 41: selfhold.cellar.v1.Cellar.Discover:input_type -> selfhold.cellar.v1.Ref
+	9,  // 42: selfhold.cellar.v1.Cellar.ListKeys:input_type -> selfhold.cellar.v1.Empty
+	24, // 43: selfhold.cellar.v1.Cellar.SaveLocalKey:input_type -> selfhold.cellar.v1.LocalKey
+	10, // 44: selfhold.cellar.v1.Cellar.DeleteLocalKey:input_type -> selfhold.cellar.v1.Ref
+	9,  // 45: selfhold.cellar.v1.Cellar.ListConnections:input_type -> selfhold.cellar.v1.Empty
+	25, // 46: selfhold.cellar.v1.Cellar.SaveConnection:input_type -> selfhold.cellar.v1.Connection
+	10, // 47: selfhold.cellar.v1.Cellar.DeleteConnection:input_type -> selfhold.cellar.v1.Ref
+	25, // 48: selfhold.cellar.v1.Cellar.TestConnection:input_type -> selfhold.cellar.v1.Connection
+	10, // 49: selfhold.cellar.v1.Cellar.ListDatabases:input_type -> selfhold.cellar.v1.Ref
+	30, // 50: selfhold.cellar.v1.Cellar.ListSchemas:input_type -> selfhold.cellar.v1.DbRef
+	33, // 51: selfhold.cellar.v1.Cellar.ListObjects:input_type -> selfhold.cellar.v1.SchemaRef
+	36, // 52: selfhold.cellar.v1.Cellar.DescribeObject:input_type -> selfhold.cellar.v1.ObjectRef
+	46, // 53: selfhold.cellar.v1.Cellar.ReadTable:input_type -> selfhold.cellar.v1.ReadTableRequest
+	49, // 54: selfhold.cellar.v1.Cellar.ApplyEdits:input_type -> selfhold.cellar.v1.EditRequest
+	30, // 55: selfhold.cellar.v1.Cellar.OpenConsole:input_type -> selfhold.cellar.v1.DbRef
+	52, // 56: selfhold.cellar.v1.Cellar.CloseConsole:input_type -> selfhold.cellar.v1.ConsoleRef
+	53, // 57: selfhold.cellar.v1.Cellar.Execute:input_type -> selfhold.cellar.v1.ExecuteRequest
+	52, // 58: selfhold.cellar.v1.Cellar.Cancel:input_type -> selfhold.cellar.v1.ConsoleRef
+	54, // 59: selfhold.cellar.v1.Cellar.Statements:input_type -> selfhold.cellar.v1.StatementsRequest
+	9,  // 60: selfhold.cellar.v1.Cellar.EnableSync:input_type -> selfhold.cellar.v1.Empty
+	9,  // 61: selfhold.cellar.v1.Cellar.DisableSync:input_type -> selfhold.cellar.v1.Empty
+	9,  // 62: selfhold.cellar.v1.Cellar.SyncNow:input_type -> selfhold.cellar.v1.Empty
+	9,  // 63: selfhold.cellar.v1.Cellar.MoveServersToShard:input_type -> selfhold.cellar.v1.Empty
+	11, // 64: selfhold.cellar.v1.Cellar.GetState:output_type -> selfhold.cellar.v1.State
+	13, // 65: selfhold.cellar.v1.Cellar.Events:output_type -> selfhold.cellar.v1.Event
+	15, // 66: selfhold.cellar.v1.Cellar.ListServers:output_type -> selfhold.cellar.v1.ServerList
+	14, // 67: selfhold.cellar.v1.Cellar.SaveServer:output_type -> selfhold.cellar.v1.Server
+	9,  // 68: selfhold.cellar.v1.Cellar.DeleteServer:output_type -> selfhold.cellar.v1.Empty
+	18, // 69: selfhold.cellar.v1.Cellar.ConnectServer:output_type -> selfhold.cellar.v1.ConnectReply
+	14, // 70: selfhold.cellar.v1.Cellar.TrustHostKey:output_type -> selfhold.cellar.v1.Server
+	9,  // 71: selfhold.cellar.v1.Cellar.DisconnectServer:output_type -> selfhold.cellar.v1.Empty
+	21, // 72: selfhold.cellar.v1.Cellar.Discover:output_type -> selfhold.cellar.v1.DiscoverReply
+	23, // 73: selfhold.cellar.v1.Cellar.ListKeys:output_type -> selfhold.cellar.v1.KeyList
+	22, // 74: selfhold.cellar.v1.Cellar.SaveLocalKey:output_type -> selfhold.cellar.v1.Key
+	9,  // 75: selfhold.cellar.v1.Cellar.DeleteLocalKey:output_type -> selfhold.cellar.v1.Empty
+	26, // 76: selfhold.cellar.v1.Cellar.ListConnections:output_type -> selfhold.cellar.v1.ConnectionList
+	25, // 77: selfhold.cellar.v1.Cellar.SaveConnection:output_type -> selfhold.cellar.v1.Connection
+	9,  // 78: selfhold.cellar.v1.Cellar.DeleteConnection:output_type -> selfhold.cellar.v1.Empty
+	27, // 79: selfhold.cellar.v1.Cellar.TestConnection:output_type -> selfhold.cellar.v1.TestReply
+	29, // 80: selfhold.cellar.v1.Cellar.ListDatabases:output_type -> selfhold.cellar.v1.DatabaseList
+	32, // 81: selfhold.cellar.v1.Cellar.ListSchemas:output_type -> selfhold.cellar.v1.SchemaList
+	35, // 82: selfhold.cellar.v1.Cellar.ListObjects:output_type -> selfhold.cellar.v1.ObjectList
+	40, // 83: selfhold.cellar.v1.Cellar.DescribeObject:output_type -> selfhold.cellar.v1.ObjectInfo
+	44, // 84: selfhold.cellar.v1.Cellar.ReadTable:output_type -> selfhold.cellar.v1.ResultSet
+	50, // 85: selfhold.cellar.v1.Cellar.ApplyEdits:output_type -> selfhold.cellar.v1.EditReply
+	51, // 86: selfhold.cellar.v1.Cellar.OpenConsole:output_type -> selfhold.cellar.v1.Console
+	9,  // 87: selfhold.cellar.v1.Cellar.CloseConsole:output_type -> selfhold.cellar.v1.Empty
+	57, // 88: selfhold.cellar.v1.Cellar.Execute:output_type -> selfhold.cellar.v1.ExecuteReply
+	9,  // 89: selfhold.cellar.v1.Cellar.Cancel:output_type -> selfhold.cellar.v1.Empty
+	56, // 90: selfhold.cellar.v1.Cellar.Statements:output_type -> selfhold.cellar.v1.StatementsReply
+	12, // 91: selfhold.cellar.v1.Cellar.EnableSync:output_type -> selfhold.cellar.v1.SyncState
+	12, // 92: selfhold.cellar.v1.Cellar.DisableSync:output_type -> selfhold.cellar.v1.SyncState
+	12, // 93: selfhold.cellar.v1.Cellar.SyncNow:output_type -> selfhold.cellar.v1.SyncState
+	12, // 94: selfhold.cellar.v1.Cellar.MoveServersToShard:output_type -> selfhold.cellar.v1.SyncState
 	64, // [64:95] is the sub-list for method output_type
 	33, // [33:64] is the sub-list for method input_type
 	33, // [33:33] is the sub-list for extension type_name
@@ -4613,27 +4613,27 @@ var file_dbm_proto_depIdxs = []int32{
 	0,  // [0:33] is the sub-list for field type_name
 }
 
-func init() { file_dbm_proto_init() }
-func file_dbm_proto_init() {
-	if File_dbm_proto != nil {
+func init() { file_cellar_proto_init() }
+func file_cellar_proto_init() {
+	if File_cellar_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_dbm_proto_rawDesc), len(file_dbm_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_cellar_proto_rawDesc), len(file_cellar_proto_rawDesc)),
 			NumEnums:      9,
 			NumMessages:   49,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_dbm_proto_goTypes,
-		DependencyIndexes: file_dbm_proto_depIdxs,
-		EnumInfos:         file_dbm_proto_enumTypes,
-		MessageInfos:      file_dbm_proto_msgTypes,
+		GoTypes:           file_cellar_proto_goTypes,
+		DependencyIndexes: file_cellar_proto_depIdxs,
+		EnumInfos:         file_cellar_proto_enumTypes,
+		MessageInfos:      file_cellar_proto_msgTypes,
 	}.Build()
-	File_dbm_proto = out.File
-	file_dbm_proto_goTypes = nil
-	file_dbm_proto_depIdxs = nil
+	File_cellar_proto = out.File
+	file_cellar_proto_goTypes = nil
+	file_cellar_proto_depIdxs = nil
 }

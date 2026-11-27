@@ -20,13 +20,13 @@ make vet test      # Go core
 make race          # Go core with the race detector
 make pg-test       # integration tests against PostgreSQL in docker
 make app-test      # flutter analyze + flutter test
-make proto         # after editing proto/dbm.proto
+make proto         # after editing proto/cellar.proto
 make app-run       # run the app
 app/tool/e2e.sh    # end-to-end run of the real app (sshd + docker)
 ```
 
 Test targets cap memory at 1 GB and should run one at a time. Build outputs go to
-`builds/`. Sync behaviour is tested against the in-memory Shard in `core/cloudsync/fake`,
+`builds/`. Sync behaviour is tested against the in-memory Shard in `core/shard/fake`,
 not a live one.
 
 ## Rules
@@ -39,13 +39,13 @@ not a live one.
 - Use only the widgets of `app/lib/presentation/common/hm.dart` and the `HmColors` /
   `HmText` design tokens: no raw colours, no Material elevation. Every screen must also work
   in the phone layout (below 768 px).
-- Generated code (`core/rpc/pb`, `core/cloudsync/pb`, `app/lib/data/rpc/gen`) is regenerated
+- Generated code (`core/rpc/pb`, `core/shard/pb`, `app/lib/data/rpc/gen`) is regenerated
   with `make proto`, never edited by hand.
 - `proto/connector.proto` is a byte-for-byte copy of
   [Shard's](https://github.com/SelfHold/shard); change it there first.
-- Don't rename persisted identifiers: the Go module `dbmanager`, the connector app id
-  `dbmanager`, the record `dbmanager.json`, the `dbmanager.*` `extra` keys, the data
-  directory, keychain entries, the Android package. They live on users' devices.
+- Don't rename persisted identifiers: the connector app id `cellar`, the record
+  `cellar.json`, the `cellar.*` `extra` keys, the data directory, keychain entries, the
+  Android package. They live on users' devices.
 - Shared core code makes no Linux-only assumptions; platform specifics stay in
   `desktopbind`, `mobilebind`, `core/keychain` and the data-directory lookup. Windows is not
   a target.

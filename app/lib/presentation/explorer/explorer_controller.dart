@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../core/i18n.dart';
 import '../../core/settings/app_settings.dart';
 import '../../data/rpc/core_client.dart';
-import '../../data/rpc/gen/dbm.pbgrpc.dart' as pb;
+import '../../data/rpc/gen/cellar.pbgrpc.dart' as pb;
 import '../core/core_cubit.dart';
 
 /// What a tree row is.
@@ -113,7 +113,7 @@ class ExplorerController extends ChangeNotifier {
   final errors = <String, String>{};
   String? selected;
 
-  pb.DBManagerClient get api => core.api;
+  pb.CellarClient get api => core.api;
 
   void _onEvent(pb.Event ev) {
     switch (ev.kind) {

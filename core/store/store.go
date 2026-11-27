@@ -15,12 +15,12 @@ import (
 
 // File names in the data dir.
 const (
-	DocFile    = "dbmanager.json"
+	DocFile    = "cellar.json"
 	DeviceFile = "device.json"
 )
 
 // LocalKey is an SSH private key the user pasted or loaded on this device.
-// It is never synced: the UI suggests the CloudSync safe for keys that
+// It is never synced: the UI suggests the Shard safe for keys that
 // other devices need.
 type LocalKey struct {
 	ID         string `json:"id"`
@@ -46,7 +46,7 @@ const (
 )
 
 // Store is the working copy of the document and the device file. The app
-// reads and writes it whether or not CloudSync is there.
+// reads and writes it whether or not Shard is there.
 type Store struct {
 	dir   string
 	seal  *Sealer

@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../i18n.dart';
 
-/// Preferences of this device (not synced): `<config dir>/dbmanager/app.json`
+/// Preferences of this device (not synced): `<config dir>/selfhold/cellar/app.json`
 /// on desktops, app support on Android. Holds the UI language (`lang`).
 class AppSettings extends ChangeNotifier {
   AppSettings._(this._file);
@@ -40,7 +40,7 @@ class AppSettings extends ChangeNotifier {
       final xdg = Platform.environment['XDG_CONFIG_HOME'];
       final home = Platform.environment['HOME'] ?? '.';
       final base = Platform.isWindows ? (Platform.environment['APPDATA'] ?? '.') : (xdg != null && xdg.isNotEmpty ? xdg : p.join(home, '.config'));
-      file = File(p.join(base, 'dbmanager', 'app.json'));
+      file = File(p.join(base, 'selfhold', 'cellar', 'app.json'));
     }
     final s = AppSettings._(file);
     // English on every start unless the user picked Russian in settings:

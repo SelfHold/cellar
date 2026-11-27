@@ -14,8 +14,8 @@ import (
 
 	"golang.org/x/crypto/ssh"
 
-	"dbmanager/core/sshx"
-	"dbmanager/core/sshx/sshtest"
+	"github.com/SelfHold/cellar/core/sshx"
+	"github.com/SelfHold/cellar/core/sshx/sshtest"
 )
 
 func newKey(t *testing.T, passphrase string) (string, ssh.PublicKey) {

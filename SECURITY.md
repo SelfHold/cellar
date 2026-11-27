@@ -22,7 +22,7 @@ In scope, for example:
 
 - database credentials, SSH private keys or passphrases written to disk unsealed, or leaking
   into logs, error messages, RPC responses or the sync record;
-- weaknesses in the sealing of `dbmanager.json`, `device.json` or the sync cache, or in the
+- weaknesses in the sealing of `cellar.json`, `device.json` or the sync cache, or in the
   handling of the local key;
 - host-key checks that can be bypassed, or a changed host key accepted without the user's
   explicit consent;

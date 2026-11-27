@@ -8,7 +8,7 @@ import '../../core/theme/colors.dart';
 import '../../core/theme/layout.dart';
 import '../../core/theme/typography.dart';
 import '../../data/rpc/core_client.dart';
-import '../../data/rpc/gen/dbm.pbgrpc.dart' as pb;
+import '../../data/rpc/gen/cellar.pbgrpc.dart' as pb;
 import '../common/hm.dart';
 import '../core/core_cubit.dart';
 
@@ -72,7 +72,7 @@ Future<bool?> _trustDialog(BuildContext context, pb.HostKey k) {
         const SizedBox(height: 8),
         SelectableText(k.fingerprint, style: HmText.jb(13, weight: 600, color: changed ? HmColors.error : HmColors.accent)),
         const SizedBox(height: 8),
-        Text(tr('The key is saved with the server and shared with your other apps and devices through CloudSync.', 'Ключ сохранится вместе с сервером и через CloudSync станет известен другим приложениям и устройствам.'), style: HmText.small),
+        Text(tr('The key is saved with the server and shared with your other apps and devices through Shard.', 'Ключ сохранится вместе с сервером и через Shard станет известен другим приложениям и устройствам.'), style: HmText.small),
       ],
     ),
     actions: (ctx) => [
@@ -132,7 +132,7 @@ class _ServerFormState extends State<_ServerForm> {
   bool _saving = false;
   String? _error;
 
-  pb.DBManagerClient get _api => context.read<CoreCubit>().api;
+  pb.CellarClient get _api => context.read<CoreCubit>().api;
 
   @override
   void initState() {
@@ -207,7 +207,7 @@ class _ServerFormState extends State<_ServerForm> {
         if (s.shared || (s.id.isEmpty && sync.sharedServers))
           Padding(
             padding: const EdgeInsets.only(bottom: 14),
-            child: HmBanner(tr('Kept in CloudSync: the same server list is in SSH Manager and on your other devices.', 'Хранится в CloudSync: тот же список серверов есть в SSH Manager и на других устройствах.'), tone: HmTone.info),
+            child: HmBanner(tr('Kept in Shard: the same server list is in Postern and on your other devices.', 'Хранится в Shard: тот же список серверов есть в Postern и на других устройствах.'), tone: HmTone.info),
           ),
         row([
           HmTextField(label: tr('Name', 'Название'), controller: _name, autofocus: s.id.isEmpty, placeholder: 'prod-db-1'),
@@ -236,7 +236,7 @@ class _ServerFormState extends State<_ServerForm> {
                 value: keyOptions.containsKey(s.keyId) ? s.keyId : null,
                 placeholder: _keys.isEmpty ? tr('No keys yet', 'Ключей пока нет') : tr('Choose a key', 'Выберите ключ'),
                 onChanged: (v) => setState(() => s.keyId = v),
-                hint: _safeNote.isNotEmpty ? _safeNote : tr('☁ — from the CloudSync safe, 🖴 — on this device only', '☁ — из сейфа CloudSync, 🖴 — только на этом устройстве'),
+                hint: _safeNote.isNotEmpty ? _safeNote : tr('☁ — from the Shard safe, 🖴 — on this device only', '☁ — из сейфа Shard, 🖴 — только на этом устройстве'),
               ),
             ),
             const SizedBox(width: 8),
@@ -286,7 +286,7 @@ Future<pb.Key?> showLocalKeyForm(BuildContext context) {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          HmBanner(tr('The key stays on this device. To use it on your other devices too, put it into the CloudSync safe instead.', 'Ключ останется только на этом устройстве. Чтобы он был и на других устройствах, положите его в сейф CloudSync.'), tone: HmTone.info),
+          HmBanner(tr('The key stays on this device. To use it on your other devices too, put it into the Shard safe instead.', 'Ключ останется только на этом устройстве. Чтобы он был и на других устройствах, положите его в сейф Shard.'), tone: HmTone.info),
           const SizedBox(height: 14),
           HmTextField(label: tr('Title', 'Название'), controller: title, placeholder: 'laptop ed25519'),
           const SizedBox(height: 14),

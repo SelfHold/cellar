@@ -1,8 +1,8 @@
 /builds/
 *.test
 *.out
-/app/android/app/libs/dbmanager.aar
-/app/android/app/libs/dbmanager-sources.jar
+/app/android/app/libs/cellar.aar
+/app/android/app/libs/cellar-sources.jar
 /desktopbind/desktopbind
 /mobilebind/mobilebind
 

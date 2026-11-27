@@ -4,10 +4,10 @@ project(runner LANGUAGES CXX)
 
 # The name of the executable created for the application. Change this to change
 # the on-disk name of your application.
-set(BINARY_NAME "dbmanager")
+set(BINARY_NAME "cellar")
 # The unique GTK application identifier for this application. See:
 # https://wiki.gnome.org/HowDoI/ChooseApplicationID
-set(APPLICATION_ID "dev.dbmanager.dbmanager")
+set(APPLICATION_ID "dev.selfhold.cellar")
 
 # Explicitly opt in to modern CMake behaviors to avoid warnings with recent
 # versions of CMake.
@@ -61,22 +61,22 @@ add_subdirectory("runner")
 add_dependencies(${BINARY_NAME} flutter_assemble)
 
 # The core (Go, desktopbind) is linked into the executable: one process, no
-# daemon. `make core-lib` builds it; Dart calls DbmStart/Stop/Free through
+# daemon. `make core-lib` builds it; Dart calls CellarStart/Stop/Free through
 # FFI (DynamicLibrary.process()), so they are pulled from the archive and
 # exported although nothing in C++ calls them.
 find_package(Threads REQUIRED)
-set(DBM_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../..")
-set(DBM_CORE "${CMAKE_BINARY_DIR}/core/libdbmanager.a")
-add_custom_target(dbmanager_core
-  COMMAND make -C "${DBM_ROOT}" --no-print-directory core-lib "CORE_LIB=${DBM_CORE}"
-  BYPRODUCTS "${DBM_CORE}"
+set(CELLAR_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../..")
+set(CELLAR_CORE "${CMAKE_BINARY_DIR}/core/libcellar.a")
+add_custom_target(cellar_core
+  COMMAND make -C "${CELLAR_ROOT}" --no-print-directory core-lib "CORE_LIB=${CELLAR_CORE}"
+  BYPRODUCTS "${CELLAR_CORE}"
   USES_TERMINAL
 )
-add_dependencies(${BINARY_NAME} dbmanager_core)
-foreach(sym DbmStart DbmStop DbmFree)
+add_dependencies(${BINARY_NAME} cellar_core)
+foreach(sym CellarStart CellarStop CellarFree)
   target_link_options(${BINARY_NAME} PRIVATE "LINKER:-u,${sym}" "LINKER:--export-dynamic-symbol=${sym}")
 endforeach()
-target_link_libraries(${BINARY_NAME} PRIVATE "${DBM_CORE}" Threads::Threads)
+target_link_libraries(${BINARY_NAME} PRIVATE "${CELLAR_CORE}" Threads::Threads)
 
 # Only the install-generated bundle's copy of the executable will launch
 # correctly, since the resources must in the right relative locations. To avoid

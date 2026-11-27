@@ -1,6 +1,6 @@
 // This is a generated file - do not edit.
 //
-// Generated from dbm.proto.
+// Generated from cellar.proto.
 
 // @dart = 3.3
 
@@ -15,11 +15,11 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'dbm.pbenum.dart';
+import 'cellar.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-export 'dbm.pbenum.dart';
+export 'cellar.pbenum.dart';
 
 class Empty extends $pb.GeneratedMessage {
   factory Empty() => Empty._();
@@ -35,7 +35,8 @@ class Empty extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Empty',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: Empty.$_createMessage)
     ..hasRequiredFields = false;
 
@@ -80,7 +81,8 @@ class Ref extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Ref',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: Ref.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'id')
     ..hasRequiredFields = false;
@@ -143,7 +145,8 @@ class State extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'State',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: State.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'coreVersion')
     ..aOS(2, _omitFieldNames ? '' : 'coreBuild')
@@ -263,7 +266,8 @@ class SyncState extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'SyncState',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: SyncState.$_createMessage)
     ..aE<SyncState_Phase>(1, _omitFieldNames ? '' : 'phase',
         enumValues: SyncState_Phase.values)
@@ -391,7 +395,7 @@ class SyncState extends $pb.GeneratedMessage {
   void clearSafeKeys() => $_clearField(10);
 
   /// This app still keeps servers of its own while the shared list is
-  /// available: offer MoveServersToCloudSync.
+  /// available: offer MoveServersToShard.
   @$pb.TagNumber(11)
   $core.int get ownServers => $_getIZ(10);
   @$pb.TagNumber(11)
@@ -426,7 +430,8 @@ class Event extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Event',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: Event.$_createMessage)
     ..aE<Event_Kind>(1, _omitFieldNames ? '' : 'kind',
         enumValues: Event_Kind.values)
@@ -530,7 +535,8 @@ class Server extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Server',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: Server.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'id')
     ..aOS(2, _omitFieldNames ? '' : 'name')
@@ -681,7 +687,7 @@ class Server extends $pb.GeneratedMessage {
   @$pb.TagNumber(13)
   void clearUpdatedMs() => $_clearField(13);
 
-  /// Where it lives: the shared CloudSync list, or this app's own list.
+  /// Where it lives: the shared Shard list, or this app's own list.
   @$pb.TagNumber(14)
   $core.bool get shared => $_getBF(13);
   @$pb.TagNumber(14)
@@ -722,7 +728,8 @@ class ServerList extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ServerList',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: ServerList.$_createMessage)
     ..pPM<Server>(1, _omitFieldNames ? '' : 'servers',
         subBuilder: Server.$_createMessage)
@@ -774,7 +781,8 @@ class ConnectRequest extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ConnectRequest',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: ConnectRequest.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'id')
     ..aOS(2, _omitFieldNames ? '' : 'passphrase')
@@ -851,7 +859,8 @@ class HostKey extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'HostKey',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: HostKey.$_createMessage)
     ..aE<HostKey_Status>(1, _omitFieldNames ? '' : 'status',
         enumValues: HostKey_Status.values)
@@ -953,7 +962,8 @@ class ConnectReply extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ConnectReply',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: ConnectReply.$_createMessage)
     ..aOB(1, _omitFieldNames ? '' : 'connected')
     ..aOM<HostKey>(2, _omitFieldNames ? '' : 'hostKey',
@@ -1047,7 +1057,8 @@ class TrustRequest extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'TrustRequest',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: TrustRequest.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'id')
     ..aOS(2, _omitFieldNames ? '' : 'key')
@@ -1143,7 +1154,8 @@ class DiscoveredService extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'DiscoveredService',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: DiscoveredService.$_createMessage)
     ..aE<DiscoveredService_Kind>(1, _omitFieldNames ? '' : 'kind',
         enumValues: DiscoveredService_Kind.values)
@@ -1295,7 +1307,8 @@ class DiscoverReply extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'DiscoverReply',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: DiscoverReply.$_createMessage)
     ..pPM<DiscoveredService>(1, _omitFieldNames ? '' : 'services',
         subBuilder: DiscoveredService.$_createMessage)
@@ -1369,7 +1382,8 @@ class Key extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Key',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: Key.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'id')
     ..aOS(2, _omitFieldNames ? '' : 'title')
@@ -1516,7 +1530,8 @@ class KeyList extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'KeyList',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: KeyList.$_createMessage)
     ..pPM<Key>(1, _omitFieldNames ? '' : 'keys',
         subBuilder: Key.$_createMessage)
@@ -1581,7 +1596,8 @@ class LocalKey extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'LocalKey',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: LocalKey.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'title')
     ..aOS(2, _omitFieldNames ? '' : 'privateKey')
@@ -1684,7 +1700,8 @@ class Connection extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Connection',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: Connection.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'id')
     ..aOS(2, _omitFieldNames ? '' : 'name')
@@ -1876,7 +1893,8 @@ class ConnectionList extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ConnectionList',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: ConnectionList.$_createMessage)
     ..pPM<Connection>(1, _omitFieldNames ? '' : 'connections',
         subBuilder: Connection.$_createMessage)
@@ -1934,7 +1952,8 @@ class TestReply extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'TestReply',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: TestReply.$_createMessage)
     ..aOB(1, _omitFieldNames ? '' : 'ok')
     ..aOS(2, _omitFieldNames ? '' : 'serverVersion')
@@ -2027,7 +2046,8 @@ class Database extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Database',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: Database.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'name')
     ..aOS(2, _omitFieldNames ? '' : 'owner')
@@ -2124,7 +2144,8 @@ class DatabaseList extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'DatabaseList',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: DatabaseList.$_createMessage)
     ..pPM<Database>(1, _omitFieldNames ? '' : 'databases',
         subBuilder: Database.$_createMessage)
@@ -2188,7 +2209,8 @@ class DbRef extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'DbRef',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: DbRef.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'connectionId')
     ..aOS(2, _omitFieldNames ? '' : 'database')
@@ -2257,7 +2279,8 @@ class Schema extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Schema',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: Schema.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'name')
     ..aOS(2, _omitFieldNames ? '' : 'owner')
@@ -2332,7 +2355,8 @@ class SchemaList extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'SchemaList',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: SchemaList.$_createMessage)
     ..pPM<Schema>(1, _omitFieldNames ? '' : 'schemas',
         subBuilder: Schema.$_createMessage)
@@ -2386,7 +2410,8 @@ class SchemaRef extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'SchemaRef',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: SchemaRef.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'connectionId')
     ..aOS(2, _omitFieldNames ? '' : 'database')
@@ -2469,7 +2494,8 @@ class DbObject extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'DbObject',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: DbObject.$_createMessage)
     ..aE<DbObject_Kind>(1, _omitFieldNames ? '' : 'kind',
         enumValues: DbObject_Kind.values)
@@ -2565,7 +2591,8 @@ class ObjectList extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ObjectList',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: ObjectList.$_createMessage)
     ..pPM<DbObject>(1, _omitFieldNames ? '' : 'objects',
         subBuilder: DbObject.$_createMessage)
@@ -2625,7 +2652,8 @@ class ObjectRef extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ObjectRef',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: ObjectRef.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'connectionId')
     ..aOS(2, _omitFieldNames ? '' : 'database')
@@ -2749,7 +2777,8 @@ class Column extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Column',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: Column.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'name')
     ..aOS(2, _omitFieldNames ? '' : 'type')
@@ -2900,7 +2929,8 @@ class Index extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Index',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: Index.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'name')
     ..aOS(2, _omitFieldNames ? '' : 'definition')
@@ -2989,7 +3019,8 @@ class Constraint extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Constraint',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: Constraint.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'name')
     ..aOS(2, _omitFieldNames ? '' : 'type')
@@ -3078,7 +3109,8 @@ class ObjectInfo extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ObjectInfo',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: ObjectInfo.$_createMessage)
     ..aOM<DbObject>(1, _omitFieldNames ? '' : 'object',
         subBuilder: DbObject.$_createMessage)
@@ -3191,7 +3223,8 @@ class ResultColumn extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ResultColumn',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: ResultColumn.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'name')
     ..aI(2, _omitFieldNames ? '' : 'typeOid', fieldType: $pb.PbFieldType.OU3)
@@ -3281,7 +3314,8 @@ class Cell extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Cell',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: Cell.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'text')
     ..aOB(2, _omitFieldNames ? '' : 'null')
@@ -3346,7 +3380,8 @@ class Row extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Row',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: Row.$_createMessage)
     ..pPM<Cell>(1, _omitFieldNames ? '' : 'cells',
         subBuilder: Cell.$_createMessage)
@@ -3426,7 +3461,8 @@ class ResultSet extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ResultSet',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: ResultSet.$_createMessage)
     ..pPM<ResultColumn>(1, _omitFieldNames ? '' : 'columns',
         subBuilder: ResultColumn.$_createMessage)
@@ -3616,7 +3652,8 @@ class Sort extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Sort',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: Sort.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'column')
     ..aOB(2, _omitFieldNames ? '' : 'desc')
@@ -3695,7 +3732,8 @@ class ReadTableRequest extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ReadTableRequest',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: ReadTableRequest.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'connectionId')
     ..aOS(2, _omitFieldNames ? '' : 'database')
@@ -3822,7 +3860,8 @@ class EditValue extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'EditValue',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: EditValue.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'column')
     ..aOM<Cell>(2, _omitFieldNames ? '' : 'value',
@@ -3905,7 +3944,8 @@ class RowEdit extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'RowEdit',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: RowEdit.$_createMessage)
     ..aE<RowEdit_Op>(1, _omitFieldNames ? '' : 'op',
         enumValues: RowEdit_Op.values)
@@ -3980,7 +4020,8 @@ class EditRequest extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'EditRequest',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: EditRequest.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'connectionId')
     ..aOS(2, _omitFieldNames ? '' : 'database')
@@ -4074,7 +4115,8 @@ class EditReply extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'EditReply',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: EditReply.$_createMessage)
     ..aInt64(1, _omitFieldNames ? '' : 'rowsAffected')
     ..pPS(2, _omitFieldNames ? '' : 'statements')
@@ -4142,7 +4184,8 @@ class Console extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Console',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: Console.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'id')
     ..aOS(2, _omitFieldNames ? '' : 'connectionId')
@@ -4237,7 +4280,8 @@ class ConsoleRef extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ConsoleRef',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: ConsoleRef.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'id')
     ..hasRequiredFields = false;
@@ -4300,7 +4344,8 @@ class ExecuteRequest extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ExecuteRequest',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: ExecuteRequest.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'consoleId')
     ..aOS(2, _omitFieldNames ? '' : 'sql')
@@ -4401,7 +4446,8 @@ class StatementsRequest extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'StatementsRequest',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: StatementsRequest.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'sql')
     ..hasRequiredFields = false;
@@ -4460,7 +4506,8 @@ class StatementRange extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'StatementRange',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: StatementRange.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'start')
     ..aI(2, _omitFieldNames ? '' : 'end')
@@ -4527,7 +4574,8 @@ class StatementsReply extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'StatementsReply',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: StatementsReply.$_createMessage)
     ..pPM<StatementRange>(1, _omitFieldNames ? '' : 'statements',
         subBuilder: StatementRange.$_createMessage)
@@ -4583,7 +4631,8 @@ class ExecuteReply extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ExecuteReply',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'dbm.v1'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'selfhold.cellar.v1'),
       createEmptyInstance: ExecuteReply.$_createMessage)
     ..pPM<ResultSet>(1, _omitFieldNames ? '' : 'results',
         subBuilder: ResultSet.$_createMessage)

@@ -6,7 +6,7 @@ import '../../core/settings/app_settings.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/layout.dart';
 import '../../core/theme/typography.dart';
-import '../../data/rpc/gen/dbm.pbgrpc.dart' as pb;
+import '../../data/rpc/gen/cellar.pbgrpc.dart' as pb;
 import '../common/hm.dart';
 import '../core/core_cubit.dart';
 import '../explorer/explorer_controller.dart';
@@ -114,12 +114,12 @@ class _StatusBar extends StatelessWidget {
     builder: (context, s) {
       final sync = s.sync;
       final (syncText, syncColor) = switch (sync.phase) {
-        pb.SyncState_Phase.SYNCED => (tr('CloudSync: synced', 'CloudSync: синхронизировано'), HmColors.ok),
-        pb.SyncState_Phase.PAIRING => (tr('CloudSync: confirm ${sync.pairingCode}', 'CloudSync: подтвердите ${sync.pairingCode}'), HmColors.warning),
-        pb.SyncState_Phase.OFFLINE => (tr('CloudSync: offline', 'CloudSync: нет хранилища'), HmColors.warning),
-        pb.SyncState_Phase.LOCKED => (tr('CloudSync: locked', 'CloudSync: заблокирован'), HmColors.warning),
-        pb.SyncState_Phase.NOT_RUNNING => (tr('CloudSync: not running', 'CloudSync: не запущен'), HmColors.muted),
-        pb.SyncState_Phase.ERROR => (tr('CloudSync: error', 'CloudSync: ошибка'), HmColors.error),
+        pb.SyncState_Phase.SYNCED => (tr('Shard: synced', 'Shard: синхронизировано'), HmColors.ok),
+        pb.SyncState_Phase.PAIRING => (tr('Shard: confirm ${sync.pairingCode}', 'Shard: подтвердите ${sync.pairingCode}'), HmColors.warning),
+        pb.SyncState_Phase.OFFLINE => (tr('Shard: offline', 'Shard: нет хранилища'), HmColors.warning),
+        pb.SyncState_Phase.LOCKED => (tr('Shard: locked', 'Shard: заблокирован'), HmColors.warning),
+        pb.SyncState_Phase.NOT_RUNNING => (tr('Shard: not running', 'Shard: не запущен'), HmColors.muted),
+        pb.SyncState_Phase.ERROR => (tr('Shard: error', 'Shard: ошибка'), HmColors.error),
         _ => (tr('Standalone', 'Автономно'), HmColors.muted),
       };
       return Container(
@@ -144,7 +144,7 @@ class _StatusBar extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 16),
-          Text('DB Manager ${s.state?.coreVersion ?? ''}', style: HmText.footer),
+          Text('Cellar ${s.state?.coreVersion ?? ''}', style: HmText.footer),
         ]),
       );
     },

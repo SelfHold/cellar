@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import '../../core/i18n.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/typography.dart';
-import '../../data/rpc/gen/dbm.pb.dart' as pb;
+import '../../data/rpc/gen/cellar.pb.dart' as pb;
 import '../common/hm.dart';
 
 /// A column of the grid.

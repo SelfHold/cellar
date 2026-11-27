@@ -6,7 +6,7 @@ import '../../core/theme/colors.dart';
 import '../../core/theme/layout.dart';
 import '../../core/theme/typography.dart';
 import '../../data/rpc/core_client.dart';
-import '../../data/rpc/gen/dbm.pbgrpc.dart' as pb;
+import '../../data/rpc/gen/cellar.pbgrpc.dart' as pb;
 import '../common/hm.dart';
 import '../servers/discover_dialog.dart';
 import '../servers/server_dialogs.dart';
@@ -39,7 +39,7 @@ class ExplorerView extends StatelessWidget {
             HmIconButton(icon: Icons.add, label: tr('New server', 'Новый сервер'), onPressed: () => _newServer(context, '')),
             HmIconButton(icon: Icons.cable, label: tr('New direct connection', 'Новое прямое подключение'), onPressed: () => showConnectionForm(context)),
             HmIconButton(icon: Icons.refresh, label: tr('Reload', 'Обновить'), onPressed: ctl.reload),
-            HmIconButton(icon: Icons.settings_outlined, label: tr('Settings and CloudSync', 'Настройки и CloudSync'), onPressed: () => showSettings(context)),
+            HmIconButton(icon: Icons.settings_outlined, label: tr('Settings and Shard', 'Настройки и Shard'), onPressed: () => showSettings(context)),
           ]),
         ),
         Expanded(
@@ -50,7 +50,7 @@ class ExplorerView extends StatelessWidget {
               final rows = ctl.rows;
               if (rows.isEmpty) {
                 return HmEmptyState(
-                  tr('Add a server: DB Manager connects over SSH and finds the databases running there.', 'Добавьте сервер: DB Manager подключится по SSH и найдёт запущенные на нём базы.'),
+                  tr('Add a server: Cellar connects over SSH and finds the databases running there.', 'Добавьте сервер: Cellar подключится по SSH и найдёт запущенные на нём базы.'),
                   icon: Icons.dns_outlined,
                   action: HmButton(tr('Add server', 'Добавить сервер'), variant: HmVariant.primary, icon: Icons.add, onPressed: () => _newServer(context, '')),
                 );
@@ -190,7 +190,7 @@ class ExplorerView extends StatelessWidget {
             title: server ? tr('Delete the server?', 'Удалить сервер?') : tr('Delete the connection?', 'Удалить подключение?'),
             message: server
                 ? (r.server!.shared
-                      ? tr('${r.label} is removed from CloudSync: SSH Manager and your other devices lose it too. Its $n connections go with it.', '${r.label} удаляется из CloudSync: SSH Manager и другие устройства тоже его потеряют. Подключения ($n) удалятся вместе с ним.')
+                      ? tr('${r.label} is removed from Shard: Postern and your other devices lose it too. Its $n connections go with it.', '${r.label} удаляется из Shard: Postern и другие устройства тоже его потеряют. Подключения ($n) удалятся вместе с ним.')
                       : tr('${r.label} and its $n connections are removed.', '${r.label} и подключения ($n) будут удалены.'))
                 : tr('${r.label} is removed. The database itself is not touched.', '${r.label} будет удалено. Сама база не затрагивается.'),
             action: tr('Delete', 'Удалить'),
@@ -304,7 +304,7 @@ class _RowViewState extends State<_RowView> {
                   style: r.kind == NodeKind.info ? HmText.jb(11, color: r.color ?? HmColors.muted).copyWith(fontStyle: FontStyle.italic) : HmText.jb(12, weight: r.kind == NodeKind.server || r.kind == NodeKind.group ? 600 : 400),
                 ),
               ),
-              if (r.kind == NodeKind.server && r.server!.shared) ...[const SizedBox(width: 4), const Tooltip(message: 'CloudSync', child: Icon(Icons.cloud_outlined, size: 12, color: HmColors.muted))],
+              if (r.kind == NodeKind.server && r.server!.shared) ...[const SizedBox(width: 4), const Tooltip(message: 'Shard', child: Icon(Icons.cloud_outlined, size: 12, color: HmColors.muted))],
               if (r.detail.isNotEmpty) ...[
                 const SizedBox(width: 8),
                 Flexible(child: Text(r.detail, overflow: TextOverflow.ellipsis, maxLines: 1, style: HmText.jb(11, color: HmColors.muted))),

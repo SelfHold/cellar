@@ -1,20 +1,20 @@
 syntax = "proto3";
 
-// The API between the DB Manager core (inside the app's process: desktopbind
+// The API between the Cellar core (inside the app's process: desktopbind
 // on desktops, mobilebind on Android) and its Flutter app. The core owns the
 // SSH connections, database sessions, the server and connection lists and
-// CloudSync; the app only draws.
-package dbm.v1;
+// Shard; the app only draws.
+package selfhold.cellar.v1;
 
-option go_package = "dbmanager/core/rpc/pb";
+option go_package = "github.com/SelfHold/cellar/core/rpc/pb";
 
-service DBManager {
+service Cellar {
   rpc GetState(Empty) returns (State);
   // Events streams changes (servers, connections, keys, sync, SSH state).
   // The app keeps one open and reloads what an event names.
   rpc Events(Empty) returns (stream Event);
 
-  // --- servers (shared through CloudSync when its "servers" scope is on) ---
+  // --- servers (shared through Shard when its "servers" scope is on) ---
   rpc ListServers(Empty) returns (ServerList);
   // SaveServer creates (id = "") or replaces a server.
   rpc SaveServer(Server) returns (Server);
@@ -29,7 +29,7 @@ service DBManager {
   // listening ports, docker containers) and checks each candidate port.
   rpc Discover(Ref) returns (DiscoverReply);
 
-  // --- SSH keys: CloudSync's safe (scope "ssh_keys") + keys of this device --
+  // --- SSH keys: Shard's safe (scope "ssh_keys") + keys of this device --
   rpc ListKeys(Empty) returns (KeyList);
   // SaveLocalKey keeps a pasted / loaded private key on this device only.
   rpc SaveLocalKey(LocalKey) returns (Key);
@@ -71,15 +71,15 @@ service DBManager {
   // for highlighting the one at the cursor.
   rpc Statements(StatementsRequest) returns (StatementsReply);
 
-  // --- CloudSync ----------------------------------------------------------
+  // --- Shard ----------------------------------------------------------
   // EnableSync pairs (if needed) and returns the code to show; the result
   // comes as a SYNC event.
   rpc EnableSync(Empty) returns (SyncState);
   rpc DisableSync(Empty) returns (SyncState);
   rpc SyncNow(Empty) returns (SyncState);
-  // MoveServersToCloudSync copies this app's own servers into the shared
+  // MoveServersToShard copies this app's own servers into the shared
   // list (once the "servers" scope is granted) and drops the own copy.
-  rpc MoveServersToCloudSync(Empty) returns (SyncState);
+  rpc MoveServersToShard(Empty) returns (SyncState);
 }
 
 message Empty {}
@@ -102,17 +102,17 @@ message SyncState {
   enum Phase {
     PHASE_UNSPECIFIED = 0;
     OFF = 1;          // switched off: standalone
-    NOT_RUNNING = 2;  // switched on, CloudSync not found
+    NOT_RUNNING = 2;  // switched on, Shard not found
     NO_VAULT = 3;
     LOCKED = 4;
-    PAIRING = 5;      // waiting for the user in CloudSync (code)
+    PAIRING = 5;      // waiting for the user in Shard (code)
     OFFLINE = 6;      // reads work, writes wait
     SYNCED = 7;
     ERROR = 8;
   }
   Phase phase = 1;
   bool enabled = 2;
-  bool available = 3;      // CloudSync answers on this device
+  bool available = 3;      // Shard answers on this device
   string pairing_code = 4; // "123 456" while PAIRING
   string error = 5;
   bool pending = 6;        // local changes not uploaded yet
@@ -122,7 +122,7 @@ message SyncState {
   bool shared_servers = 9;
   bool safe_keys = 10;
   // This app still keeps servers of its own while the shared list is
-  // available: offer MoveServersToCloudSync.
+  // available: offer MoveServersToShard.
   int32 own_servers = 11;
 }
 
@@ -162,7 +162,7 @@ message Server {
   string jump_server_id = 11;
   string notes = 12;
   int64 updated_ms = 13;
-  // Where it lives: the shared CloudSync list, or this app's own list.
+  // Where it lives: the shared Shard list, or this app's own list.
   bool shared = 14;
   // Live: the SSH connection is open.
   bool connected = 15;

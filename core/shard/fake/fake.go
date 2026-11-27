@@ -1,4 +1,4 @@
-// Package fake is an in-memory CloudSync for tests: records with
+// Package fake is an in-memory Shard for tests: records with
 // revisions, the shared servers (scope "servers") and SSH keys of the safe
 // (scope "ssh_keys", CONNECTOR.md § 13–14), pairing that the test
 // approves, and Watch. Several devices (Dialers) share one vault.
@@ -17,11 +17,11 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
 
-	"dbmanager/core/cloudsync"
-	"dbmanager/core/cloudsync/pb"
+	"github.com/SelfHold/cellar/core/shard"
+	"github.com/SelfHold/cellar/core/shard/pb"
 )
 
-// Vault is one CloudSync vault.
+// Vault is one Shard vault.
 type Vault struct {
 	mu      sync.Mutex
 	rev     int
@@ -32,7 +32,7 @@ type Vault struct {
 	keys    map[string]*pb.SshKey
 	// Grant: the scopes a pairing gets (the user's answer).
 	Grant []string
-	// Old: a CloudSync without the new scopes (UNIMPLEMENTED, and
+	// Old: a Shard without the new scopes (UNIMPLEMENTED, and
 	// unknown scopes are INVALID_ARGUMENT).
 	Old      bool
 	State    pb.VaultState
@@ -50,7 +50,7 @@ type change struct {
 func New() *Vault {
 	return &Vault{
 		records: map[string]*pb.Item{}, servers: map[string]*pb.Server{}, gone: map[string]int{}, keys: map[string]*pb.SshKey{},
-		Grant: []string{cloudsync.ScopeServers, cloudsync.ScopeSSHKeys}, State: pb.VaultState_READY,
+		Grant: []string{shard.ScopeServers, shard.ScopeSSHKeys}, State: pb.VaultState_READY,
 		watchers: map[chan *pb.Change]struct{}{}, paired: map[string][]string{},
 	}
 }
@@ -136,16 +136,16 @@ func (v *Vault) putServer(s *pb.Server) *pb.Server {
 type Device struct {
 	V    *Vault
 	Name string
-	// Down: CloudSync is not running on this device.
+	// Down: Shard is not running on this device.
 	Down atomic.Bool
 }
 
 func (*Device) UsesToken() bool { return true }
 func (*Device) CanOpen() bool   { return false }
 
-func (d *Device) Dial(_ context.Context, token string) (cloudsync.Client, error) {
+func (d *Device) Dial(_ context.Context, token string) (shard.Client, error) {
 	if d.Down.Load() {
-		return nil, cloudsync.ErrNotRunning
+		return nil, shard.ErrNotRunning
 	}
 	return &client{d: d, token: token}, nil
 }
@@ -194,7 +194,7 @@ func (c *client) Hello(context.Context, *pb.HelloRequest) (*pb.HelloReply, error
 	defer v.mu.Unlock()
 	r := &pb.HelloReply{ApiVersion: 1, State: v.State, VaultId: "vault-1", DeviceName: c.d.Name, Paired: c.isPaired()}
 	if r.Paired {
-		r.AppId, r.Scopes = cloudsync.AppID, slices.Clone(c.scopes())
+		r.AppId, r.Scopes = shard.AppID, slices.Clone(c.scopes())
 	}
 	return r, nil
 }
@@ -217,7 +217,7 @@ func (c *client) AwaitPairing(_ context.Context, r *pb.AwaitPairingRequest) (*pb
 		grant = slices.Clone(v.Grant)
 	}
 	v.paired[token] = grant
-	return &pb.PairingResult{Status: pb.PairingStatus_APPROVED, Token: token, AppId: cloudsync.AppID, Scopes: grant}, nil
+	return &pb.PairingResult{Status: pb.PairingStatus_APPROVED, Token: token, AppId: shard.AppID, Scopes: grant}, nil
 }
 
 func (c *client) Get(_ context.Context, r *pb.GetRequest) (*pb.Item, error) {
@@ -269,7 +269,7 @@ func (c *client) Unpair(context.Context, *pb.UnpairRequest) (*pb.UnpairReply, er
 }
 
 func (c *client) ListSshKeys(context.Context, *pb.ListSshKeysRequest) (*pb.ListSshKeysReply, error) {
-	if err := c.auth(cloudsync.ScopeSSHKeys); err != nil {
+	if err := c.auth(shard.ScopeSSHKeys); err != nil {
 		return nil, err
 	}
 	v := c.v()
@@ -286,7 +286,7 @@ func (c *client) ListSshKeys(context.Context, *pb.ListSshKeysRequest) (*pb.ListS
 }
 
 func (c *client) GetSshKeys(_ context.Context, r *pb.GetSshKeysRequest) (*pb.ListSshKeysReply, error) {
-	if err := c.auth(cloudsync.ScopeSSHKeys); err != nil {
+	if err := c.auth(shard.ScopeSSHKeys); err != nil {
 		return nil, err
 	}
 	v := c.v()
@@ -302,7 +302,7 @@ func (c *client) GetSshKeys(_ context.Context, r *pb.GetSshKeysRequest) (*pb.Lis
 }
 
 func (c *client) ListServers(_ context.Context, r *pb.ListServersRequest) (*pb.ListServersReply, error) {
-	if err := c.auth(cloudsync.ScopeServers); err != nil {
+	if err := c.auth(shard.ScopeServers); err != nil {
 		return nil, err
 	}
 	v := c.v()
@@ -321,7 +321,7 @@ func (c *client) ListServers(_ context.Context, r *pb.ListServersRequest) (*pb.L
 }
 
 func (c *client) GetServers(_ context.Context, r *pb.GetServersRequest) (*pb.ListServersReply, error) {
-	if err := c.auth(cloudsync.ScopeServers); err != nil {
+	if err := c.auth(shard.ScopeServers); err != nil {
 		return nil, err
 	}
 	v := c.v()
@@ -337,7 +337,7 @@ func (c *client) GetServers(_ context.Context, r *pb.GetServersRequest) (*pb.Lis
 }
 
 func (c *client) PutServer(_ context.Context, r *pb.PutServerRequest) (*pb.Server, error) {
-	if err := c.auth(cloudsync.ScopeServers); err != nil {
+	if err := c.auth(shard.ScopeServers); err != nil {
 		return nil, err
 	}
 	v := c.v()
@@ -363,7 +363,7 @@ func (c *client) PutServer(_ context.Context, r *pb.PutServerRequest) (*pb.Serve
 }
 
 func (c *client) DeleteServer(_ context.Context, r *pb.DeleteServerRequest) (*pb.DeleteServerReply, error) {
-	if err := c.auth(cloudsync.ScopeServers); err != nil {
+	if err := c.auth(shard.ScopeServers); err != nil {
 		return nil, err
 	}
 	v := c.v()
@@ -385,7 +385,7 @@ func (c *client) DeleteServer(_ context.Context, r *pb.DeleteServerRequest) (*pb
 }
 
 func (c *client) ListServerChanges(_ context.Context, r *pb.ListChangesRequest) (*pb.ListChangesReply, error) {
-	if err := c.auth(cloudsync.ScopeServers); err != nil {
+	if err := c.auth(shard.ScopeServers); err != nil {
 		return nil, err
 	}
 	v := c.v()
@@ -426,7 +426,7 @@ func (c *client) Watch(ctx context.Context) (func() (*pb.Change, error), error) 
 			case <-t.C:
 				if c.d.Down.Load() {
 					stop()
-					return nil, status.Error(codes.Unavailable, "CloudSync stopped")
+					return nil, status.Error(codes.Unavailable, "Shard stopped")
 				}
 			case <-ctx.Done():
 				stop()

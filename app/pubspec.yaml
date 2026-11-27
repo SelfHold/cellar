@@ -1,5 +1,5 @@
-name: dbmanager
-description: DB Manager — databases on your servers, over SSH.
+name: cellar
+description: Cellar — databases on your servers, over SSH.
 publish_to: 'none'
 version: 0.1.0+1
 

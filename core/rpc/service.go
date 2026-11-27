@@ -1,6 +1,6 @@
-// Package rpc is the core's gRPC API for the app (proto/dbm.proto): the
+// Package rpc is the core's gRPC API for the app (proto/cellar.proto): the
 // server and connection lists, SSH connections, discovery, the schema
-// browser, data viewer, query consoles and CloudSync.
+// browser, data viewer, query consoles and Shard.
 package rpc
 
 import (
@@ -19,12 +19,12 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
-	"dbmanager/core/cloudsync"
-	"dbmanager/core/discover"
-	"dbmanager/core/pg"
-	"dbmanager/core/rpc/pb"
-	"dbmanager/core/sshx"
-	"dbmanager/core/store"
+	"github.com/SelfHold/cellar/core/discover"
+	"github.com/SelfHold/cellar/core/pg"
+	"github.com/SelfHold/cellar/core/rpc/pb"
+	"github.com/SelfHold/cellar/core/shard"
+	"github.com/SelfHold/cellar/core/sshx"
+	"github.com/SelfHold/cellar/core/store"
 )
 
 // Version and Build identify the core; make sets them with -ldflags -X.
@@ -33,12 +33,12 @@ var (
 	Build   = "dev"
 )
 
-// Service implements pb.DBManagerServer.
+// Service implements pb.CellarServer.
 type Service struct {
-	pb.UnimplementedDBManagerServer
+	pb.UnimplementedCellarServer
 
 	Store    *store.Store
-	Sync     *cloudsync.Syncer // nil: no CloudSync
+	Sync     *shard.Syncer // nil: no Shard
 	Pool     *sshx.Pool
 	PG       *pg.Manager
 	Platform string
@@ -74,14 +74,14 @@ func New(st *store.Store, platform string) *Service {
 	return s
 }
 
-// SyncChanged is cloudsync.Options.OnChange.
+// SyncChanged is shard.Options.OnChange.
 func (s *Service) SyncChanged(what string) {
 	switch what {
-	case cloudsync.ChangedSync:
+	case shard.ChangedSync:
 		s.publish(pb.Event_SYNC, "")
-	case cloudsync.ChangedServers:
+	case shard.ChangedServers:
 		s.publish(pb.Event_SERVERS, "")
-	case cloudsync.ChangedKeys:
+	case shard.ChangedKeys:
 		s.publish(pb.Event_KEYS, "")
 	}
 }
@@ -406,7 +406,7 @@ func (s *Service) spec(ctx context.Context, id string, depth int) (*sshx.Spec, e
 		switch {
 		case strings.HasPrefix(x.KeyID, store.SafeKeyPrefix):
 			if s.Sync == nil {
-				return nil, cloudsync.ErrNoSafe
+				return nil, shard.ErrNoSafe
 			}
 			priv, pass, err = s.Sync.SafeKeySecret(ctx, strings.TrimPrefix(x.KeyID, store.SafeKeyPrefix))
 			if err != nil {
@@ -572,7 +572,7 @@ func (s *Service) ListKeys(context.Context, *pb.Empty) (*pb.KeyList, error) {
 			})
 		}
 	} else {
-		out.SafeNote = "CloudSync is not available in this build."
+		out.SafeNote = "Shard is not available in this build."
 	}
 	for _, k := range s.Store.LocalKeys() {
 		info, _ := sshx.DescribeKey(k.PrivateKey, k.Passphrase)
@@ -808,10 +808,10 @@ func (s *Service) Statements(_ context.Context, r *pb.StatementsRequest) (*pb.St
 	return out, nil
 }
 
-// --- CloudSync -----------------------------------------------------------------
+// --- Shard -----------------------------------------------------------------
 
 func (s *Service) noSync() error {
-	return status.Error(codes.Unimplemented, "CloudSync is not available in this build")
+	return status.Error(codes.Unimplemented, "Shard is not available in this build")
 }
 
 func (s *Service) EnableSync(context.Context, *pb.Empty) (*pb.SyncState, error) {
@@ -838,12 +838,12 @@ func (s *Service) SyncNow(context.Context, *pb.Empty) (*pb.SyncState, error) {
 	return s.syncState(), nil
 }
 
-func (s *Service) MoveServersToCloudSync(ctx context.Context, _ *pb.Empty) (*pb.SyncState, error) {
+func (s *Service) MoveServersToShard(ctx context.Context, _ *pb.Empty) (*pb.SyncState, error) {
 	if s.Sync == nil {
 		return nil, s.noSync()
 	}
 	if _, ok := s.Sync.SharedServers(); !ok {
-		return nil, cloudsync.ErrNoShared
+		return nil, shard.ErrNoShared
 	}
 	// Jump servers first, so the moved servers can name their new ids.
 	own := s.Store.Servers()
@@ -883,7 +883,7 @@ func (s *Service) MoveServersToCloudSync(ctx context.Context, _ *pb.Empty) (*pb.
 	if err := s.Store.DropServers(moved); err != nil {
 		return nil, grpcErr(err)
 	}
-	s.logf("info", "%d servers moved to CloudSync", len(moved))
+	s.logf("info", "%d servers moved to Shard", len(moved))
 	return s.syncState(), nil
 }
 

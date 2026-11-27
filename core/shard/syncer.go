@@ -1,4 +1,4 @@
-package cloudsync
+package shard
 
 import (
 	"context"
@@ -15,27 +15,27 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"dbmanager/core/cloudsync/pb"
-	"dbmanager/core/keychain"
-	"dbmanager/core/store"
+	"github.com/SelfHold/cellar/core/keychain"
+	"github.com/SelfHold/cellar/core/shard/pb"
+	"github.com/SelfHold/cellar/core/store"
 )
 
 const (
-	// AppID is DB Manager's data in CloudSync: never change it.
-	AppID = "dbmanager"
+	// AppID is Cellar's data in Shard: never change it.
+	AppID = "cellar"
 	// RecordKey holds the document (store.Doc) bytes.
-	RecordKey = "dbmanager.json"
-	// MaxRecord is CloudSync's limit for one record.
+	RecordKey = "cellar.json"
+	// MaxRecord is Shard's limit for one record.
 	MaxRecord = 256 << 10
 
 	ScopeSSHKeys = "ssh_keys"
 	ScopeServers = "servers"
 
-	// ExtraPrefix marks DB Manager's keys in Server.extra.
+	// ExtraPrefix marks Cellar's keys in Server.extra.
 	ExtraPrefix = AppID + "."
 )
 
-// Phase is SyncState.Phase of dbm.proto (same numbers).
+// Phase is SyncState.Phase of cellar.proto (same numbers).
 type Phase int32
 
 const (
@@ -75,12 +75,12 @@ type Options struct {
 	Dialer Dialer
 	Store  *store.Store
 	Seal   *store.Sealer
-	// Dir keeps this device's sync state (cloudsync.json, the shared
+	// Dir keeps this device's sync state (shard.json, the shared
 	// servers cache; the token too when there is no keychain).
 	Dir         string
 	Keychain    keychain.Keychain
-	AppName     string // "DB Manager"
-	Description string // "DB Manager 0.1 on linux"
+	AppName     string // "Cellar"
+	Description string // "Cellar 0.1 on linux"
 	Log         func(level, msg string)
 	OnChange    func(what string)
 }
@@ -94,7 +94,7 @@ type saved struct {
 	SyncedMs   int64  `json:"synced_ms,omitempty"`
 }
 
-// SafeKey is an SSH key of CloudSync's safe, without its secrets.
+// SafeKey is an SSH key of Shard's safe, without its secrets.
 type SafeKey struct {
 	ID            string `json:"id"`
 	Title         string `json:"title"`
@@ -107,7 +107,7 @@ type SafeKey struct {
 	Group         string `json:"group,omitempty"`
 }
 
-// cache is what CloudSync gave last, for when it is not running: the
+// cache is what Shard gave last, for when it is not running: the
 // shared servers (with secrets, sealed on disk) and the safe's key list.
 type cache struct {
 	VaultID string         `json:"vault_id"`
@@ -122,19 +122,19 @@ type cachedServer struct {
 	Rev string `json:"revision"`
 }
 
-const cacheFile = "cloudsync-cache.json"
+const cacheFile = "shard-cache.json"
 
 // Errors.
 var (
-	// ErrNoShared: the shared list needs CloudSync running with the
+	// ErrNoShared: the shared list needs Shard running with the
 	// "servers" scope.
-	ErrNoShared = status.Error(codes.FailedPrecondition, "the shared server list needs CloudSync (running, unlocked, scope \"servers\")")
-	// ErrNoSafe: the safe's keys need CloudSync running with "ssh_keys".
-	ErrNoSafe = status.Error(codes.FailedPrecondition, "the SSH keys of the CloudSync safe need CloudSync running and unlocked, with the \"ssh_keys\" scope")
+	ErrNoShared = status.Error(codes.FailedPrecondition, "the shared server list needs Shard (running, unlocked, scope \"servers\")")
+	// ErrNoSafe: the safe's keys need Shard running with "ssh_keys".
+	ErrNoSafe = status.Error(codes.FailedPrecondition, "the SSH keys of the Shard safe need Shard running and unlocked, with the \"ssh_keys\" scope")
 )
 
-// Syncer keeps DB Manager's document in CloudSync and serves the shared
-// servers and the safe's SSH keys while CloudSync is there.
+// Syncer keeps Cellar's document in Shard and serves the shared
+// servers and the safe's SSH keys while Shard is there.
 type Syncer struct {
 	o Options
 
@@ -224,7 +224,7 @@ func (s *Syncer) Enable() State {
 }
 
 // Disable switches sync off and unpairs; the local document stays. The
-// shared servers stay in CloudSync, but this app no longer sees them.
+// shared servers stay in Shard, but this app no longer sees them.
 func (s *Syncer) Disable(ctx context.Context) State {
 	s.mu.Lock()
 	s.sv = saved{}
@@ -249,7 +249,7 @@ func (s *Syncer) Disable(ctx context.Context) State {
 		c.Close()
 	}
 	s.clearToken()
-	s.logf("info", "sync via CloudSync is off")
+	s.logf("info", "sync via Shard is off")
 	s.changed(ChangedSync, ChangedServers, ChangedKeys)
 	s.Kick()
 	return s.State()
@@ -257,7 +257,7 @@ func (s *Syncer) Disable(ctx context.Context) State {
 
 // --- shared servers and safe keys --------------------------------------------
 
-// SharedServers returns the shared list as CloudSync gave it last, and
+// SharedServers returns the shared list as Shard gave it last, and
 // whether the list is in use (scope granted, sync on).
 func (s *Syncer) SharedServers() ([]store.Server, bool) {
 	s.mu.Lock()
@@ -296,7 +296,7 @@ func (s *Syncer) client(noneErr error) (Client, error) {
 	}
 	switch s.liveState {
 	case pb.VaultState_LOCKED:
-		return nil, status.Error(codes.FailedPrecondition, "unlock CloudSync first")
+		return nil, status.Error(codes.FailedPrecondition, "unlock Shard first")
 	}
 	return s.live, nil
 }
@@ -371,16 +371,16 @@ func (s *Syncer) DeleteServer(ctx context.Context, id string) error {
 	return nil
 }
 
-// SafeKeys returns the safe's keys as CloudSync listed them last, and a
+// SafeKeys returns the safe's keys as Shard listed them last, and a
 // note when they are not available.
 func (s *Syncer) SafeKeys() ([]SafeKey, string) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	switch {
 	case !s.sv.Enabled:
-		return nil, "Switch on sync via CloudSync to use the SSH keys of its safe."
+		return nil, "Switch on sync via Shard to use the SSH keys of its safe."
 	case !slices.Contains(s.cache.Scopes, ScopeSSHKeys):
-		return nil, "CloudSync did not grant access to its SSH keys (scope \"ssh_keys\"): switch sync on again to ask."
+		return nil, "Shard did not grant access to its SSH keys (scope \"ssh_keys\"): switch sync on again to ask."
 	}
 	return slices.Clone(s.cache.Keys), ""
 }
@@ -397,7 +397,7 @@ func (s *Syncer) SafeKeySecret(ctx context.Context, id string) (privateKey, pass
 		return "", "", explain(err)
 	}
 	if len(r.Keys) == 0 {
-		return "", "", status.Error(codes.NotFound, "the SSH key is not in the CloudSync safe any more")
+		return "", "", status.Error(codes.NotFound, "the SSH key is not in the Shard safe any more")
 	}
 	return r.Keys[0].PrivateKey, r.Keys[0].Passphrase, nil
 }
@@ -405,11 +405,11 @@ func (s *Syncer) SafeKeySecret(ctx context.Context, id string) (privateKey, pass
 func explain(err error) error {
 	switch status.Code(err) {
 	case codes.Unimplemented:
-		return status.Error(codes.FailedPrecondition, "this CloudSync does not offer shared servers and SSH keys yet: update CloudSync")
+		return status.Error(codes.FailedPrecondition, "this Shard does not offer shared servers and SSH keys yet: update Shard")
 	case codes.PermissionDenied:
-		return status.Error(codes.PermissionDenied, "CloudSync did not grant this access: switch sync on again to ask")
+		return status.Error(codes.PermissionDenied, "Shard did not grant this access: switch sync on again to ask")
 	case codes.Unavailable:
-		return status.Error(codes.Unavailable, "CloudSync is offline (no storage answers): try again later")
+		return status.Error(codes.Unavailable, "Shard is offline (no storage answers): try again later")
 	}
 	return err
 }
@@ -463,7 +463,7 @@ func (s *Syncer) session() time.Duration {
 		st.DeviceName = hello.DeviceName
 	})
 	if hello.State == pb.VaultState_NO_VAULT {
-		s.setPhase(PhaseNoVault, "Set up CloudSync first.")
+		s.setPhase(PhaseNoVault, "Set up Shard first.")
 		return s.ProbeDelay
 	}
 	if !enabled && !wantPair {
@@ -487,14 +487,14 @@ func (s *Syncer) session() time.Duration {
 	s.mu.Lock()
 	s.wantPair = false
 	if s.sv.VaultID != "" && s.sv.VaultID != hello.VaultId {
-		// Another CloudSync vault: never merge across vaults.
+		// Another Shard vault: never merge across vaults.
 		s.sv = saved{}
 		s.cache = cache{}
 		s.st.Enabled = false
 		s.mu.Unlock()
 		s.save()
 		s.saveCache()
-		s.setPhase(PhaseOff, "CloudSync opened another vault, so sync is off: switch it on to sync with that vault.")
+		s.setPhase(PhaseOff, "Shard opened another vault, so sync is off: switch it on to sync with that vault.")
 		s.changed(ChangedServers, ChangedKeys)
 		return s.ProbeDelay
 	}
@@ -542,7 +542,7 @@ func (s *Syncer) session() time.Duration {
 	scopes := hello.Scopes
 	for {
 		if state == pb.VaultState_LOCKED {
-			s.setPhase(PhaseLocked, "Unlock CloudSync to sync.")
+			s.setPhase(PhaseLocked, "Unlock Shard to sync.")
 		} else {
 			s.refreshShared(ctx, c, scopes)
 			if err := s.reconcile(ctx, c); err != nil {
@@ -610,7 +610,7 @@ func (s *Syncer) session() time.Duration {
 
 var errEnd = errors.New("end")
 
-// pair asks CloudSync for the pairing (with both scopes) and waits for
+// pair asks Shard for the pairing (with both scopes) and waits for
 // the user. It reports whether the device is paired now.
 func (s *Syncer) pair(ctx context.Context, c Client) bool {
 	t, err := c.RequestPairing(ctx, &pb.PairingRequest{
@@ -618,7 +618,7 @@ func (s *Syncer) pair(ctx context.Context, c Client) bool {
 		Scopes: []string{ScopeServers, ScopeSSHKeys},
 	})
 	if status.Code(err) == codes.InvalidArgument {
-		// An older CloudSync that knows no such scopes: records only.
+		// An older Shard that knows no such scopes: records only.
 		t, err = c.RequestPairing(ctx, &pb.PairingRequest{AppId: AppID, AppName: s.o.AppName, Description: s.o.Description})
 	}
 	if err != nil {
@@ -657,13 +657,13 @@ func (s *Syncer) pair(ctx context.Context, c Client) bool {
 				s.storeToken(r.Token)
 				c.SetToken(r.Token)
 			}
-			s.logf("info", "paired with CloudSync, scopes: "+strings.Join(r.Scopes, ", "))
+			s.logf("info", "paired with Shard, scopes: "+strings.Join(r.Scopes, ", "))
 			return true
 		case pb.PairingStatus_DENIED:
 			s.mu.Lock()
 			s.wantPair = false
 			s.mu.Unlock()
-			s.setPhase(PhaseOff, "CloudSync denied the pairing.")
+			s.setPhase(PhaseOff, "Shard denied the pairing.")
 			return false
 		default:
 			s.mu.Lock()
@@ -719,7 +719,7 @@ func (s *Syncer) reconcile(ctx context.Context, c Client) error {
 		rev := item.Revision
 		if len(item.Versions) != 1 || string(remote) != string(out) {
 			if len(out) > MaxRecord {
-				return fmt.Errorf("the server and connection list is too big for CloudSync (%d KiB, at most 256)", len(out)>>10)
+				return fmt.Errorf("the server and connection list is too big for Shard (%d KiB, at most 256)", len(out)>>10)
 			}
 			put, err := c.Put(ctx, &pb.PutRequest{Key: RecordKey, Data: out, Base: item.Revision})
 			if status.Code(err) == codes.Aborted {
@@ -974,7 +974,7 @@ func (s *Syncer) unpaired() {
 	s.clearToken()
 	s.update(func(st *State) {
 		*st = State{Phase: PhaseOff, Available: st.Available, DeviceName: st.DeviceName,
-			Error: "The pairing with CloudSync was revoked: switch sync on to pair again."}
+			Error: "The pairing with Shard was revoked: switch sync on to pair again."}
 	})
 	s.changed(ChangedServers, ChangedKeys)
 }
@@ -996,7 +996,7 @@ func (s *Syncer) logf(level, msg string) {
 
 // --- files -------------------------------------------------------------------
 
-func (s *Syncer) statePath() string { return filepath.Join(s.o.Dir, "cloudsync.json") }
+func (s *Syncer) statePath() string { return filepath.Join(s.o.Dir, "shard.json") }
 
 func (s *Syncer) load() {
 	if data, err := os.ReadFile(s.statePath()); err == nil {
@@ -1029,11 +1029,11 @@ func (s *Syncer) saveCache() {
 	data, _ := json.Marshal(s.cache)
 	s.mu.Unlock()
 	if err := store.WriteAtomic(filepath.Join(s.o.Dir, cacheFile), s.o.Seal.Seal(cacheFile, data)); err != nil {
-		s.logf("warn", "save CloudSync cache: "+err.Error())
+		s.logf("warn", "save Shard cache: "+err.Error())
 	}
 }
 
-const tokenName = "cloudsync-token"
+const tokenName = "shard-token"
 
 func (s *Syncer) loadToken() string {
 	if !s.o.Dialer.UsesToken() {
@@ -1053,7 +1053,7 @@ func (s *Syncer) loadToken() string {
 		}
 	}
 	if t == "" {
-		if b, err := os.ReadFile(filepath.Join(s.o.Dir, "cloudsync.token")); err == nil {
+		if b, err := os.ReadFile(filepath.Join(s.o.Dir, "shard.token")); err == nil {
 			t = strings.TrimSpace(string(b))
 		}
 	}
@@ -1068,10 +1068,10 @@ func (s *Syncer) storeToken(t string) {
 	s.token = &t
 	s.mu.Unlock()
 	if s.o.Keychain != nil && s.o.Keychain.Set(tokenName, []byte(t)) == nil {
-		os.Remove(filepath.Join(s.o.Dir, "cloudsync.token"))
+		os.Remove(filepath.Join(s.o.Dir, "shard.token"))
 		return
 	}
-	store.WriteAtomic(filepath.Join(s.o.Dir, "cloudsync.token"), []byte(t))
+	store.WriteAtomic(filepath.Join(s.o.Dir, "shard.token"), []byte(t))
 }
 
 func (s *Syncer) clearToken() {
@@ -1082,7 +1082,7 @@ func (s *Syncer) clearToken() {
 	if s.o.Keychain != nil {
 		s.o.Keychain.Delete(tokenName)
 	}
-	os.Remove(filepath.Join(s.o.Dir, "cloudsync.token"))
+	os.Remove(filepath.Join(s.o.Dir, "shard.token"))
 }
 
 func jsonEqual(a, b any) bool {

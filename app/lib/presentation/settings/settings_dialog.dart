@@ -7,7 +7,7 @@ import '../../core/settings/app_settings.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/typography.dart';
 import '../../data/rpc/core_client.dart';
-import '../../data/rpc/gen/dbm.pbgrpc.dart' as pb;
+import '../../data/rpc/gen/cellar.pbgrpc.dart' as pb;
 import '../common/hm.dart';
 import '../core/core_cubit.dart';
 
@@ -29,14 +29,14 @@ class _Settings extends StatefulWidget {
 class _SettingsState extends State<_Settings> {
   bool _busy = false;
 
-  Future<void> _call(Future<pb.SyncState> Function(pb.DBManagerClient api) f, {String? done}) async {
+  Future<void> _call(Future<pb.SyncState> Function(pb.CellarClient api) f, {String? done}) async {
     final core = context.read<CoreCubit>();
     setState(() => _busy = true);
     try {
       core.adoptSync(await f(core.api));
       if (done != null) Toasts.success(done);
     } catch (e) {
-      Toasts.error(tr('CloudSync', 'CloudSync'), errorText(e));
+      Toasts.error(tr('Shard', 'Shard'), errorText(e));
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -44,10 +44,10 @@ class _SettingsState extends State<_Settings> {
 
   String _phase(pb.SyncState s) => switch (s.phase) {
     pb.SyncState_Phase.OFF => tr('Off: this device keeps its own list', 'Выключена: список хранится только на этом устройстве'),
-    pb.SyncState_Phase.NOT_RUNNING => tr('CloudSync is not running on this device', 'CloudSync не запущен на этом устройстве'),
-    pb.SyncState_Phase.NO_VAULT => tr('CloudSync is not set up yet', 'CloudSync ещё не настроен'),
-    pb.SyncState_Phase.LOCKED => tr('CloudSync is locked: unlock it', 'CloudSync заблокирован: разблокируйте его'),
-    pb.SyncState_Phase.PAIRING => tr('Waiting for your answer in CloudSync', 'Ждём подтверждения в CloudSync'),
+    pb.SyncState_Phase.NOT_RUNNING => tr('Shard is not running on this device', 'Shard не запущен на этом устройстве'),
+    pb.SyncState_Phase.NO_VAULT => tr('Shard is not set up yet', 'Shard ещё не настроен'),
+    pb.SyncState_Phase.LOCKED => tr('Shard is locked: unlock it', 'Shard заблокирован: разблокируйте его'),
+    pb.SyncState_Phase.PAIRING => tr('Waiting for your answer in Shard', 'Ждём подтверждения в Shard'),
     pb.SyncState_Phase.OFFLINE => tr('Offline: changes wait for a storage', 'Нет связи с хранилищем: изменения ждут'),
     pb.SyncState_Phase.SYNCED => tr('Synced', 'Синхронизировано'),
     pb.SyncState_Phase.ERROR => tr('Error', 'Ошибка'),
@@ -64,7 +64,7 @@ class _SettingsState extends State<_Settings> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const HmSectionTitle('CLOUDSYNC'),
+          const HmSectionTitle('SHARD'),
           const SizedBox(height: 10),
           Row(children: [
             HmDot(ok: ok),
@@ -74,8 +74,8 @@ class _SettingsState extends State<_Settings> {
           ]),
           const SizedBox(height: 8),
           Text(
-            tr('With sync on, servers and connections are the same on all your devices; servers and SSH keys come from CloudSync itself and are shared with SSH Manager.',
-                'С синхронизацией серверы и подключения одинаковы на всех ваших устройствах; серверы и SSH-ключи берутся из самого CloudSync и общие с SSH Manager.'),
+            tr('With sync on, servers and connections are the same on all your devices; servers and SSH keys come from Shard itself and are shared with Postern.',
+                'С синхронизацией серверы и подключения одинаковы на всех ваших устройствах; серверы и SSH-ключи берутся из самого Shard и общие с Postern.'),
             style: HmText.small.copyWith(height: 1.5),
           ),
           if (s.pairingCode.isNotEmpty) ...[
@@ -85,7 +85,7 @@ class _SettingsState extends State<_Settings> {
               child: Row(children: [
                 Text(s.pairingCode, style: HmText.syne(26, weight: 800, color: HmColors.accent, spacing: 2)),
                 const SizedBox(width: 16),
-                Expanded(child: Text(tr('Confirm this code in CloudSync to let DB Manager in.', 'Подтвердите этот код в CloudSync, чтобы пустить DB Manager.'), style: HmText.body)),
+                Expanded(child: Text(tr('Confirm this code in Shard to let Cellar in.', 'Подтвердите этот код в Shard, чтобы пустить Cellar.'), style: HmText.body)),
               ]),
             ),
           ],
@@ -102,15 +102,15 @@ class _SettingsState extends State<_Settings> {
           if (s.ownServers > 0) ...[
             const SizedBox(height: 12),
             HmBanner(
-              tr('${s.ownServers} servers are still kept by DB Manager alone. Move them into CloudSync so SSH Manager and your other devices see them.',
-                  'Серверов только в DB Manager: ${s.ownServers}. Перенесите их в CloudSync, чтобы их видели SSH Manager и другие устройства.'),
-              action: HmButton(tr('Move', 'Перенести'), small: true, variant: HmVariant.primary, onPressed: _busy ? null : () => _call((a) => a.moveServersToCloudSync(pb.Empty()), done: tr('Servers moved', 'Серверы перенесены'))),
+              tr('${s.ownServers} servers are still kept by Cellar alone. Move them into Shard so Postern and your other devices see them.',
+                  'Серверов только в Cellar: ${s.ownServers}. Перенесите их в Shard, чтобы их видели Postern и другие устройства.'),
+              action: HmButton(tr('Move', 'Перенести'), small: true, variant: HmVariant.primary, onPressed: _busy ? null : () => _call((a) => a.moveServersToShard(pb.Empty()), done: tr('Servers moved', 'Серверы перенесены'))),
             ),
           ],
           const SizedBox(height: 14),
           Row(children: [
             if (!s.enabled && s.phase != pb.SyncState_Phase.PAIRING)
-              HmButton(tr('Sync via CloudSync', 'Синхронизировать через CloudSync'), variant: HmVariant.primary, icon: Icons.cloud_sync_outlined, loading: _busy, onPressed: _busy || st == null ? null : () => _call((a) => a.enableSync(pb.Empty())))
+              HmButton(tr('Sync via Shard', 'Синхронизировать через Shard'), variant: HmVariant.primary, icon: Icons.cloud_sync_outlined, loading: _busy, onPressed: _busy || st == null ? null : () => _call((a) => a.enableSync(pb.Empty())))
             else ...[
               HmButton(tr('Sync now', 'Синхронизировать'), variant: HmVariant.cyan, icon: Icons.sync, onPressed: _busy ? null : () => _call((a) => a.syncNow(pb.Empty()))),
               const SizedBox(width: 8),
@@ -124,7 +124,7 @@ class _SettingsState extends State<_Settings> {
                   : () async {
                       if (await confirm(context,
                           title: tr('Turn sync off?', 'Выключить синхронизацию?'),
-                          message: tr('This device keeps its connections. The shared servers stay in CloudSync, but DB Manager stops seeing them here.', 'Подключения на этом устройстве останутся. Общие серверы останутся в CloudSync, но DB Manager перестанет их здесь видеть.'),
+                          message: tr('This device keeps its connections. The shared servers stay in Shard, but Cellar stops seeing them here.', 'Подключения на этом устройстве останутся. Общие серверы останутся в Shard, но Cellar перестанет их здесь видеть.'),
                           action: tr('Turn off', 'Выключить'),
                           destructive: true)) {
                         _call((a) => a.disableSync(pb.Empty()));
@@ -153,7 +153,7 @@ class _SettingsState extends State<_Settings> {
           ),
           const SizedBox(height: 16),
           Text(
-            'DB Manager ${st?.coreVersion ?? ''} (${st?.coreBuild ?? ''}) · ${st?.platform ?? ''}'
+            'Cellar ${st?.coreVersion ?? ''} (${st?.coreBuild ?? ''}) · ${st?.platform ?? ''}'
             '${st != null && !st.keychain ? ' · ${tr('no keychain: the local key is a file', 'нет keychain: локальный ключ хранится файлом')}' : ''}',
             style: HmText.footer,
           ),

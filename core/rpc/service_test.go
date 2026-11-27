@@ -13,20 +13,20 @@ import (
 
 	"golang.org/x/crypto/ssh"
 
-	"dbmanager/core/cloudsync"
-	"dbmanager/core/cloudsync/fake"
-	cspb "dbmanager/core/cloudsync/pb"
-	"dbmanager/core/keychain"
-	"dbmanager/core/rpc"
-	"dbmanager/core/rpc/pb"
-	"dbmanager/core/sshx"
-	"dbmanager/core/sshx/sshtest"
-	"dbmanager/core/store"
+	"github.com/SelfHold/cellar/core/keychain"
+	"github.com/SelfHold/cellar/core/rpc"
+	"github.com/SelfHold/cellar/core/rpc/pb"
+	"github.com/SelfHold/cellar/core/shard"
+	"github.com/SelfHold/cellar/core/shard/fake"
+	cspb "github.com/SelfHold/cellar/core/shard/pb"
+	"github.com/SelfHold/cellar/core/sshx"
+	"github.com/SelfHold/cellar/core/sshx/sshtest"
+	"github.com/SelfHold/cellar/core/store"
 )
 
 var ctx = context.Background()
 
-func newService(t *testing.T, dir string, d cloudsync.Dialer) *rpc.Service {
+func newService(t *testing.T, dir string, d shard.Dialer) *rpc.Service {
 	t.Helper()
 	kc := keychain.NewMemory()
 	seal, err := store.LoadSealer(dir, kc)
@@ -39,7 +39,7 @@ func newService(t *testing.T, dir string, d cloudsync.Dialer) *rpc.Service {
 	}
 	s := rpc.New(st, "test")
 	if d != nil {
-		sy := cloudsync.New(cloudsync.Options{Dialer: d, Store: st, Seal: seal, Dir: dir, Keychain: kc, AppName: "DB Manager", OnChange: s.SyncChanged})
+		sy := shard.New(shard.Options{Dialer: d, Store: st, Seal: seal, Dir: dir, Keychain: kc, AppName: "Cellar", OnChange: s.SyncChanged})
 		sy.RetryDelay, sy.ProbeDelay, sy.Heartbeat = 50*time.Millisecond, 50*time.Millisecond, 50*time.Millisecond
 		s.Sync = sy
 		sy.Start()
@@ -187,7 +187,7 @@ func TestStandalone(t *testing.T) {
 	}
 }
 
-func TestCloudSyncShared(t *testing.T) {
+func TestShardShared(t *testing.T) {
 	vault := fake.New()
 	safePEM, safePub := key(t, "")
 	vault.AddKey(&cspb.SshKey{Id: "k1", Title: "work key", KeyType: "ssh-ed25519", Fingerprint: sshx.Fingerprint(safePub),
@@ -197,7 +197,7 @@ func TestCloudSyncShared(t *testing.T) {
 
 	devA := &fake.Device{V: vault, Name: "laptop"}
 	a := newService(t, t.TempDir(), devA)
-	waitFor(t, "CloudSync found", func() bool { return a.Sync.State().Available })
+	waitFor(t, "Shard found", func() bool { return a.Sync.State().Available })
 
 	// Standalone first: an own server and a connection through it.
 	own, err := a.SaveServer(ctx, &pb.Server{Name: "db1", Host: "127.0.0.1", Port: uint32(srv.Port()), User: "deploy", Auth: pb.Server_PASSWORD, Password: "pw", HostKeys: []string{hostKey}})
@@ -219,7 +219,7 @@ func TestCloudSyncShared(t *testing.T) {
 	}
 
 	// Move the own server into the shared list; the connection follows.
-	if _, err := a.MoveServersToCloudSync(ctx, &pb.Empty{}); err != nil {
+	if _, err := a.MoveServersToShard(ctx, &pb.Empty{}); err != nil {
 		t.Fatal(err)
 	}
 	shared := vault.Servers()
@@ -261,7 +261,7 @@ func TestCloudSyncShared(t *testing.T) {
 	// extra keys.
 	cur := vault.Servers()[0]
 	cur.Name = "renamed"
-	cur.Extra = map[string][]byte{"sshmanager.start_dir": []byte("/srv")}
+	cur.Extra = map[string][]byte{"postern.start_dir": []byte("/srv")}
 	vault.PutServerDirect(cur)
 	waitFor(t, "rename seen", func() bool {
 		l, _ := a.ListServers(ctx, &pb.Empty{})
@@ -284,7 +284,7 @@ func TestCloudSyncShared(t *testing.T) {
 		t.Fatal(err)
 	}
 	for _, x := range vault.Servers() {
-		if x.Id == renamed.Id && (x.Notes != "edited here" || string(x.Extra["sshmanager.start_dir"]) != "/srv") {
+		if x.Id == renamed.Id && (x.Notes != "edited here" || string(x.Extra["postern.start_dir"]) != "/srv") {
 			t.Fatalf("edit lost data: %+v", x)
 		}
 	}
@@ -298,21 +298,21 @@ func TestCloudSyncShared(t *testing.T) {
 		return len(ca.Connections) == 3 && len(cb.Connections) == 3
 	})
 
-	// CloudSync stops: the shared list stays readable from the cache,
+	// Shard stops: the shared list stays readable from the cache,
 	// writes are refused.
 	devA.Down.Store(true)
 	a.Sync.Kick()
-	waitFor(t, "not running", func() bool { return a.Sync.State().Phase == cloudsync.PhaseNotRunning })
+	waitFor(t, "not running", func() bool { return a.Sync.State().Phase == shard.PhaseNotRunning })
 	l, _ = a.ListServers(ctx, &pb.Empty{})
 	if len(l.Servers) != 2 {
 		t.Fatalf("cached servers %d", len(l.Servers))
 	}
 	if _, err := a.SaveServer(ctx, l.Servers[0]); err == nil {
-		t.Fatal("write to the shared list without CloudSync")
+		t.Fatal("write to the shared list without Shard")
 	}
 }
 
-func TestOldCloudSync(t *testing.T) {
+func TestOldShard(t *testing.T) {
 	vault := fake.New()
 	vault.Old = true
 	s := newService(t, t.TempDir(), &fake.Device{V: vault, Name: "pc"})
@@ -322,14 +322,14 @@ func TestOldCloudSync(t *testing.T) {
 		st, _ := s.GetState(ctx, &pb.Empty{})
 		return st.Sync.Phase == pb.SyncState_SYNCED && !st.Sync.SharedServers
 	})
-	if !strings.Contains(string(vault.Record(cloudsync.RecordKey)), `"own"`) {
+	if !strings.Contains(string(vault.Record(shard.RecordKey)), `"own"`) {
 		t.Fatal("the own servers are not in the record")
 	}
 	k, _ := s.ListKeys(ctx, &pb.Empty{})
 	if k.SafeNote == "" {
 		t.Fatal("no note about the safe")
 	}
-	if _, err := s.MoveServersToCloudSync(ctx, &pb.Empty{}); err == nil {
+	if _, err := s.MoveServersToShard(ctx, &pb.Empty{}); err == nil {
 		t.Fatal("move without the scope")
 	}
 }

@@ -1,4 +1,4 @@
-module dbmanager
+module github.com/SelfHold/cellar
 
 go 1.27.1
 

@@ -10,7 +10,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	"dbmanager/core/rpc/pb"
+	"github.com/SelfHold/cellar/core/rpc/pb"
 )
 
 // ReadTable returns one page of a table or view. Rows of a table without a

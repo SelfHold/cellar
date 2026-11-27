@@ -6,13 +6,13 @@ import 'dart:io';
 /// the executable on Linux.
 class NativeCore {
   NativeCore._(DynamicLibrary lib)
-    : _start = lib.lookupFunction<Pointer<Uint8> Function(), Pointer<Uint8> Function()>('DbmStart'),
-      _stop = lib.lookupFunction<Void Function(), void Function()>('DbmStop'),
-      _free = lib.lookupFunction<Void Function(Pointer<Uint8>), void Function(Pointer<Uint8>)>('DbmFree');
+    : _start = lib.lookupFunction<Pointer<Uint8> Function(), Pointer<Uint8> Function()>('CellarStart'),
+      _stop = lib.lookupFunction<Void Function(), void Function()>('CellarStop'),
+      _free = lib.lookupFunction<Void Function(Pointer<Uint8>), void Function(Pointer<Uint8>)>('CellarFree');
 
   static NativeCore? _instance;
 
-  static NativeCore get instance => _instance ??= NativeCore._(Platform.isWindows ? DynamicLibrary.open('dbmanager_core.dll') : DynamicLibrary.process());
+  static NativeCore get instance => _instance ??= NativeCore._(Platform.isWindows ? DynamicLibrary.open('cellar_core.dll') : DynamicLibrary.process());
 
   final Pointer<Uint8> Function() _start;
   final void Function() _stop;

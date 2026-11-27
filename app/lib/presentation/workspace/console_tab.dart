@@ -8,7 +8,7 @@ import '../../core/settings/app_settings.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/typography.dart';
 import '../../data/rpc/core_client.dart';
-import '../../data/rpc/gen/dbm.pbgrpc.dart' as pb;
+import '../../data/rpc/gen/cellar.pbgrpc.dart' as pb;
 import '../common/hm.dart';
 import '../core/core_cubit.dart';
 import '../explorer/explorer_controller.dart';
@@ -42,7 +42,7 @@ class _ConsoleTabState extends State<ConsoleTab> {
   final _editorFocus = FocusNode();
   final _editorScroll = ScrollController();
   final _logScroll = ScrollController();
-  pb.DBManagerClient? _api;
+  pb.CellarClient? _api;
   String? _consoleId;
   pb.Console? _info;
   String? _openError;

@@ -10,18 +10,18 @@ import (
 	"testing"
 	"time"
 
-	"dbmanager/core/pg"
-	"dbmanager/core/rpc/pb"
-	"dbmanager/core/sshx"
-	"dbmanager/core/sshx/sshtest"
-	"dbmanager/core/store"
+	"github.com/SelfHold/cellar/core/pg"
+	"github.com/SelfHold/cellar/core/rpc/pb"
+	"github.com/SelfHold/cellar/core/sshx"
+	"github.com/SelfHold/cellar/core/sshx/sshtest"
+	"github.com/SelfHold/cellar/core/store"
 )
 
-// pgConn reads DBM_PG_DSN (make pg-test starts a PostgreSQL in docker).
+// pgConn reads CELLAR_PG_DSN (make pg-test starts a PostgreSQL in docker).
 func pgConn(t *testing.T) store.Connection {
-	dsn := os.Getenv("DBM_PG_DSN")
+	dsn := os.Getenv("CELLAR_PG_DSN")
 	if dsn == "" {
-		t.Skip("DBM_PG_DSN is not set (make pg-test)")
+		t.Skip("CELLAR_PG_DSN is not set (make pg-test)")
 	}
 	u, err := url.Parse(dsn)
 	if err != nil {

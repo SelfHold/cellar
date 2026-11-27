@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../core/i18n.dart';
 import '../../data/rpc/core_client.dart';
 import '../../data/rpc/endpoint.dart';
-import '../../data/rpc/gen/dbm.pbgrpc.dart' as pb;
+import '../../data/rpc/gen/cellar.pbgrpc.dart' as pb;
 
 enum Conn { connecting, ready, failed }
 
@@ -45,7 +45,7 @@ class CoreCubit extends Cubit<CoreState> {
 
   Stream<pb.Event> get events => _events.stream;
 
-  pb.DBManagerClient get api {
+  pb.CellarClient get api {
     final c = _client;
     if (c == null) throw StateError('not connected');
     return c.api;

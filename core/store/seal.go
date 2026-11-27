@@ -10,7 +10,7 @@ import (
 
 	"golang.org/x/crypto/chacha20poly1305"
 
-	"dbmanager/core/keychain"
+	"github.com/SelfHold/cellar/core/keychain"
 )
 
 // The local files hold passwords, so nothing is readable on disk: each is
@@ -19,7 +19,7 @@ import (
 // (Android, a Linux without Secret Service) the key is a file readable only
 // by the user (local.key; on Android inside the app's private storage).
 
-var magic = []byte("DBMSEAL1")
+var magic = []byte("CELLSEAL1")
 
 const keychainName = "local-key"
 
@@ -91,7 +91,7 @@ func (s *Sealer) Open(name string, data []byte) ([]byte, error) {
 		if len(t) == 0 || t[0] == '{' {
 			return data, nil
 		}
-		return nil, fmt.Errorf("store: %s is not a DB Manager file", name)
+		return nil, fmt.Errorf("store: %s is not a Cellar file", name)
 	}
 	aead, _ := chacha20poly1305.NewX(s.key[:])
 	rest := data[len(magic):]

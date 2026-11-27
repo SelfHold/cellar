@@ -21,16 +21,16 @@ import (
 
 	"google.golang.org/grpc"
 
-	"dbmanager/core/cloudsync"
-	"dbmanager/core/keychain"
-	"dbmanager/core/rpc"
-	"dbmanager/core/rpc/pb"
-	"dbmanager/core/store"
+	"github.com/SelfHold/cellar/core/keychain"
+	"github.com/SelfHold/cellar/core/rpc"
+	"github.com/SelfHold/cellar/core/rpc/pb"
+	"github.com/SelfHold/cellar/core/shard"
+	"github.com/SelfHold/cellar/core/store"
 )
 
 // Options say where the core keeps its files and listens.
 type Options struct {
-	Dir      string // dbmanager.json, device.json, sync state
+	Dir      string // cellar.json, device.json, sync state
 	Platform string // runtime.GOOS when empty
 	Listen   string // unix:PATH or tcp:HOST:PORT
 	// Endpoint, when set, is where address and token are written (readable
@@ -39,18 +39,18 @@ type Options struct {
 	Endpoint string
 	LogFile  string
 	Log      io.Writer
-	// Keychain keeps the local files' key and the CloudSync token; nil:
+	// Keychain keeps the local files' key and the Shard token; nil:
 	// keychain.System().
-	Keychain    keychain.Keychain
-	NoKeychain  bool
-	CloudSync   cloudsync.Dialer // nil: the desktop daemon
-	NoCloudSync bool
+	Keychain   keychain.Keychain
+	NoKeychain bool
+	Shard      shard.Dialer // nil: the desktop daemon
+	NoShard    bool
 }
 
 // Core is a running core.
 type Core struct {
 	Service *rpc.Service
-	Sync    *cloudsync.Syncer
+	Sync    *shard.Syncer
 	Address string
 	Token   string
 
@@ -61,7 +61,7 @@ type Core struct {
 }
 
 // ErrRunning: another process of this user already runs the core.
-var ErrRunning = errors.New("DB Manager is already running")
+var ErrRunning = errors.New("Cellar is already running")
 
 // Start opens the files and the socket and serves the API.
 func Start(o Options) (*Core, error) {
@@ -119,16 +119,16 @@ func Start(o Options) (*Core, error) {
 	svc := rpc.New(st, o.Platform)
 	svc.Keychain = sealer.InKeychain
 	svc.Log = func(level, msg string) { logLine(level, "core", msg) }
-	if !o.NoCloudSync {
-		d := o.CloudSync
+	if !o.NoShard {
+		d := o.Shard
 		if d == nil {
-			d = cloudsync.Desktop{}
+			d = shard.Desktop{}
 		}
-		c.Sync = cloudsync.New(cloudsync.Options{
+		c.Sync = shard.New(shard.Options{
 			Dialer: d, Store: st, Seal: sealer, Dir: o.Dir, Keychain: kc,
-			AppName:     "DB Manager",
-			Description: fmt.Sprintf("DB Manager %s on %s", rpc.Version, o.Platform),
-			Log:         func(level, msg string) { logLine(level, "cloudsync", msg) },
+			AppName:     "Cellar",
+			Description: fmt.Sprintf("Cellar %s on %s", rpc.Version, o.Platform),
+			Log:         func(level, msg string) { logLine(level, "shard", msg) },
 			OnChange:    svc.SyncChanged,
 		})
 		svc.Sync = c.Sync
@@ -147,7 +147,7 @@ func Start(o Options) (*Core, error) {
 		}
 	}
 	c.srv = grpc.NewServer(rpc.TokenAuth(c.Token)...)
-	pb.RegisterDBManagerServer(c.srv, svc)
+	pb.RegisterCellarServer(c.srv, svc)
 	go c.srv.Serve(lis)
 	if c.Sync != nil {
 		c.Sync.Start()
@@ -194,16 +194,16 @@ func randomToken() string {
 	return hex.EncodeToString(b[:])
 }
 
-// DefaultDir is ~/.config/dbmanager (%AppData%\dbmanager).
+// DefaultDir is <user config dir>/selfhold/cellar (~/.config/selfhold/cellar).
 func DefaultDir() string {
 	cfg, err := os.UserConfigDir()
 	if err != nil {
 		cfg = "."
 	}
-	return filepath.Join(cfg, "dbmanager")
+	return filepath.Join(cfg, "selfhold", "cellar")
 }
 
-// DefaultListen is $XDG_RUNTIME_DIR/dbmanager.sock, or a localhost port on
+// DefaultListen is $XDG_RUNTIME_DIR/selfhold-cellar.sock, or a localhost port on
 // Windows.
 func DefaultListen(dir string) string {
 	if runtime.GOOS == "windows" {
@@ -213,7 +213,7 @@ func DefaultListen(dir string) string {
 	if d == "" {
 		d = dir
 	}
-	return "unix:" + filepath.Join(d, "dbmanager.sock")
+	return "unix:" + filepath.Join(d, "selfhold-cellar.sock")
 }
 
 // ReadEndpoint reads an endpoint file and says whether the core answers.

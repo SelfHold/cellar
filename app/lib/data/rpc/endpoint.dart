@@ -23,7 +23,7 @@ abstract class CoreLauncher {
 /// Android: the core runs inside the app (gomobile AAR); Kotlin starts it
 /// and hands over the socket path and token.
 class AndroidLauncher implements CoreLauncher {
-  static const _ch = MethodChannel('dev.dbmanager/core');
+  static const _ch = MethodChannel('dev.selfhold.cellar/core');
 
   @override
   Future<Endpoint> endpoint() async {

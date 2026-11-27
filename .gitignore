@@ -1,0 +1,21 @@
+/builds/
+*.test
+*.out
+/app/android/app/libs/dbmanager.aar
+/app/android/app/libs/dbmanager-sources.jar
+/desktopbind/desktopbind
+/mobilebind/mobilebind
+
+# Local agent instructions (kept out of the public repo)
+CLAUDE.md
+.claude/
+
+# Editors, logs, local configs
+.idea/
+.vscode/
+*.log
+.env
+.env.*
+
+# e2e screenshots (app/tool/e2e.dart writes to $SHOTS, default ./shots)
+shots/

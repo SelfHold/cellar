@@ -1,0 +1,547 @@
+syntax = "proto3";
+
+// The API between the DB Manager core (inside the app's process: desktopbind
+// on desktops, mobilebind on Android) and its Flutter app. The core owns the
+// SSH connections, database sessions, the server and connection lists and
+// CloudSync; the app only draws.
+package dbm.v1;
+
+option go_package = "dbmanager/core/rpc/pb";
+
+service DBManager {
+  rpc GetState(Empty) returns (State);
+  // Events streams changes (servers, connections, keys, sync, SSH state).
+  // The app keeps one open and reloads what an event names.
+  rpc Events(Empty) returns (stream Event);
+
+  // --- servers (shared through CloudSync when its "servers" scope is on) ---
+  rpc ListServers(Empty) returns (ServerList);
+  // SaveServer creates (id = "") or replaces a server.
+  rpc SaveServer(Server) returns (Server);
+  rpc DeleteServer(Ref) returns (Empty);
+  // ConnectServer opens (or reuses) the SSH connection. An unknown or
+  // changed host key comes back in `host_key` (status != KNOWN) and the
+  // connection is not opened: the app asks, then calls TrustHostKey.
+  rpc ConnectServer(ConnectRequest) returns (ConnectReply);
+  rpc TrustHostKey(TrustRequest) returns (Server);
+  rpc DisconnectServer(Ref) returns (Empty);
+  // Discover looks for database services running on the server (processes,
+  // listening ports, docker containers) and checks each candidate port.
+  rpc Discover(Ref) returns (DiscoverReply);
+
+  // --- SSH keys: CloudSync's safe (scope "ssh_keys") + keys of this device --
+  rpc ListKeys(Empty) returns (KeyList);
+  // SaveLocalKey keeps a pasted / loaded private key on this device only.
+  rpc SaveLocalKey(LocalKey) returns (Key);
+  rpc DeleteLocalKey(Ref) returns (Empty);
+
+  // --- connections: a database endpoint, through a server or direct ------
+  rpc ListConnections(Empty) returns (ConnectionList);
+  rpc SaveConnection(Connection) returns (Connection);
+  rpc DeleteConnection(Ref) returns (Empty);
+  // TestConnection connects with the given settings (not saved) and says
+  // what answered.
+  rpc TestConnection(Connection) returns (TestReply);
+
+  // --- schema browser -----------------------------------------------------
+  rpc ListDatabases(Ref) returns (DatabaseList);
+  rpc ListSchemas(DbRef) returns (SchemaList);
+  // ListObjects returns tables, views, sequences, functions of one schema.
+  rpc ListObjects(SchemaRef) returns (ObjectList);
+  rpc DescribeObject(ObjectRef) returns (ObjectInfo);
+
+  // --- data ---------------------------------------------------------------
+  // ReadTable returns one page of a table or view.
+  rpc ReadTable(ReadTableRequest) returns (ResultSet);
+  // ApplyEdits inserts, updates and deletes rows of a table in one
+  // transaction (the data editor's "Submit").
+  rpc ApplyEdits(EditRequest) returns (EditReply);
+
+  // --- query console ------------------------------------------------------
+  // OpenConsole pins one database session (transactions, SET, temp tables
+  // live as long as the console).
+  rpc OpenConsole(DbRef) returns (Console);
+  rpc CloseConsole(ConsoleRef) returns (Empty);
+  // Execute runs the text (one or several statements) on the console's
+  // session and returns one result per statement.
+  rpc Execute(ExecuteRequest) returns (ExecuteReply);
+  // Cancel stops the statement running on the console.
+  rpc Cancel(ConsoleRef) returns (Empty);
+  // Statements splits a console's text into statements (UTF-16 offsets),
+  // for highlighting the one at the cursor.
+  rpc Statements(StatementsRequest) returns (StatementsReply);
+
+  // --- CloudSync ----------------------------------------------------------
+  // EnableSync pairs (if needed) and returns the code to show; the result
+  // comes as a SYNC event.
+  rpc EnableSync(Empty) returns (SyncState);
+  rpc DisableSync(Empty) returns (SyncState);
+  rpc SyncNow(Empty) returns (SyncState);
+  // MoveServersToCloudSync copies this app's own servers into the shared
+  // list (once the "servers" scope is granted) and drops the own copy.
+  rpc MoveServersToCloudSync(Empty) returns (SyncState);
+}
+
+message Empty {}
+
+message Ref {
+  string id = 1;
+}
+
+message State {
+  string core_version = 1;
+  string core_build = 2;
+  string platform = 3;
+  SyncState sync = 4;
+  // The local files are sealed with a key from the OS keychain; false: a
+  // key file next to them (no keychain on this machine).
+  bool keychain = 5;
+}
+
+message SyncState {
+  enum Phase {
+    PHASE_UNSPECIFIED = 0;
+    OFF = 1;          // switched off: standalone
+    NOT_RUNNING = 2;  // switched on, CloudSync not found
+    NO_VAULT = 3;
+    LOCKED = 4;
+    PAIRING = 5;      // waiting for the user in CloudSync (code)
+    OFFLINE = 6;      // reads work, writes wait
+    SYNCED = 7;
+    ERROR = 8;
+  }
+  Phase phase = 1;
+  bool enabled = 2;
+  bool available = 3;      // CloudSync answers on this device
+  string pairing_code = 4; // "123 456" while PAIRING
+  string error = 5;
+  bool pending = 6;        // local changes not uploaded yet
+  int64 last_sync_ms = 7;
+  string device_name = 8;
+  // Granted scopes: shared servers, SSH keys of the safe.
+  bool shared_servers = 9;
+  bool safe_keys = 10;
+  // This app still keeps servers of its own while the shared list is
+  // available: offer MoveServersToCloudSync.
+  int32 own_servers = 11;
+}
+
+message Event {
+  enum Kind {
+    KIND_UNSPECIFIED = 0;
+    SERVERS = 1;
+    CONNECTIONS = 2;
+    KEYS = 3;
+    SYNC = 4;
+    SSH = 5; // an SSH connection opened or closed: id = server id
+  }
+  Kind kind = 1;
+  string id = 2;
+  string message = 3;
+}
+
+// --- servers ---------------------------------------------------------------
+
+message Server {
+  string id = 1;
+  string name = 2;
+  string group = 3; // "a/b" nests folders
+  string host = 4;
+  uint32 port = 5;  // 0 = 22
+  string user = 6;
+  enum Auth {
+    AUTH_UNSPECIFIED = 0;
+    PASSWORD = 1;
+    KEY = 2;   // key_id: a key of ListKeys
+    AGENT = 3; // ssh-agent ($SSH_AUTH_SOCK), desktops only
+  }
+  Auth auth = 7;
+  string password = 8;
+  string key_id = 9; // Key.id ("safe:<id>" or "local:<id>")
+  repeated string host_keys = 10;
+  string jump_server_id = 11;
+  string notes = 12;
+  int64 updated_ms = 13;
+  // Where it lives: the shared CloudSync list, or this app's own list.
+  bool shared = 14;
+  // Live: the SSH connection is open.
+  bool connected = 15;
+}
+
+message ServerList {
+  repeated Server servers = 1;
+}
+
+message ConnectRequest {
+  string id = 1;
+  // Passphrase of an encrypted key the safe does not keep; kept in memory
+  // until the app quits.
+  string passphrase = 2;
+}
+
+message HostKey {
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    KNOWN = 1;
+    UNKNOWN = 2; // first connection: no key on record
+    CHANGED = 3; // differs from the keys on record
+  }
+  Status status = 1;
+  string key = 2;         // authorized_keys format
+  string fingerprint = 3; // SHA256:...
+  string type = 4;
+  string server_id = 5;   // the server (a jump server may be asked first)
+}
+
+message ConnectReply {
+  bool connected = 1;
+  HostKey host_key = 2; // set when the key needs the user's decision
+  bool need_passphrase = 3;
+  string server_banner = 4;
+}
+
+message TrustRequest {
+  string id = 1;
+  string key = 2;
+  // CHANGED: drop the keys on record and keep only this one.
+  bool replace = 3;
+}
+
+message DiscoveredService {
+  enum Kind {
+    KIND_UNSPECIFIED = 0;
+    POSTGRES = 1;
+  }
+  Kind kind = 1;
+  string host = 2; // as reached from the server: 127.0.0.1, a container IP
+  uint32 port = 3;
+  string source = 4;  // "process", "docker", "port"
+  string title = 5;   // "PostgreSQL 16", "docker: pg (postgres:17)"
+  string detail = 6;  // data dir, container id, process args
+  bool confirmed = 7; // the port answered as PostgreSQL
+  string connection_id = 8; // already added as this connection
+  // Credentials found where the server keeps them (a container's
+  // POSTGRES_USER / POSTGRES_DB): a hint for the form, not a secret.
+  string user_hint = 9;
+  string database_hint = 10;
+}
+
+message DiscoverReply {
+  repeated DiscoveredService services = 1;
+  repeated string warnings = 2; // "docker: permission denied", ...
+}
+
+// --- keys --------------------------------------------------------------------
+
+message Key {
+  string id = 1;    // "safe:<entry id>" or "local:<id>"
+  string title = 2;
+  string key_type = 3;
+  string fingerprint = 4;
+  string public_key = 5;
+  string comment = 6;
+  bool encrypted = 7;
+  bool has_passphrase = 8;
+  bool local = 9; // this device only
+  string group = 10;
+}
+
+message KeyList {
+  repeated Key keys = 1;
+  // The safe's keys are not available: why ("" = they are listed).
+  string safe_note = 2;
+}
+
+message LocalKey {
+  string title = 1;
+  string private_key = 2; // OpenSSH / PEM
+  string passphrase = 3;  // optional; kept with the key
+}
+
+// --- connections ---------------------------------------------------------------
+
+message Connection {
+  string id = 1;
+  string name = 2;
+  string server_id = 3; // "" = direct from this device
+  enum Kind {
+    KIND_UNSPECIFIED = 0;
+    POSTGRES = 1;
+  }
+  Kind kind = 4;
+  string host = 5; // as reached from the server (or from here)
+  uint32 port = 6; // 0 = 5432
+  string user = 7;
+  string password = 8;
+  string database = 9; // the first database; "" = user's
+  enum SslMode {
+    SSL_MODE_UNSPECIFIED = 0; // prefer
+    DISABLE = 1;
+    PREFER = 2;
+    REQUIRE = 3;
+  }
+  SslMode ssl_mode = 10;
+  string source = 11; // how it was found (DiscoveredService.source/title)
+  string color = 12;  // a tag colour name, "" = none
+  int64 updated_ms = 13;
+  // Show these databases only ("" = all).
+  repeated string databases = 14;
+  bool read_only = 15; // sessions start READ ONLY
+}
+
+message ConnectionList {
+  repeated Connection connections = 1;
+}
+
+message TestReply {
+  bool ok = 1;
+  string server_version = 2;
+  string error = 3;
+  int64 latency_ms = 4;
+}
+
+// --- schema ----------------------------------------------------------------
+
+message Database {
+  string name = 1;
+  string owner = 2;
+  int64 size_bytes = 3;
+  bool is_template = 4;
+  bool can_connect = 5;
+}
+
+message DatabaseList {
+  repeated Database databases = 1;
+  string server_version = 2;
+}
+
+message DbRef {
+  string connection_id = 1;
+  string database = 2;
+}
+
+message Schema {
+  string name = 1;
+  string owner = 2;
+  bool system = 3; // pg_catalog, information_schema, pg_toast...
+}
+
+message SchemaList {
+  repeated Schema schemas = 1;
+}
+
+message SchemaRef {
+  string connection_id = 1;
+  string database = 2;
+  string schema = 3;
+}
+
+message DbObject {
+  enum Kind {
+    KIND_UNSPECIFIED = 0;
+    TABLE = 1;
+    VIEW = 2;
+    MATERIALIZED_VIEW = 3;
+    SEQUENCE = 4;
+    FUNCTION = 5;
+    FOREIGN_TABLE = 6;
+    PARTITIONED_TABLE = 7;
+    PROCEDURE = 8;
+  }
+  Kind kind = 1;
+  string name = 2;
+  string comment = 3;
+  int64 rows_estimate = 4; // tables: pg_class.reltuples (-1 unknown)
+  string signature = 5;    // functions: argument types
+}
+
+message ObjectList {
+  repeated DbObject objects = 1;
+}
+
+message ObjectRef {
+  string connection_id = 1;
+  string database = 2;
+  string schema = 3;
+  string name = 4;
+  DbObject.Kind kind = 5;
+  string signature = 6; // functions
+}
+
+message Column {
+  string name = 1;
+  string type = 2; // as format_type() shows it
+  bool nullable = 3;
+  string default = 4;
+  string comment = 5;
+  bool primary_key = 6;
+  uint32 type_oid = 7;
+  int32 position = 8;
+  bool identity = 9; // identity or serial: may be left out of inserts
+  bool generated = 10;
+}
+
+message Index {
+  string name = 1;
+  string definition = 2;
+  bool unique = 3;
+  bool primary = 4;
+}
+
+message Constraint {
+  string name = 1;
+  string type = 2; // PRIMARY KEY, FOREIGN KEY, UNIQUE, CHECK, EXCLUDE
+  string definition = 3;
+}
+
+message ObjectInfo {
+  DbObject object = 1;
+  repeated Column columns = 2;
+  repeated Index indexes = 3;
+  repeated Constraint constraints = 4;
+  string ddl = 5; // CREATE statement as far as the core can tell
+  repeated string primary_key = 6;
+  string owner = 7;
+  int64 size_bytes = 8;
+}
+
+// --- data --------------------------------------------------------------------
+
+message ResultColumn {
+  string name = 1;
+  uint32 type_oid = 2;
+  string type = 3;
+  // ReadTable: the column of the table (editable), else "".
+  string table_column = 4;
+}
+
+message Cell {
+  string text = 1;
+  bool null = 2;
+}
+
+message Row {
+  repeated Cell cells = 1;
+}
+
+message ResultSet {
+  repeated ResultColumn columns = 1;
+  repeated Row rows = 2;
+  // There are more rows than returned (max_rows / page size).
+  bool truncated = 3;
+  string command_tag = 4; // "SELECT 12", "UPDATE 3"
+  int64 rows_affected = 5;
+  string error = 6;       // this statement failed
+  string error_detail = 7; // DETAIL / HINT / position
+  int64 duration_ms = 8;
+  string statement = 9;   // the statement this result belongs to
+  // ReadTable: how rows are identified for edits: the primary key columns
+  // (by name), or "ctid" (a hidden first column) when there is none.
+  repeated string key_columns = 10;
+  bool has_ctid = 11;
+  int64 total_estimate = 12; // ReadTable: rows in the table (estimate)
+  repeated string notices = 13;
+  // Where the statement is in ExecuteRequest.sql (UTF-16 offsets).
+  int32 statement_start = 14;
+  int32 statement_end = 15;
+  // The error's position in ExecuteRequest.sql (UTF-16), -1 = none.
+  int32 error_offset = 16;
+}
+
+message Sort {
+  string column = 1;
+  bool desc = 2;
+}
+
+message ReadTableRequest {
+  string connection_id = 1;
+  string database = 2;
+  string schema = 3;
+  string table = 4;
+  int64 offset = 5;
+  int32 limit = 6; // 0 = 500
+  repeated Sort sort = 7;
+  // A WHERE condition as typed by the user (without "WHERE").
+  string filter = 8;
+}
+
+message EditValue {
+  string column = 1;
+  Cell value = 2;
+  // Set to DEFAULT (inserts) instead of the value.
+  bool use_default = 3;
+}
+
+message RowEdit {
+  enum Op {
+    OP_UNSPECIFIED = 0;
+    INSERT = 1;
+    UPDATE = 2;
+    DELETE = 3;
+  }
+  Op op = 1;
+  // UPDATE / DELETE: the row's key (ResultSet.key_columns, or "ctid").
+  repeated EditValue key = 2;
+  repeated EditValue values = 3; // INSERT / UPDATE
+}
+
+message EditRequest {
+  string connection_id = 1;
+  string database = 2;
+  string schema = 3;
+  string table = 4;
+  repeated RowEdit edits = 5;
+}
+
+message EditReply {
+  int64 rows_affected = 1;
+  // The statements run, for the log ("UPDATE ... WHERE ...").
+  repeated string statements = 2;
+}
+
+// --- console ---------------------------------------------------------------
+
+message Console {
+  string id = 1;
+  string connection_id = 2;
+  string database = 3;
+  string server_version = 4;
+  int32 backend_pid = 5;
+}
+
+message ConsoleRef {
+  string id = 1;
+}
+
+message ExecuteRequest {
+  string console_id = 1;
+  // The console's text (or the selection: then run all of it).
+  string sql = 2;
+  int32 max_rows = 3; // per result; 0 = 1000
+  // false: run only the statement at `cursor` (UTF-16 offset into sql),
+  // like Ctrl+Enter in DataGrip; true: every statement, stopping at the
+  // first error.
+  bool all = 4;
+  int32 cursor = 5;
+}
+
+message StatementsRequest {
+  string sql = 1;
+}
+
+message StatementRange {
+  int32 start = 1;
+  int32 end = 2;
+}
+
+message StatementsReply {
+  repeated StatementRange statements = 1;
+}
+
+message ExecuteReply {
+  repeated ResultSet results = 1;
+  // The session's transaction state after the run: "idle", "transaction",
+  // "failed" (an error inside a transaction block).
+  string tx_status = 2;
+  int64 duration_ms = 3;
+}

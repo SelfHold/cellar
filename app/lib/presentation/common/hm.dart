@@ -1,0 +1,11 @@
+/// The component library: every screen is built from
+/// these widgets only.
+library;
+
+export 'buttons.dart';
+export 'forms.dart';
+export 'lists.dart';
+export 'overlays.dart';
+export 'page.dart';
+export 'surfaces.dart';
+export 'table.dart';
